@@ -80,6 +80,9 @@ I will need to add the following changes:
 Todo test creado al importar un excel será un test que todos los usuarios podrán ver. Es decir, que es un test que
 no fue generado proceduralmente. Entonces, al crear la instancia del test, quiero que el campo "fue generado 
 proceduralmente" sea falso.
+
+Tengo que modificar el utils.py u otros scripts para que pueda detectar los titulos en inglés en vez de solo 
+detectarlos en español.
 """
 
 
@@ -97,9 +100,15 @@ def import_exams_from_excel(file_path):
         if datos_del_archivo_excel.empty:
             raise ValidationError("El archivo de Excel está vacío.")
 
-        # Valida las columnas del archivo de Excel que esperas encontrar
-        expected_columns = ['Examen', 'Tema', 'Normativa', 'Pregunta', 'A', 'B', 'C', 'D', 'Correcta', 'Justificación',
-                            'Año']
+        # Valida las columnas del archivo de Excel que esperas encontrar usando los títulos / encabezados
+        # In English:
+        expected_columns = ['Exam', 'Topic', 'Regulation', 'Question', 'A', 'B', 'C', 'D', 'Correct', 'Explanation',
+                            'Year']
+
+        # En español (DESACTIVAR POR LOS MOMENTOS):
+        # expected_columns = ['Examen', 'Tema', 'Normativa', 'Pregunta', 'A', 'B', 'C', 'D', 'Correcta', 'Justificación',
+        #                     'Año']
+
         if not all(col in datos_del_archivo_excel.columns for col in expected_columns):
             missing = [col for col in expected_columns if col not in datos_del_archivo_excel.columns]
             raise ValidationError(f"Columnas que faltan en el archivo de Excel: {', '.join(missing)}")
@@ -111,9 +120,11 @@ def import_exams_from_excel(file_path):
                 # Esto crea una instancia del modelo de Test si el Test no existe, o lo coge si ya existe
                 # Check if the Test instance already exists.
                 test_instance, created = Test.objects.get_or_create(
-                    nombre_del_test=row['Examen'],
+                    # nombre_del_test=row['Examen'],  # Spanish
+                    nombre_del_test=row['Exam'],  # English
                     tipo="año",  # Todo test importado de un Excel es un test por año, por lo que debo asignarle el tipo
-                    year=row['Año'],  # Año del test
+                    # year=row['Año'],  # Año del test (Español)
+                    year=row['Year'],  # Year of the exam (English)
                     fue_generado_proceduralmente=False  # Indico que este es un test universal
                 )
 
@@ -128,17 +139,30 @@ def import_exams_from_excel(file_path):
                 # Create an instance of the PreguntaDelTest model using the test_instance as the name of the exam
                 pregunta_del_test = PreguntaDelTest(
                     # nombre_del_test=test_instance,
-                    tema=row['Tema'],
-                    normativa=row['Normativa'],
-                    pregunta=row['Pregunta'],
+
+                    # In Spanish:
+                    # tema=row['Tema'],
+                    # normativa=row['Normativa'],
+                    # pregunta=row['Pregunta'],
+                    # In English:
+                    tema=row['Topic'],
+                    normativa=row['Regulation'],
+                    pregunta=row['Question'],
                     opcion_a=row['A'],
                     opcion_b=row['B'],
                     opcion_c=row['C'],
-                    opcion_d=opcion_d,  # Use the checked value
+                    opcion_d=opcion_d,  # Use the checked value (so that it's optional)
                     # opcion_d=row['D'],
-                    respuesta_correcta=row['Correcta'],
-                    justificacion=row['Justificación'],
-                    year=row['Año'],  # Año del test
+
+                    # In Spanish:
+                    # respuesta_correcta=row['Correcta'],
+                    # justificacion=row['Justificación'],
+                    # year=row['Año'],  # Año del test
+
+                    # In English:
+                    respuesta_correcta=row['Correct'],
+                    justificacion=row['Explanation'],
+                    year=row['Year'],  # Year of the Exam
                 )
                 pregunta_del_test.full_clean()  # Validate model fields
                 pregunta_del_test.save()  # Esto guarda los cambios en la instancia de esta Pregunta Del Test
