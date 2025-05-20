@@ -1,0 +1,149 @@
+{% extends 'disposiciones/disposicion_datatables.html' %}
+
+{# Lista de Resultados de Tests pasados que el usuario autenticado tomó. #}
+{# #}
+{#This template: #}
+{#  1. Shows a table of all test sessions #}
+{#  2. For each session displays: #}
+{#   - Test name #}
+{#   - Start and end times #}
+{#   - Score (if completed) #}
+{#   - Pass/Fail status #}
+{#   - Button to view results or continue test #}
+{#  3. Uses Bootstrap classes for styling #}
+{#  4. Shows a message if no tests have been taken #}
+{#  5. Formats dates nicely #}
+{#  6. Differentiates between completed and in-progress tests #}
+
+{# Agregué un botón que me permite continuar un Test Interrumpido, y ahora renderizo los tests interrumpidos. Así #}
+{# el usuario puede continuar con un test que no haya terminado, y que aún tenga tiempo de entregarlo. #}
+
+{# Ya no voy a poner el nivel de dificultad del test como parámetro, ya que ahora el nivel de dificultad lo vas #}
+{# a seleccionar desde el template de Configurar los Ajustes del test #}
+{#  #}
+{# Now, to continue an interrupted exam, I want to inser the session ID from the SesionDelTest() model, not the Test ID. However, I will need to also change the iniciar_el_test() view in order to continue an interrupted exam from an interrupted session using the sesion's ID, NOT the exam's ID. Look at the selected snippet, and look at my iniciar_el_test() view on my views.py file, and tell me how to implement my idea of continuing an interrupted exam using the session ID instead of the Test's ID. #}
+{#  #}
+{# Here's how to modify your code to use the session ID for continuing interrupted exams: #}
+{# 1) First, modify the template to use the session ID: #}
+{# 2) Skip iniciar_el_test view entirely and link directly to tomar_test.  #}
+{# The main changes are: #}
+    {# Remove the URL reference to iniciar_el_test #}
+    {# Link directly to tomar_test with the session ID #}
+    {# Set question_number=1 initially (MODIFY LATER with the last unanswered question) #}
+{# This approach is simpler since: #}
+    {# 1) The session already exists #}
+    {# 2) All configuration is preserved #}
+    {# 3) The time remaining is already stored #}
+    {# 4) You don't need to create a new session #}
+{#  #}
+{# Ya no redirijo al usuario a la vista de iniciar el test, sino que directamente lo redirijo a la vista de tomar  #}
+{# el test. Y le meto la ID de la sesión interrumpida para la sesión interrumpida que le corresponda. Así, si tomo 3  #}
+{# veces el mismo test, pero para 3 sesiones diferentes, podré escoger cual de las 3 sesiones interrumpidas quiero  #}
+{# hacer, y continuar con la sesión que yo quiera correctamente. #}
+{#  #}
+{# Ahora, la ultima pregunta desde donde vas a empezar será la ultima pregunta respondida por el usuario para #}
+{# ese test interrumpido. Si el usuario no respondio ninguna pregunta, el usuario empezará desde la 1era pregunta. #}
+{% load static %}
+
+{% block title %}Lista de Tests Incompletos{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2>Tests Incompletos</h2>
+
+        {% if sesiones_con_tests_incompletos %}
+            <table id="tabla-tests-incompletos" class="table table-striped">
+                <thead> {# Encabezados de la Tabla de Tests Incompletos #}
+                    <tr>
+                        <th>Nombre del Test</th>
+                        <th>Hora de Inicio</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {# Por cada test tomado por el Cliente #}
+                    {% for sesion_individual in sesiones_con_tests_incompletos %}
+                            <tr>
+                                <td>{{ sesion_individual.sesion.nombre_del_test }}</td>
+                                <td>{{ sesion_individual.sesion.hora_de_inicio|date:"d/m/Y H:i" }}</td>
+                                <td>
+                                    {# Si el test está incompleto, el usuario podrá continuar con su test #}
+                                    {#                                    <a href="{% url 'tests_clientes:iniciar_el_test' nombre_del_test=test.nombre_del_test.id difficulty=test.nivel_de_dificultad %}"#}
+                                    {#                                      <a href="{% url 'tests_clientes:iniciar_el_test' nombre_del_test=sesion.nombre_del_test.id %}"#}
+
+                                    {# Si el Test tiene Autocorrección #}
+                                    {% if sesion_individual.sesion.test_autocorregido %}
+                                        {# Esto te deja continuar un test con Autocorrección #}
+                                        <a href="{% url 'tests_clientes:tomar_test_autocorregido' session_id=sesion_individual.sesion.id question_number=sesion_individual.ultima_pregunta %}"
+                                           class="btn btn-warning btn-sm"
+                                        >
+                                    {% else %} {# Si el test es un test normal SIN autocorrección #}
+                                        {# Esto te deja continuar un test SIN autocorrección #}
+                                        <a href="{% url 'tests_clientes:tomar_test' session_id=sesion_individual.sesion.id question_number=sesion_individual.ultima_pregunta %}"
+                                           class="btn btn-warning btn-sm"
+                                        >
+                                    {% endif %}
+                                        Continuar Test
+                                    </a>
+                                </td>
+                            </tr>
+                        {# Fin del bucle "for" que revisa si el test tomado tenía una hora de fin #}
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No tienes ningún test incompleto.</p>
+            <a href="{% url 'tests_clientes:lista_de_tests' %}" class="btn btn-primary">View Available Tests</a>
+        {% endif %}
+    </div>
+    
+      {# Bloque con el Javascript adicional para hacer funcionar el plugin de datatables.net #}
+  {% block extra_js %}
+
+    {# Esto renderiza mi tabla usando el plugin de datatables.net. Tuve que especificar la ID de mi tabla. #}
+      
+    {# Problem 1: Multiple DataTable Initialization The warning occurs because the DataTable is being initialized #}
+    {#  multiple times on the same table. This happens when the JavaScript code runs again after the page has already #}
+    {#  loaded (common in Django templates with blocks). To prevent this, we need to check if the table is already #}
+    {#  initialized. #}
+      
+    {# Fuente del datatable con scrolling horizontal: https://datatables.net/examples/basic_init/scroll_x.html  #}
+    <script>
+        $(document).ready( function () {
+            
+            // Esto solo renderiza el datatable si no ha sido renderizado antes. es para prevenir una alerta de JS.
+            if (!$.fn.DataTable.isDataTable('#tabla-tests-incompletos')) {
+            
+                // Esto inicializa el datatable.
+                $('#tabla-tests-incompletos').DataTable({
+                    scrollX: true,   // Esto me permite hacer scroll horizontal en la tabla de manera responsive
+                    language: {  // Esto me permite traducir al español el texto del datatable
+                        processing:     "Procesando...",
+                        search:         "Buscar:",
+                        lengthMenu:     "Mostrar _MENU_ elementos",
+                        info:           "Mostrando _START_ a _END_ de _TOTAL_ elementos",
+                        infoEmpty:      "Mostrando 0 a 0 de 0 elementos",
+                        infoFiltered:   "(filtrado de _MAX_ elementos totales)",
+                        infoPostFix:    "",
+                        loadingRecords: "Cargando...",
+                        zeroRecords:    "No se encontraron resultados",
+                        emptyTable:     "No hay datos disponibles en la tabla",
+                        paginate: {
+                            first:      "Primero",
+                            previous:   "Anterior",
+                            next:       "Siguiente",
+                            last:       "Último"
+                        },
+                        aria: {
+                            sortAscending:  ": activar para ordenar la columna en orden ascendente",
+                            sortDescending: ": activar para ordenar la columna en orden descendente"
+                        }
+                    }
+                });
+            
+            }
+        } );
+    </script>
+
+  {% endblock %}
+{% endblock %}

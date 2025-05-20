@@ -1,0 +1,64 @@
+{% extends 'disposiciones/disposicion_autenticacion.html' %}
+
+{# Lista de Tests por Normativa. Cuando entre a esta vista me debe salir la lista de todos los tests, pero con #}
+{# un título que diga "Normativa 1", y ahí salen todos los tests de esa primera normativa; luego otro título que #}
+{# diga "normativa 2", y salgan todos los tests de la normativa 2, y así sucesivamente. #}
+{#  #}
+{# This template: #}
+    {# Extends the base authentication layout. #}
+    {# Shows a main heading. #}
+    {# Displays a single table with all tests of type "normativa". #}
+    {# Each row shows test name, question count, and actions. #}
+    {# Shows a message if no tests are available. #}
+
+
+{% block content %}
+  <h2 class="mb-4">Lista de Tests por Normativa</h2>
+
+    {#  {% for normativa, tests in tests_por_normativa.items %}#}
+    {% if tests %}
+      <div class="mb-4">
+        {# Esto imprimirá los títulos de cada normativa. Si no tiene normativa, se imprime "Sin Normativa". #}
+        {#        <h3>{{ normativa }}</h3>#}
+
+
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Nombre del Test</th>
+                <th>Número de Preguntas</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for test in tests %}
+                <tr>
+                  <td>{{ test.nombre_del_test }}</td>
+                    
+                  {# Assuming 'preguntas' is the related_name for the ManyToManyField in PreguntaDelTest, #}
+                  {# this prints the number of questions for the current iteration of the test. #}
+                  <td>{{ test.preguntadeltest_set.count }}</td>
+
+                  {#                  <td>{{ test.preguntas.count }}</td>#}
+                  <td>
+                    <a href="{% url 'tests_clientes:configurar_test' test.id %}" class="btn btn-primary btn-sm">
+                      Tomar Test
+                    </a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    {% else %}
+        <p class="alert alert-info">No hay tests por normativa disponibles.</p>
+    {% endif %}
+
+    {#  {% endfor %}#}
+
+    {#  {% if not tests_por_normativa %}#}
+    {#    <p class="alert alert-info">No hay tests disponibles.</p>#}
+    {#  {% endif %}#}
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'disposiciones/disposicion_autenticacion.html' %}  {# Disposicion con el CSS #}
+
+{# Con la disposición, ya tengo los mensajes flash de "messages". No necesito volver a poner los mensajes de  #}
+{# "messages" de Jinja aquí. #}
+
+{% block title %}Subir Archivo de Excel con Tests{% endblock %}
+
+{% block content %}
+  <h2>Sube un Archivo de Excel con Tests</h2>
+
+    {#  <!-- Display messages -->#}
+    {#  {% if messages %}#}
+    {#    <ul class="messages">#}
+    {#      {% for message in messages %}#}
+    {#        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>#}
+    {#      {% endfor %}#}
+    {#    </ul>#}
+    {#  {% endif %}#}
+
+  <!-- Upload form -->
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    {# Formulario pra Subir un archivo de Excel con Tests / Examenes #}  
+    {{ form.as_p }}
+    <button class="btn btn-primary" type="submit">Subir e Importar</button>
+  </form>
+{% endblock %}

@@ -1,0 +1,34 @@
+/* To align the buttons in the "Acciones" column across multiple datatables in your Django web app, you can
+ensure consistent widths for the column and buttons by adding custom CSS. Here's how to adjust your code:
+
+### **Solution: Use CSS for Column Alignment**
+
+Update your CSS to explicitly set a fixed width for the "Acciones" column and make the buttons consistent:
+
+### **Update Your Template**
+
+Modify your HTML template to include the CSS class in the "Acciones" column:
+
+### **How It Works**
+- The `acciones-column` class ensures that the width of the "Acciones" column is the same across all tables,
+preventing misalignment.
+- The `btn` styles make the buttons consistent in size and positioning.
+
+### **Test and Tweak**
+Load your page and check if the alignment issue is resolved. You may need to tweak the column width (`150px`)
+to fit your design perfectly.
+*/
+
+/* Ensure consistent column width */
+.acciones-column {
+    width: 150px; /* Adjust width as needed */
+    text-align: center; /* Center align the buttons */
+}
+
+/* Esto hace que los botones de los datatables tengan el ancho de la columna de "Acciones", o sea cual sea el
+el nombre de la columna que los contenga.
+*/
+.boton-de-datatable {
+    display: block; /* Makes buttons fill the column uniformly. It makes the button as wide as the browser's width. */
+    margin: auto; /* Centers the buttons vertically */
+}

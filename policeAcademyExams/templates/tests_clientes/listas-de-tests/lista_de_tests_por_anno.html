@@ -1,0 +1,209 @@
+{% extends 'disposiciones/disposicion_datatables.html' %}
+
+{# Cuando entre a esta vista me debe salir la lista de todos los tests, pero con un título que diga "2023", y  #}
+{# ahí salen todos los tests del Año 2023; luego otro título que diga "2024", y salgan todos los tests del 2024, y #}
+{# así sucesivamente. #}
+
+{# Necesito esto para cargar el CSS desde mi carpeta "static". De ahí sale el CDN con el CSS y JS del plugin #}
+{# de datatables.net . #}
+{% load static %}
+
+{% block content %}
+  <h2 class="mb-4">Lista de Tests por Año</h2>
+
+  {% for anno, tests in tests_por_anno.items %}
+    {% if tests %}
+      <div class="mb-4">
+
+          {# Botón con el título de Cada Año. Si lo clicas, el año aparece o desaparece. #}
+          <button class="btn btn-primary" onclick="toggleTableVisibility('{{ anno }}_table')">
+            {% if anno == "Sin Año" %}
+                Sin Año {# Para los tests que no tengan tema, pondré que el título sea solo "Sin Año" #}
+            {% else %}
+                {{ anno }} {# Para los tests que tengan su respectivo Año, pondré que el título sea "(Año)" #}
+            {% endif %}
+          </button>
+
+        {# Div o contenedor que contiene el datatable de la iteración actual del bucle "for". #}
+        {#  #}
+        {# Necesito ponerle un "style=display", sea "none" o sea "block", para que mi función de Javascript de #}
+        {# Toggle me oculte y me muestre  correctamente este datatable. De lo contrario, me saldrá un bug en el que #}
+        {# tienes que clicar 2 veces el botón para que puedas ocultar o mostrar el datatable.  #}
+        <div id="{{ anno }}_table" class="table-responsive" style="display: none;">
+
+          {# Tabla con el Datatable en donde se van a renderizar todos los tests del año de la iteración actual. #}
+          {#  #}
+          {# Usaré la clase "year-table" para llamar o crear cada instancia del plugin de datatables.net. #}
+          {# Le asigné una ID única a cada tabla generado por el "for" para hacerle toggle con una función JS. #}
+          <table class="table table-striped year-table">
+            <thead>
+              <tr>
+                <th>Nombre del Test</th>
+                {#                <th>Número de Preguntas</th>#}
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for test in tests %}
+                <tr>
+                  <td>{{ test.nombre_del_test }}</td>
+                    {#                  <td>{{ test.preguntas.count }}</td>#}
+                  <td>
+                    <a href="{% url 'tests_clientes:configurar_test' test.id %}" class="btn btn-primary btn-sm">
+                      Tomar Test
+                    </a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    {% endif %}
+    <hr>    {# Línea divisoria entre datatable y datatable #}
+    <br>
+  {% endfor %}
+
+  {% if not tests_por_anno %}
+    <p class="alert alert-info">No hay tests disponibles.</p>
+  {% endif %}
+
+  {# Bloque con el Javascript adicional para hacer funcionar el plugin de datatables.net #}
+  {% block extra_js %}
+
+    <script>
+
+        /* JavaScript function to toggle table visibility.
+        * */
+        function toggleTableVisibility(tableId) {
+            const table = document.getElementById(tableId);
+            if (table) {
+                if (table.style.display === "none" || table.style.display === "") {
+                    table.style.display = "block"; // Or "block" if you prefer, "table" is more semantically correct for a table
+
+                } else {
+                    table.style.display = "none";
+
+                }
+            }
+        }
+
+        /* Javascript del Plugin de Datatables.net */
+        /* Fuente del snippet del plugin de datatables.net que voy a usar:
+        * https://datatables.net/examples/basic_init/multiple_tables.html .
+        */
+        $(document).ready( function () {
+
+            // Esto solo renderiza el datatable si no ha sido renderizado antes. Es para prevenir una alerta de JS.
+            if (!$.fn.DataTable.isDataTable('table.year-table')) {
+
+                // Esto inicializa cada datatable. En vez de asignarlo por ID, lo asignaré por clase usando "year-table"
+                $('table.year-table').DataTable({
+                    scrollX: true,   // Esto me permite hacer scroll horizontal en la tabla de manera responsive
+                    language: {  // Esto me permite traducir al español el texto del datatable
+                        processing:     "Procesando...",
+                        search:         "Buscar:",
+                        lengthMenu:     "Mostrar _MENU_ elementos",
+                        info:           "Mostrando _START_ a _END_ de _TOTAL_ elementos",
+                        infoEmpty:      "Mostrando 0 a 0 de 0 elementos",
+                        infoFiltered:   "(filtrado de _MAX_ elementos totales)",
+                        infoPostFix:    "",
+                        loadingRecords: "Cargando...",
+                        zeroRecords:    "No se encontraron resultados",
+                        emptyTable:     "No hay datos disponibles en la tabla",
+                        paginate: {
+                            first:      "Primero",
+                            previous:   "Anterior",
+                            next:       "Siguiente",
+                            last:       "Último"
+                        },
+                        aria: {
+                            sortAscending:  ": activar para ordenar la columna en orden ascendente",
+                            sortDescending: ": activar para ordenar la columna en orden descendente"
+                        }
+                    }
+                });
+
+            }
+        } );
+    </script>
+  {% endblock %} {# Fin del JavaScript adicional #}
+{% endblock %}
+
+
+{#{% extends 'disposiciones/disposicion_autenticacion.html' %}#}
+{##}
+{# Necesito esto para cargar el CSS desde mi carpeta "static" #}
+{#{% load static %}#}
+{##}
+{# Cuando entre a esta vista me debe salir la lista de todos los tests, pero con un título que diga "2023", y  #}
+{# ahí salen todos los tests del Año 2023; luego otro título que diga "2024", y salgan todos los tests del 2024, y #}
+{# así sucesivamente. #}
+{##}
+{# Esto agrega el CSS extra que usaré en este template #}
+{#{% block extra_css %}#}
+{##}
+    {# Enlace al CSS con los estilos para este template #}
+{#    <link rel="stylesheet" href="{% static 'css/lista_de_tests_por_anno.css' %}">#}
+{##}
+{#{% endblock %}#}
+{##}
+{#{% block content %}#}
+{##}
+{#  {% if selected_year == "sin-año" %}#}
+{#    <h2 class="mb-4">Lista de Tests Sin Año</h2>#}
+{#  {% else %}#}
+{#    <h2 class="mb-4">Lista de Tests del {{ selected_year }}</h2>#}
+{#  {% endif %}#}
+{##}
+    {#  {% for anno, tests in tests_por_anno.items %}#}
+    {#    {% if tests %}#}
+{#    <div class="mb-4">#}
+{#    #}
+{#        <a href="{% url 'tests_clientes:lista_de_annos' %}" class="btn btn-secondary mb-3">#}
+{#            <i class="fas fa-arrow-left"></i> Volver a la Lista de Años#}
+{#        </a>#}
+{#    #}
+        {# Para los tests que no tengan tema, pondré que el título sea solo "Sin Año" #}
+        {#        {% if anno == "Sin Año" %}#}
+        {#          <h3>Sin Año</h3>#}
+        {#        {% else %}#}
+        {#          <h3>{{ anno }}</h3>  {# Para los tests que tengan su respectivo Año, pondré que el título sea "(Año)" #}
+        {#        {% endif %}#}
+{##}
+{#        <div class="table-responsive">#}
+{#          <table class="table table-striped">#}
+{#            <thead>#}
+{#              <tr>#}
+{#                <th>Nombre del Test</th>#}
+                {#                <th>Número de Preguntas</th>#}
+{##}
+                {# Para que la columna de "acciones" esté siempre alineada, agrego la clase "Acciones Column" #}
+{#                <th class="acciones-column">Acciones</th>#}
+{#              </tr>#}
+{#            </thead>#}
+{#            <tbody>#}
+{#              {% for test in tests %}#}
+{#                <tr>#}
+{#                  <td>{{ test.nombre_del_test }}</td>#}
+                    {#                  <td>{{ test.preguntas.count }}</td>#}
+{#                  <td>#}
+{#                    <a href="{% url 'tests_clientes:configurar_test' test.id %}" #}
+{#                       class="btn btn-primary btn-sm boton-de-datatable"#}
+{#                    >#}
+{#                      Tomar Test#}
+{#                    </a>#}
+{#                  </td>#}
+{#                </tr>#}
+{#              {% endfor %}#}
+{#            </tbody>#}
+{#          </table>#}
+{#        </div>#}
+{#      </div>#}
+    {#    {% endif %}#}
+    {#  {% endfor %}#}
+{##}
+    {#  {% if not tests_por_anno %}#}
+    {#    <p class="alert alert-info">No hay tests disponibles.</p>#}
+    {#  {% endif %}#}
+{#{% endblock %}#}

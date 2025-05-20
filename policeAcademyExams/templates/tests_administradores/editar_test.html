@@ -1,0 +1,129 @@
+{% extends 'disposiciones/disposicion_autenticacion.html' %}
+{% load static %}
+
+{# Pagina para Editar un Test #}
+
+{# This template: #}
+{# - Extends the base layout template #}
+{# - Uses Bootstrap classes for styling #}
+{# - Includes proper form handling with CSRF protection #}
+{# - Shows validation errors for each field #}
+{# - Provides clear visual separation between questions using cards #}
+{# - Includes a delete option for existing questions #}
+{# - Allows adding new questions dynamically #}
+{# - Has proper button styling and layout #}
+{# - Uses JavaScript to handle dynamic form addition #}
+{# - Prevents duplicate event listeners #}
+{# - Maintains proper form indexing #}
+{# - Includes cancel button for better UX #}
+{# - Groups related elements logically #}
+{# - Uses semantic HTML elements #}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Editar Test: {{ test.nombre_del_test }}</h2>
+
+    <form method="post" class="mb-4">
+        {% csrf_token %}
+        
+        {# Nombre del Test #}
+        <div class="form-group mb-4">
+            {{ campo_nombre_del_test.as_p }}
+        </div>
+
+        {# Preguntas del Test #}
+        <div id="formset-container">
+            {{ formset.management_form }}
+            
+            {% for form in formset %}
+                <div class="pregunta-form card mb-4">
+                    <div class="card-body">
+                        <h4>Pregunta #{{ forloop.counter }}</h4>
+                        
+                        {# Campos ocultos #}
+                        {% for hidden in form.hidden_fields %}
+                            {{ hidden }}
+                        {% endfor %}
+                        
+                        {# Campos visibles #}
+                        {% for field in form.visible_fields %}
+                            <div class="form-group mb-3">
+                                {{ field.label_tag }}
+                                {{ field }}
+                                {% if field.errors %}
+                                    <div class="alert alert-danger mt-1">
+                                        {{ field.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                        
+                        {# Checkbox para eliminar pregunta #}
+                        {#                        {% if form.instance.pk %}#}
+                        {#                            <div class="form-check mt-3">#}
+                        {#                                {{ form.DELETE }}#}
+                        {#                                <label class="form-check-label text-danger" for="{{ form.DELETE.id_for_label }}">#}
+                        {#                                    Eliminar esta pregunta#}
+                        {#                                </label>#}
+                        {#                            </div>#}
+                        {#                        {% endif %}#}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {# Botones #}
+        <div class="mt-4">
+            <button type="button" id="add-form" class="btn btn-secondary">Añadir pregunta</button>
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+            <a href="{% url 'tests_clientes:lista_de_tests' %}" class="btn btn-outline-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        function initializeFormHandling() {
+            const addButton = document.getElementById('add-form');
+            const formsetContainer = document.getElementById('formset-container');
+            const totalForms = document.querySelector('#id_preguntas-TOTAL_FORMS');
+
+            // Remove any existing listeners
+            addButton.replaceWith(addButton.cloneNode(true));
+            const newAddButton = document.getElementById('add-form');
+
+            newAddButton.addEventListener('click', function() {
+                const formCount = parseInt(totalForms.value);
+                const newForm = formsetContainer.querySelector('.pregunta-form').cloneNode(true);
+
+                // Update form index
+                newForm.innerHTML = newForm.innerHTML.replace(/-\d+-/g, `-${formCount}-`);
+                newForm.querySelector('h4').textContent = `Pregunta #${formCount + 1}`;
+
+                // Clear form values
+                newForm.querySelectorAll('input[type="text"], textarea').forEach(input => {
+                    input.value = '';
+                    if (input.id) {
+                        input.id = input.id.replace(/-\d+-/, `-${formCount}-`);
+                    }
+                });
+
+                // Remove DELETE checkbox for new forms
+                const deleteDiv = newForm.querySelector('.form-check');
+                if (deleteDiv) {
+                    deleteDiv.remove();
+                }
+
+                formsetContainer.appendChild(newForm);
+                totalForms.value = formCount + 1;
+            });
+        }
+
+        // Only initialize once
+        if (!window.formHandlingInitialized) {
+            document.addEventListener('DOMContentLoaded', initializeFormHandling);
+            window.formHandlingInitialized = true;
+        }
+    </script>
+{% endblock %}

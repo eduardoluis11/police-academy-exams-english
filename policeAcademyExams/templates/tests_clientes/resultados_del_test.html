@@ -1,0 +1,143 @@
+{% extends 'disposiciones/disposicion_autenticacion.html' %}
+
+{# Resultados Generales del Test tomado #}
+{#  #}
+{# En esta página, el usuario podrá ver los resultados de un test que haya tomado. ESTA NO ES LA PAGINA PARA #}
+{# REPASAR EL TEST. Solo se muestra la puntuación total, y la animación del confetti. #}
+{# Se le mostrará el número total de preguntas, el número de respuestas correctas, el número de respuestas incorrectas, #}
+{# el porcentaje de respuestas correctas, y si ha pasado o no el test. #}
+{# Además, se le mostrará una lista de las preguntas que respondió, junto con la respuesta correcta. #}
+{#  #}
+{# Si el usuario ha pasado el test, se le mostrará un mensaje de "Passed". #}
+{# Si el usuario no ha pasado el test, se le mostrará un mensaje de "Failed". #}
+{#  #}
+{# Quiero también agregar el nivel de dificultad, para que el usuario vea la dificultad del test #}
+{#  #}
+{# Voy a usar la bibliteca de JavaScript de canvas-confetti de Kiril Vatev para reproducir una animación #}
+{# de confetti volando cuando apruebes el test. Fuente de la biblioteca: https://github.com/catdad/canvas-confetti . #}
+{#  #}
+{# Técnicamente el CDN del canvas confetti es JavaScript adicional, NO CSS adicional. Sin embargo, la única forma #}
+{# de cargarlo usando la disposición que estoy usando por los momentos es a través de un bloque CSS adicional. #}
+{# Así, el CDN de canvas-confetti se carga al principio del código de la página, dentro de la etiqueta <head>, #}
+{# por lo que se cargará de primero al entrar en este template. Si lo dejara como JavaScript adicional, se #}
+{# cargaría al final de la página, por lo que el CDN no se ejecutaría a tiempo, por lo que no se reproduciría #}
+{# la animación del confetti. #}
+
+
+{# Llamada a la biblioteca de canvas-confetti como que si fuera CSS adicional #}
+{% block extra_css %}
+  <!-- Llamada al CDN con el JS de la biblioteca de canvas-confetti para la animación de confetti. -->
+  <!-- Fuente: Kiril Vatev en https://github.com/catdad/canvas-confetti .  -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  
+  
+{% endblock %}
+
+{% block content %}
+  <h2>Resultados del Test - {{ session.nombre_del_test }}</h2>
+
+  {# Puntuación del Test en escala del 1 al 10 con 2 decimales #}
+  <p>Has obtenido un {{ score|floatformat:2 }}</p>
+
+  {# Nivel de Dificultad / criterios de corrección del test #}
+  <p>Criterios de corrección: {{ nombre_de_dificultad }}</p>
+
+  {# Respuestas Correctas / Aciertos #}
+  <p>Aciertos: {{ correct_answers }}</p>
+
+  {# Respuestas Incorrectas / Errores #}
+  <p>Errores: {{ incorrect_answers }}</p>
+
+  {# Preguntás que el usuario dejó en blanco #}
+  <p>En blanco: {{ respuestas_vacias }}</p>
+
+  {# Número total de preguntas en el test #}
+  <p>Número Total de Preguntas: {{ total_questions }}</p>
+    
+  {# Si el usuario ha pasado el test, se le mostrará un mensaje de "Aprobado". #}
+  {# Si el usuario no ha pasado el test, se le mostrará un mensaje de "Suspendido". #}
+  <p>Resultado:
+
+      {# Si el usuario aprobó el test #}
+      {% if passed %}
+
+          {# Le muestro al usuario que aprobó el test #}
+          <span id="resultadoAprobado">Aprobado</span>
+
+          {# Le muestro al usuario una animación de confetti volando. Usé la biblioteca de canvas-confetti.  #}
+          <script>
+            // Fire confetti when the page loads
+            confetti({
+              particleCount: 100,
+              spread: 70,
+              origin: { y: 0.6 },
+              colors: ['#26de81', '#20bf6b', '#0fb9b1']  // Green colors for success
+            });
+      
+            // Create multiple bursts for a more festive effect
+            setTimeout(() => {
+              confetti({
+                particleCount: 50,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 }
+              });
+              confetti({
+                particleCount: 50,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 }
+              });
+            }, 500);
+          </script>
+          
+      {% else %}    {# Si el usuario suspendió el test #}
+          <span id="resultadoSuspendido">Suspendido</span>
+      {% endif %}
+  </p>
+
+  {# Repasar el Test. Aquí puedes ver cuales preguntas respondiste bien, y cuales no. #}
+  {#  <h3>Repasar Test</h3>#}
+    
+    {# Enlace para repasar el test. Debo meter la ID de la sesión, y quiero empezar por la 1era pregunta. #}
+    <a href="{% url 'tests_clientes:repasar_test_finalizado' session.id 1 %}">Repasar Test</a>
+    <br>
+    <br>
+    
+    {#  <ul>#}
+
+    {# Aquí se le muestran las respuestas seleccionadas por el usuario, y cuales eran las respuestas correctas #}
+    {#    {% for respuesta in respuestas_del_usuario %}#}
+    {#      <li>#}
+            {# Pregunta #}
+    {#        <b>{{ respuesta.pregunta.pregunta }}</b>#}
+    {#        <br>#}
+            {# Respuesta seleccionada por el usuario #}
+    {#        Tu respuesta: {{ respuesta.respuesta_seleccionada }}#}
+    {#        <br>#}
+            {# Respuesta correcta #}
+    {#        Respuesta correcta: {{ respuesta.pregunta.respuesta_correcta }}#}
+    {#        <br>#}
+            {# Si la respuesta es correcta, se le mostrará "Correcto". De lo contrario, se le muestra "Incorrecto". #}
+    {#        {% if respuesta.es_correcto %}Correcto{% else %}Incorrecto{% endif %}#}
+    {#      </li>#}
+    {#      <br>#}
+    {#    {% endfor %}#}
+    {#  </ul>#}
+
+  {# Enlace para volver a la página de Inicio #}
+  <a href="{% url 'inicio' %}">
+      Volver al Inicio
+  </a>
+
+  <br>
+  <br>
+  {# Puedo poner un Footer o algo similar que diga "La animación de Confetti es copyright de Kiril Vatev". #}
+  <footer>  {# Footer de la página. #}
+        <p>
+            La animación de confeti está protegida por derechos de autor © 2020 de
+            <a href="https://github.com/catdad/canvas-confetti" target="_blank">Kiril Vatev</a>.
+        </p>
+  </footer>
+
+{% endblock %}

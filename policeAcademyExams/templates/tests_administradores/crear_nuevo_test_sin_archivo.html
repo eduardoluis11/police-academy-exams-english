@@ -1,0 +1,115 @@
+{% extends 'disposiciones/disposicion_autenticacion.html' %}
+
+{# Formulario para Crear un Nuevo Test Sin Tener que Subir un Excel  #}
+
+{% block content %}
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">Crear un Nuevo Test</h2>
+                <p class="card-text">Rellene los Campos para crear un nuevo test</p>
+
+                
+                <div class="mt-4">
+                    <form method="post" 
+                          action="{% url 'tests_administradores:crear_nuevo_test_sin_subir_un_archivo' %}">
+                        {% csrf_token %}
+                        
+                        {# Campo del Nombre del Nuevo Test #}
+                        {{ campo_nombre_del_test.as_p }}
+
+                        {# {{ resto_del_formulario.as_p }} #}
+
+                        {# Formset con el Resto del Formulario #}
+                        <div id="formset-container">
+                            {{ formset.management_form }}
+
+                            {# Esto renderiza cad formset individual #}
+                            {% for form in formset %}
+                                <div class="pregunta-form border p-3 mb-3">
+                                    <h4>Pregunta #{{ forloop.counter }}</h4>
+                                    {{ form.as_p }}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        {# Botón para agregar un nuevo formset a mi formulario usando Javascript #}
+                        <button type="button" id="add-form" class="btn btn-secondary">Añadir Pregunta</button>
+
+                        {# Botón para enviar mi formulario #}
+                        <button type="submit" class="btn btn-primary">Crear Test</button>
+                    
+                        {# Botón para Cancelar la Creación del Test y regresarme a la lista de Tests #}
+                        <a href="{% url 'tests_clientes:lista_de_tests' %}" class="btn btn-secondary ml-2">Cancelar</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+
+        {# This JavaScript code manages dynamic form handling for your Django formset. Here's what it does: #}
+        {# #}
+        {#1. **Initial Setup**: #}
+        {#- Waits for the DOM to load #}
+        {#- Gets references to: #}
+        {#  - Add button (`#add-form`) #}
+        {#  - Formset container (`#formset-container`) #}
+        {#  - Total forms counter (`#id_preguntas-TOTAL_FORMS`) #}
+        {# #}
+        {#2. **Adding New Questions**: #}
+        {#- When the "Añadir Pregunta" button is clicked: #}
+        {#  - Clones the first question form template #}
+        {#  - Updates form indices to maintain proper Django formset structure #}
+        {#  - Updates the question number in the heading #}
+        {#  - Clears all input fields in the new form #}
+        {#  - Inserts the new form into the container #}
+        {#  - Updates the total forms count #}
+        {# #}
+        {# 3. **Deleting Questions**: #}
+        {#- Handles deletion of question forms when a delete button is clicked #}
+        {#- Prevents deletion if only one form remains #}
+        {#- Updates the total forms count after deletion #}
+        {# #}
+        {# This code allows administrators to dynamically add or remove question forms without page reload while  #}
+        {# maintaining proper Django formset management. #}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const addButton = document.getElementById('add-form');
+                const formsetContainer = document.getElementById('formset-container');
+                const totalForms = document.querySelector('#id_preguntas-TOTAL_FORMS');
+                
+                addButton.addEventListener('click', function() {
+
+                    {# DEBUGGEO: Esto va a imprimir un mensaje cada vez que se clique el boton de "Añadir Pregunta" #}
+                    {# console.log('Añadir Pregunta clicado. Idealmente, esto se deberia ejecutar 1 sola vez.'); #}
+                    
+                    const formCount = parseInt(totalForms.value);
+                    const newForm = formsetContainer.querySelector('.pregunta-form').cloneNode(true);
+                    
+                    // Update form index
+                    newForm.innerHTML = newForm.innerHTML.replace(/-\d+-/g, `-${formCount}-`);
+                    newForm.querySelector('h4').textContent = `Pregunta #${formCount + 1}`;
+                    
+                    // Clear form values and update IDs
+                    newForm.querySelectorAll('input[type="text"], textarea').forEach(input => {
+                        input.value = '';
+                        if (input.id) {
+                            input.id = input.id.replace(/-\d+-/, `-${formCount}-`);
+                        }
+                    });
+                    
+                    // Append to formset container
+                    formsetContainer.appendChild(newForm);
+                    totalForms.value = formCount + 1;
+                });
+            });
+        </script>
+        
+
+        
+        
+        
+
+{% endblock %}

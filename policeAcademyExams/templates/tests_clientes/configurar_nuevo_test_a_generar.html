@@ -1,0 +1,128 @@
+{% extends 'disposiciones/disposicion_autenticacion.html' %}
+{% load static %}
+
+{# Página para Configurar los ajustes de un Test Generado desde Cero. #}
+{# #}
+{# I will render the second part of my form ("formulario_parte_2") field by field in my template instead of  #}
+{# rendering it using "as_p". Then, I will insert the "tema" field inside of a div, and I will insert the "campo" #}
+{# field inside of another div. This will be useful for hiding and showing each field via a javascript function. #}
+
+{% block title %} Configurar Nuevo Test {% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Configurar Nuevo Test</h3>
+        </div>
+        <div class="card-body">
+
+            {# Formulario para Configurar un Test Pre-hecho #}
+            <form method="POST" action="{% url 'tests_clientes:configurar_nuevo_test_a_generar' %}">
+                {% csrf_token %}
+
+                {# Formulario para Configurar los mismos ajustes que en un test predefinido (ej: tiempo límite) #}
+                {{ formulario_parte_1.as_p }}
+                
+                {# Formulario con las nuevas preguntas que son distintas a la de la vista de Generar Test Predefinido #}
+                {#                {{ formulario_parte_2.as_p }}#}
+                {# Formulario parte 2 - rendered field by field #}
+                <div class="form-group">
+                    <label for="{{ formulario_parte_2.tipo_de_test.id_for_label }}">
+                        {{ formulario_parte_2.tipo_de_test.label }}
+                    </label>
+                    {{ formulario_parte_2.tipo_de_test }}
+                    {% if formulario_parte_2.tipo_de_test.help_text %}
+                        <small class="form-text text-muted">{{ formulario_parte_2.tipo_de_test.help_text }}</small>
+                    {% endif %}
+                    {% if formulario_parte_2.tipo_de_test.errors %}
+                        <div class="invalid-feedback d-block">{{ formulario_parte_2.tipo_de_test.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                {# Tema field in its own div with tema-container ID #}
+                <div id="tema-container" class="form-group tema-checkbox" style="display: none;">
+                    <label for="{{ formulario_parte_2.tema.id_for_label }}">{{ formulario_parte_2.tema.label }}</label>
+                    <div class="checkbox-grid">
+                        {{ formulario_parte_2.tema }}
+                    </div>
+                    {% if formulario_parte_2.tema.help_text %}
+                        <small class="form-text text-muted">{{ formulario_parte_2.tema.help_text }}</small>
+                    {% endif %}
+                    {% if formulario_parte_2.tema.errors %}
+                        <div class="invalid-feedback d-block">{{ formulario_parte_2.tema.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                {# Campo de Normativa. Debe renderizar varias casillas con todas las normativas #}
+                <div id="normativa-container" class="form-group" style="display: none;">
+                    <label for="{{ formulario_parte_2.normativa.id_for_label }}">
+                        {{ formulario_parte_2.normativa.label }}
+                    </label>
+                    {{ formulario_parte_2.normativa }}
+                    {% if formulario_parte_2.normativa.help_text %}
+                        <small class="form-text text-muted">{{ formulario_parte_2.normativa.help_text }}</small>
+                    {% endif %}
+                    {% if formulario_parte_2.normativa.errors %}
+                        <div class="invalid-feedback d-block">{{ formulario_parte_2.normativa.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                {# Número de preguntas field #}
+                <div class="form-group">
+                    <label for="{{ formulario_parte_2.numero_de_preguntas.id_for_label }}">{{ formulario_parte_2.numero_de_preguntas.label }}</label>
+                    {{ formulario_parte_2.numero_de_preguntas }}
+                    {% if formulario_parte_2.numero_de_preguntas.help_text %}
+                        <small class="form-text text-muted">{{ formulario_parte_2.numero_de_preguntas.help_text }}</small>
+                    {% endif %}
+                    {% if formulario_parte_2.numero_de_preguntas.errors %}
+                        <div class="invalid-feedback d-block">{{ formulario_parte_2.numero_de_preguntas.errors }}</div>
+                    {% endif %}
+                </div>
+            
+                {#                <div class="form-group tema-field">#}
+                {#                    <label for="id_tema">Selecciona los temas:</label>#}
+                {#                    <div class="row">#}
+                {#                        {% for checkbox in formulario_parte_2.tema %}#}
+                {#                            <div class="col-md-3 mb-2">#}
+                {#                                <div class="form-check">#}
+                {#                                    {{ checkbox }}#}
+                {#                                </div>#}
+                {#                            </div>#}
+                {#                        {% endfor %}#}
+                {#                    </div>#}
+                {#                    <button type="button" id="select-all-topics" class="btn btn-sm btn-outline-primary mt-2">#}
+                {#                        Seleccionar Todos#}
+                {#                    </button>#}
+                {#                    <button type="button" id="deselect-all-topics" class="btn btn-sm btn-outline-secondary mt-2">#}
+                {#                        Deseleccionar Todos#}
+                {#                    </button>#}
+                {#                </div>#}
+
+                <div class="text-center mt-4">
+                    {# Botón de Submit para Generar el Test #}
+                    <button type="submit" class="btn btn-warning btn-lg">Generar</button>
+
+                    <!-- Botón de "Cancelar". Esto hará que el usuario vuelva al menú de tests. -->
+                    <a href="{% url 'tests_clientes:menu_principal_tests' %}" 
+                       class="btn btn-outline-secondary btn-lg ml-2"
+                    >
+                        Cancelar
+                    </a>
+                </div>
+            </form> {# Fin del Formulario #}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+    
+    {# Script con el codigo Javascript del template de Configurar un Test Predefinido #}
+    <script src="{% static 'js/configurar_test_script.js' %}"></script>
+    
+    {# Script con todo el codigo JS para este template que no estaba en el template de Configurar un Test Predefinido #}
+    <script src="{% static 'js/configurar_nuevo_test_a_generar.js' %}"></script>
+    
+{% endblock %}

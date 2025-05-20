@@ -1,0 +1,127 @@
+{% extends 'disposiciones/disposicion_autenticacion.html' %}
+
+{% load static %} 
+
+{# Aquí pondré todos los enlaces que tengan que ver con los tests. Aquí pondre los tests por temas, el enlace #}
+{# a los tests por normativa, los enlaces a la lista de tests, a los resultados de los tests, etc. #}
+{#  #}
+{# Cambié el color del botón de los Tests Hechos a Gris. #}
+{#  #}
+{# Para hacer que los botones tengan ocupen prácticamente todo el ancho del navegador web, pero respetando los #}
+{# márgenes del container o del container fluid que los contiene, le puse la clase "w-100" a los botones. #}
+{#  #}
+{# To add a background image to the button, you'll need to combine CSS background properties with Bootstrap classes. #}
+{# To fix your issue, you can adjust the `background-size`, `background-position`, and add padding to the text for better readability. Here's the updated code: #}
+{# #}
+{#### **Explanation of Changes** #}
+{#1. **`background-size: 50px;`**: This reduces the size of the image so that it's smaller and easier to work with. #}
+{#2. **`background-position: right center;`**: Moves the image to the right of the text. #}
+{#3. **`padding-right: 60px;`**: Creates space between the text and the image for readability. #}
+{#4. **`background-repeat: no-repeat;`**: Ensures the image doesn't tile behind the text. #}
+{#5. **Text Styling**: Adjusted the text color (`color: white`) and added boldness (`font-weight: bold`) for clarity over the button. #}
+{# #}
+{#This approach ensures the button is visually appealing and functional. Let me know if you need further tweaks! 😊 #}
+{% block content %}
+    
+    <br>
+    <br>
+    
+    {# Enlace para Generar un Test con Preguntas Aleatorias desde Cero #}
+    <a href="{% url 'tests_clientes:configurar_nuevo_test_a_generar' %}" class="btn btn-primary w-100">
+        Generar un Nuevo Test
+    </a>
+    
+    <br>
+    <br>
+    
+    {# Enlaces a las Listas de Tests #}
+    
+    {# Enlaces a los Tests por Normativa, por Año, y por Tema. DEBO DEJAR ESTOS 3 Enlaces, Y ELIMINAR EL BOTON DE "Generar nuevo test" DESPUES. #}
+    {# Enlace a la Lista de Tests por Tema #}
+    <!-- Photo by ClickerHappy: https://www.pexels.com/photo/business-college-composition-desk-419635/ -->
+    <a href="{% url 'tests_clientes:lista_de_tests_por_tema' %}" class="btn btn-primary w-100"
+        style="background-image: url('{% static 'img/botones-tipos-de-test/lapiz-pexels.png' %}');
+          {#background-size: cover; #}
+          background-size: 35%; /* Specify the size of the image (responsive) */
+          {#background-position: center; #}
+          background-position: right center; /* Align the image to the right of the text */
+          height: 60px;
+          background-repeat: no-repeat; /* Ensure the image does not repeat */
+          {#padding-right: 60px; /* Add space between the text and the image */#}
+          font-weight: bold; /* Enhance the text visibility */
+          "
+    >
+        Tests por Temas
+    </a>
+    <br>
+    <br>
+    
+    {# Enlace a la Lista de Tests por Año (iras primero a la lista de años) #}
+    <!-- Foto de Towfiqu barbhuiya en Unsplash: https://unsplash.com/es/fotos/un-calendario-con-pulsadores-rojos-fijados-bwOAixLG0uc?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash
+       -->
+    <a href="{% url 'tests_clientes:lista_de_tests_por_anno' %}" class="btn btn-primary w-100"
+          style="
+          background-image: url('{% static 'img/botones-tipos-de-test/calendario-unsplash-resolucion-media.jpg' %}');
+          background-size: 25%; /* Specify the size of the image (responsive) */
+          background-position: right center; /* Align the image to the right of the text */
+          height: 60px;
+          background-repeat: no-repeat; /* Ensure the image does not repeat */
+          font-weight: bold; /* Enhance the text visibility */
+          "
+    >
+        Tests por Año
+    </a>
+    <br>
+    <br>
+    
+    {# Enlace a la Lista de Tests por Normativa #}
+    <!-- Foto de Tom Hermans en Unsplash: https://unsplash.com/es/fotos/lote-de-libros-en-la-mesa-9BoqXzEeQqM?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash
+    -->
+    <a href="{% url 'tests_clientes:lista_de_tests_por_normativa' %}" class="btn btn-primary w-100"
+          style="
+          background-image: url('{% static 'img/botones-tipos-de-test/libros-horizontales-unsplash.png' %}');
+          background-size: 25%; /* Specify the size of the image (responsive) */
+          background-position: right center; /* Align the image to the right of the text */
+          height: 60px;
+          background-repeat: no-repeat; /* Ensure the image does not repeat */
+          font-weight: bold; /* Enhance the text visibility */
+          "
+    >
+        Tests por Normativa
+    </a>    {# Fin de los Enlaces a los Tests por Normativa, por Año, y por Tema #}
+    <br>
+    <br>
+
+    {% if user.is_superuser %}
+        {# Enlace a la Lista de Tests Sin Agrupar (lista de todos los tests de la base de datos). #}
+        {# ESTO SOLO LO DEBE VER EL AMINISTRADOR. LOS CLIENTES NO. #}
+        <a href="{% url 'tests_clientes:lista_de_tests' %}" class="btn btn-primary w-100">
+            Ver la lista de Tests
+        </a>
+        <br>
+        <br>
+    {% endif %}
+    
+    {# Enlace a la los Tests Hechos (Lista de Resultados de Tests Pasados) #}
+    <a href="{% url 'tests_clientes:lista_de_resultados_de_tests_pasados' %}" class="btn btn-secondary w-100">
+        Test Hechos
+    </a>
+    <br>
+    <br>
+    
+    {# Enlace a las Preguntas Guardadas #}
+    <a href="{% url 'tests_clientes:ver_preguntas_guardadas' %}" class="btn btn-secondary w-100">
+        Preguntas Guardadas
+    </a>
+    <br>
+    <br>
+    
+    {# Enlace a la Lista de Tests Incompletos del usuario autenticado #}
+    <a href="{% url 'tests_clientes:lista_de_tests_incompletos' %}" class="btn btn-primary w-100">
+        Ver la lista de Tests Incompletos
+    </a>
+    <br>
+    <br>
+
+
+{% endblock %}

@@ -1,0 +1,119 @@
+{# Disposicion o Layout que se usará para las 3 o 4 opciones de cada pregunta del test #}
+{#  #}
+{# Para optimizar mi código y no tener que repetir el mismo snippet 4 veces, simplemente puse todo el código que #}
+{# tengo que ponerle a cada una de las 3 o 4 opciones aquí en este script de layout / disposición. Esto contiene #}
+{# todas las variables Jinja y todo el CSS que debo asignarle a cada opción. #}
+{#  #}
+{# Let's modify the selected view so that, if the user chooses the wrong answer, the right answer should also  #}
+{# be highlighted, so that the user can easily see what the right answer was. Right now, only the wrong answer is  #}
+{# highlighted if the user answers wrongly. Well, I want to highlight the right answer as well so that the user  #}
+{# can easily see what the actual answer was.  #}
+{#  #}
+{# I modified my code so that: #}
+{# The user's incorrect choice remains highlighted in red with "(Respuesta Incorrecta)" #}
+{# The correct answer is highlighted in green with "(Respuesta Correcta)" #}
+{# Works in both normal test review and auto-correction modes #}
+{# Now users will easily see both their incorrect selection and the correct answer when reviewing tests. #}
+{#  #}
+{# Tuve que meter 2 "if" statements dentro del "if" statement que revisa si la respuesta era incorrecta o si se  #}
+{# dejó en blanco para evitar un bug que hacía que, si la respuesta estaba en blanco, que se marcaran laas 4 opciones #}
+{# como "respuesta correcta". #}
+
+{# Esto solo renderiza la Opción D si esta opción existe. De lo contrario, solo renderiza las 1eras 3 opciones. #}
+{% if option_letter != 'D' or has_option_d %}
+
+{# ACTIVAR DESPUES. Al repasar un test, esto me renderiza correctamente las respuestas como un boton de tipo #}
+{#    "button", y se me pone el boton rojo o verde, segun si era incorrecto o correcto, respectivamente.  #}
+{# El problema es que, si activo esto, no podre tomar tests, sean autocorregidos o no, porque los botones no #}
+{#    funcionarán. #}
+{#  You should update your button styles in your template to have a consistent initial state. This way, when the page loads, the previously selected answer (if any) will already be highlighted. #}
+        <button type="button" name="selected_answer" value="{{ option_letter }}" 
+                onclick="selectAnswer('{{ option_letter }}')"
+            class="btn w-100 mb-2 answer-btn
+
+                
+                {# Si estoy viendo los resultados o hago un test de autocorrección #}
+                {#                {% if viewing_results or autocorreccion and user_answer %}#}
+                {% if viewing_results or autocorreccion %}
+                    {% if user_answer %} {# Si el usuario respondió la pregunta actual #}
+                        {# Si el usuario respondió la pregunta #}
+                        {% if user_answer.respuesta_seleccionada == option_letter %}
+                            {% if pregunta_seleccionada_es_correcta %}
+                                btn-success
+                            {% elif pregunta_seleccionada_es_incorrecta %}
+                                btn-danger
+                            {% else %}
+                                btn-light
+                            {% endif %}
+                        {% elif option_letter == respuesta_correcta %}
+                            {% if pregunta_seleccionada_es_incorrecta or not user_answer.respuesta_seleccionada %}
+                                btn-success
+                            {% else %}
+                                btn-light
+                            {% endif %}
+                        {% else %}
+                            btn-light
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    {# Si el usuario está tomando un test sin autocorrección. #}
+                    {# Si el usuario marca una pregunta, se pondrá de azul. De lo contrario, se deja de blanco. #}
+                    {% if user_answer.respuesta_seleccionada == option_letter %}btn-primary{% else %}btn-light{% endif %}
+                        {#                    btn-light#}
+                {% endif %}" {# Debo cerrar las comillas aquí para que todo lo de arriba se meta en "class" #}
+            {% if viewing_results or autocorreccion and user_answer %}disabled{% endif %}>
+        <b>{{ option_letter }}:</b> {{ option_text }}
+
+        {% comment %} Feedback text inside the button {% endcomment %}
+        {% if viewing_results or autocorreccion and user_answer %}
+            {% if user_answer.respuesta_seleccionada == option_letter and pregunta_seleccionada_es_correcta %}
+                <span class="badge rounded-pill bg-light text-dark ms-2">¡Correcto!</span>
+            {% elif user_answer.respuesta_seleccionada == option_letter and pregunta_seleccionada_es_incorrecta %}
+                <span class="badge rounded-pill bg-light text-dark ms-2">Respuesta Incorrecta</span>
+            {% elif option_letter == respuesta_correcta %}
+                {#                 Cuando el usuario responda incorrectamente, se le mostrará cual de las 4 opciones era la correcta. #}
+                {#                 Similarmente, al repasar un test, si dejo la pregunta en blanco, se le mostrará la respuesta. #}
+                {% if pregunta_seleccionada_es_incorrecta or not user_answer.respuesta_seleccionada %}
+                    <span class="badge rounded-pill bg-light text-dark ms-2">Respuesta Correcta</span>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+    </button>
+    {# The mb-2 on the button provides spacing, so <br><br> are removed #}
+    
+{#    <label>#}
+{#        <input type="radio" name="selected_answer"#}
+{#               value="{{ option_letter }}"#}
+{#               {% if viewing_results or autocorreccion and user_answer %}disabled{% endif %}#}
+{#               {% if user_answer.respuesta_seleccionada == option_letter %}checked#}
+{#                   {% if viewing_results or autocorreccion and user_answer %}#}
+{#                       {% if pregunta_seleccionada_es_correcta %}#}
+{#                           style="accent-color: green"#}
+{#                       {% elif pregunta_seleccionada_es_incorrecta %}#}
+{#                           style="accent-color: red"#}
+{#                       {% endif %}#}
+{#                   {% endif %}#}
+{#               {% elif option_letter == respuesta_correcta and pregunta_seleccionada_es_incorrecta or not user_answer and viewing_results or autocorreccion and user_answer %}#}
+{#                   style="accent-color: green"#}
+{#               {% endif %}#}
+{#        >#}
+{#        <b>{{ option_letter }}:</b> {{ option_text }}#}
+{##}
+{#        {% if viewing_results or autocorreccion and user_answer %}#}
+{#            {% if user_answer.respuesta_seleccionada == option_letter and pregunta_seleccionada_es_correcta %}#}
+{#                <span style="color: green"> (¡Correcto!)</span>#}
+{#            {% elif user_answer.respuesta_seleccionada == option_letter and pregunta_seleccionada_es_incorrecta %}#}
+{#                <span style="color: red"> (Respuesta Incorrecta)</span>#}
+            {#            {% elif option_letter == respuesta_correcta and pregunta_seleccionada_es_incorrecta or not user_answer %}#}
+{#            {% elif option_letter == respuesta_correcta %}#}
+                {# Cuando el usuario responda incorrectamente, se le mostrará cual de las 4 opciones era la correcta. #}
+                {# Similarmente, al repasar un test, si dejo la pregunta en blanco, se le mostrará la respuesta. #}
+{#                {% if pregunta_seleccionada_es_incorrecta or not user_answer %}#}
+{#                    <span style="color: green"> (Respuesta Correcta)</span>#}
+{#                {% endif %}#}
+{#            {% endif %}#}
+{#        {% endif %}#}
+{#    </label>#}
+    <br>
+    <br>
+{% endif %}

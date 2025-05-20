@@ -1,0 +1,235 @@
+{% extends 'disposiciones/disposicion_datatables.html' %}
+
+{# Lista de los Tests que puede tomar el cliente #}
+
+{# Los administradores podrán Editar y Eliminar cada test desde aqui. #}
+
+{# The list of tests should look like a datatable. Also, #}
+{# users can no longer take the test by clicking on the test name. Instead, you will have to render 2 new columns: #}
+{# one to choose the difficulty level of the exam, and another for starting the exam. The difficulty level could #}
+{# be a dropdown menu with 5 difficulty levels. Then, if the user clicks on the button to start taking the exam, #}
+{# you need to put the difficulty level as an additional parameter to the "iniciar_el_test()" view. Also, I'll #}
+{# have to modify my iniciar_el_test() view and the URL from urls.py for that view so that it accepts the difficulty #}
+{# level as an additional parameter. #}
+
+{# ## Use a Query Parameter Instead of Referer #}
+{# If you’re concerned about the reliability of the HTTP_REFERER header, you can modify the link in the  #}
+{# lista_de_tests.html template to include a query parameter, like ?new_session=true, and check for that in the #} 
+{# iniciar_el_test() view. #}
+{#  #}
+{# Con el "?new_session=true", podré decirle a la vista de iniciar_el_test() que el usuario viene desde este  #}
+{# template, es decir, de la página con la Lista de Tests. Así, podré crear una nueva sesión cada vez que el usuario #} 
+{# clique en "Comenzar el Test" desde la Página con la Lista de Tests. #}
+
+{% load static %}
+
+{# Para agregar CSS en mi template de disposicion, debo usar "extra_css", NO "block head". #}
+{#  <link rel="stylesheet" href="{% static 'css/search.css' %}"> #}
+
+
+{% block content %}
+  <h2>Tests Disponibles</h2>
+
+  {# Si el Usuario Autenticado es un Administrador, él podrá crear nuevos tests, sea manualmente, o con un Excel. #}
+  {% if user.is_superuser %}
+      
+      <br>
+      <br>
+      {# Si el usuario autenticado es un administrador, él podrá crear un nuevo test #}
+      <a href="{% url 'tests_administradores:crear_nuevo_test_sin_subir_un_archivo' %}" class="btn btn-primary">
+          Crear Nuevo Test
+      </a>
+      <br>
+      <br>
+      
+      {# Enlace para que el administrador pueda Subir un Archivo Excel para importar tests #}
+      <a href="{% url 'tests_administradores:upload_and_import_exams' %}" class="btn btn-primary">
+        Subir Archivo Excel para Importar Tests
+      </a>
+      <br>
+      <br>
+  {% endif %}
+  {# Fin del snippet con los botones para crear Tests para los Administradores #}
+
+  {# Lista de Tests Nueva, el cual está dentro de una Tabla #}
+  {#  #}
+  {# Nivel de Dificulta del Test: Ordenados de más restrictivo a menos restrictivo:   #}
+    {#- 1:1. 1 respuesta mal resta 1 respuesta bien.   #}
+    {#- 2:1. 2 respuestas mal restan 1 bien.   #}
+    {#- 3:1. 3 respuestas mal restan 1 bien.   #}
+    {#- 4:1. 4 respuestas mal restan 1 bien.   #}
+    {#- Errores no restan. #}
+  {#  #}
+  {# La dificultad "1" es la más fácil, mientras que la dificultad "5" es ka más difícil. #}
+  <table id="testsTable" class="table table-striped">
+      <thead>
+          <tr>
+              <th>Nombre del Test</th>
+                {#              <th>Difficulty Level</th>#}
+              <th>Acciones</th>
+              {% if user.is_superuser %}
+                  <th>Editar</th>
+                  <th>Eliminar</th>
+              {% endif %}
+          </tr>
+      </thead>
+      <tbody>
+          {% for test in nombres_de_los_tests %}
+              <tr>
+                  {# Nombre del Test #}
+                  <td>{{ test }}</td>
+
+
+                    {#                  <td>  {# Menú desplegable con el Nivel De Dificultad #}
+                                          {#                      <label for="difficulty-{{ test.id }}"></label>#}
+                    {#                      <select class="form-select difficulty-select" id="difficulty-{{ test.id }}">#}
+                    {#                          <option value="1">Errores No Restan</option>#}
+                    {#                          <option value="2">4:1 (4 respuestas malas restan 1 buena)</option>#}
+                    {#                          <option value="3">3:1 (3 respuestas malas restan 1 buena)</option>#}
+                    {#                          <option value="4">2:1 (2 respuestas malas restan 1 buena)</option>#}
+                    {#                          <option value="5">1:1 (1 respuesta mala resta 1 respuesta buena)</option>#}
+                    {#                      </select>#}
+                    {#                  </td>#}
+                  <td>  {# Botón para Tomar el Test y así empezar a hacerlo. Quiero que siempre cree una sesión nueva #}
+                        {#                      <button class="btn btn-primary start-test" #}
+                        {#                              onclick="startTest('{{ test.id }}', document.getElementById('difficulty-{{ test.id }}').value)"#}
+                        {#                      >#}
+                      <a href="{% url 'tests_clientes:iniciar_el_test' test.id %}?new_session=true" 
+                                   class="btn btn-primary btn-sm">
+                          Configurar y Tomar Test
+                      </a>
+                        {#                      </button>#}
+                  </td>
+
+                  {# Si el Usuario es un Administrador, renderizar los botones para Editar y eliminar Tests  #}
+                  {% if user.is_superuser %}
+                    {# Editar el Test #}
+                    <td>
+                        <a href="{% url 'tests_administradores:editar_test' test.id %}" class="text-warning">
+                            Editar
+                        </a>
+                    </td>
+                    {# Eliminar el Test #}
+                    <td>
+                        <a href="{% url 'tests_administradores:confirmar_eliminar_test' test.id %}" class="text-danger">
+                            Eliminar
+                        </a>
+                    </td>
+                  {% endif %}
+              </tr>
+          {% empty %}
+              <tr>
+                  <td colspan="3">No hay tests disponibles.</td>
+              </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+    
+  {# Bloque con el Javascript adicional para hacer funcionar el plugin de datatables.net #}
+  {% block extra_js %}
+      
+    {# Esto renderiza mi tabla usando el plugin de datatables.net. Tuve que especificar la ID de mi tabla. #}
+      
+    {# Problem 1: Multiple DataTable Initialization The warning occurs because the DataTable is being initialized #}
+    {#  multiple times on the same table. This happens when the JavaScript code runs again after the page has already #}
+    {#  loaded (common in Django templates with blocks). To prevent this, we need to check if the table is already #}
+    {#  initialized. #}
+      
+    {# Fuente del datatable con scrolling horizontal: https://datatables.net/examples/basic_init/scroll_x.html  #}
+      
+    {# Tuve que rehacer la URL para tomar el test seleccionado con la dificultad seleccionada. Para ello, en lugar #}
+    {# de usar el template tag de Django "url 'tests_clientes:iniciar_el_test' test.id ", usé una URL relativa de #}
+    {# JavaScript con el ID del test y la dificultad seleccionada. Use variables de jQuery. Así, al clicar en #}
+    {# "Tomar Test", el usuario será redirigido a la página para iniciar el test con el ID del test y la dificultad #}
+    {# seleccionada. #}
+      
+    {#  Esta no es la forma máss eficiente de crear una URL, ya que, si cambio la URL en urls.py de la #}
+    {#  app de clientes, tendré que también modificar manualmente esta URL. Pero al menos, por los momentos, esto #}
+    {#  funciona. #}
+    <script>
+        function startTest(testId, difficulty) {
+            
+          // Esto redirige al usuario a la página para iniciar el test con el ID del test y la dificultad seleccionada.
+          window.location.href = `/tests/test/${testId}/${difficulty}/iniciar/`;
+          // window.location.href = `/tests/iniciar/${testId}/${difficulty}/`;
+        }
+        
+        
+        $(document).ready( function () {
+            
+            // Esto solo renderiza el datatable si no ha sido renderizado antes. Es para prevenir una alerta de JS.
+            if (!$.fn.DataTable.isDataTable('#testsTable')) {
+            
+                // Esto inicializa el datatable.
+                $('#testsTable').DataTable({
+                    scrollX: true,   // Esto me permite hacer scroll horizontal en la tabla de manera responsive
+                    language: {  // Esto me permite traducir al español el texto del datatable
+                        processing:     "Procesando...",
+                        search:         "Buscar:",
+                        lengthMenu:     "Mostrar _MENU_ elementos",
+                        info:           "Mostrando _START_ a _END_ de _TOTAL_ elementos",
+                        infoEmpty:      "Mostrando 0 a 0 de 0 elementos",
+                        infoFiltered:   "(filtrado de _MAX_ elementos totales)",
+                        infoPostFix:    "",
+                        loadingRecords: "Cargando...",
+                        zeroRecords:    "No se encontraron resultados",
+                        emptyTable:     "No hay datos disponibles en la tabla",
+                        paginate: {
+                            first:      "Primero",
+                            previous:   "Anterior",
+                            next:       "Siguiente",
+                            last:       "Último"
+                        },
+                        aria: {
+                            sortAscending:  ": activar para ordenar la columna en orden ascendente",
+                            sortDescending: ": activar para ordenar la columna en orden descendente"
+                        }
+                    }
+                });
+            
+            }
+        } );
+    </script>
+
+  {% endblock %}
+
+  {# Fin de la Tabla con la Lista de Tests nueva #}
+
+  {# Lista de Tests Vieja. ELIMINAR DESPUES.  #}
+{#  <ul>#}
+    {# Esto renderiza cada Test que el Usuario puede tomar #}
+{#    {% for test in nombres_de_los_tests %}#}
+{#      <li>#}
+            {#        <a href="{% url 'tests_clientes:iniciar_el_test' test.id %}">{{ test }}</a>#}
+{##}
+{##}
+{##}
+{##}
+        {# Esto no lo modificaré por los momentos: son los botones para los Administradores #}
+{#        {% if user.is_superuser %}#}
+            {# Si el usuario autenticado es un Administrador, podrá editar y eliminar los tests. #}
+{##}
+            {#  This code adds two links that only appear for superusers. The links use Bootstrap classes #}
+            {# for warning (yellow) and danger (red) colors. Currently, the links point to "#" as placeholders #}
+            {# until you implement the edit and delete functionality. #}
+{##}
+            {# Editar el Test #}
+{#            - <a href="{% url 'tests_administradores:editar_test' test.id %}" class="text-warning">#}
+{#                Editar#}
+{#            </a>#}
+{##}
+            {# Esto Elimina el test, pero primero te pregunta si realmente quieres eliminarlo. #}
+{##}
+            {# Le especifico el ID del Test que quiero borrar para meterlo en la URL usando "test.id". #}
+{#            - <a href="{% url 'tests_administradores:confirmar_eliminar_test' test.id %}" class="text-danger">#}
+{#            Eliminar#}
+{#            </a>#}
+{#        {% endif %}#}
+        {# Fin de los botones para Editar y Eliminar Tests para los Administradores #}
+{#      </li>#}
+{#    {% empty %}#}
+{#      <li>No hay tests disponibles.</li>#}
+{#    {% endfor %}#}
+{#  </ul>#}
+  {# Fin de la Lista de Tests Vieja #}
+{% endblock %}

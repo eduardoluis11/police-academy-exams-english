@@ -1,0 +1,70 @@
+{% extends 'disposiciones/disposicion_autenticacion.html' %}
+
+{# Necesito esto para cargar el CSS desde mi carpeta "static" #}
+{% load static %}
+
+{# Esto me renderiza la lista de Preguntas Guardadas por el Usuario #}
+
+
+
+{# Esto agrega el CSS extra que usaré en este template #}
+{% block extra_css %}
+
+    {# Enlace al CSS con los estilos para este template #}
+{#    <link rel="stylesheet" href="{% static 'css/lista_de_tests_por_anno.css' %}">#}
+
+{% endblock %}
+
+{% block content %}
+  <h2 class="mb-4">Ver Preguntas Guardadas</h2>
+    
+  <div class="mb-4">
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Pregunta</th>   {# Pregunta #}
+            <th>Examen</th> {# Examen #}
+            <th>Normativa</th> {# Normativa #}
+            <th>Tema</th> {# Tema #}
+            <th>Respuesta correcta</th> {# Respuesta Correcta #}
+
+            {# Para que la columna de "acciones" esté siempre alineada, agrego la clase "Acciones Column" #}
+            <th class="acciones-column">Ver Pregunta</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for pregunta in preguntas_guardadas %}
+            <tr>
+
+              <td> {# Nombre de la Pregunta #}
+                {{ pregunta.pregunta.pregunta }}
+              </td>
+              <td> {# Nombre del Examen al que pertenece esta pregunta #}
+                {{ pregunta.test.nombre_del_test }}
+              </td>
+              <td> {# Nombre de la Normativa #}
+                {{ pregunta.pregunta.normativa }}
+              </td>
+              <td>  {# Tema #}
+                {{ pregunta.pregunta.tema }}
+              </td>
+              <td>  {# Respuesta Correcta #}
+                {{ pregunta.pregunta.respuesta_correcta }}
+              </td>
+              <td>  {# Botón con el Enlace a la Pregunta. #}
+                {# Added year as a parameter to the URL tag to pass the current year to the view. #}
+                {# Added question_id as a parameter to the URL tag to pass the current question_id to the view. #}
+                <a href="{% url 'tests_clientes:ver_detalles_de_pregunta_guardada_seleccionada' pregunta.id %}"
+
+                   class="btn btn-primary btn-sm boton-de-datatable">
+                  Ver Pregunta
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,158 @@
+{% extends 'disposiciones/disposicion_datatables.html' %}
+
+{# Ya que uso un Datatable, usaré la disposición de Datatables que creé #}
+
+{# Funcionalidad de Barra de Búsqueda para buscar alguna pregunta en especifico #}
+
+{# Create the Template #}
+{# We’ll create a template with a search bar and a table to display the results. #}
+{# #}
+{#   ## How It Works: #}
+{# The form submits a GET request, keeping the query in the URL (e.g., /search-questions/?query=texto). #}
+{# #}
+{# Results are displayed in a table with pagination links. #}
+{# #}
+{# If no results are found, a message is shown. #}
+{# #}
+{# Best Practice: GET requests for search forms allow bookmarking and sharing of search results. #}
+
+{% load static %}
+
+{# Para agregar CSS en mi template de disposicion, debo usar "extra_css", NO "block head". #}
+{#  <link rel="stylesheet" href="{% static 'css/search.css' %}"> #}
+
+
+{% block content %}
+  <h2>Buscador de Preguntas</h2>
+
+  <!-- Formulario de Búsqueda -->
+  <form method="get" class="search-form">
+
+    {# Campo para introducir el nombre de la pregunta que quieres buscar #}
+    {{ form.as_p }}
+
+    {# Botón para Enviar el Formulario  #}
+    <button type="submit">Buscar</button>
+  </form>
+
+  <!-- Results -->
+  {% if page_object %}
+    <h3>Resultados{% if consulta %} para "{{ consulta }}"{% endif %}</h3>
+
+    {# Le puse una ID a la tabla para poder renderizarla con el plugin de datatables.net #}
+    <table class="table" id="tabla-con-resultados">
+      <thead>
+        <tr>
+          {#          <th>Nombre del Test</th>#}
+          <th>Pregunta</th>
+          <th>Opción A</th>
+          <th>Opción B</th>
+          <th>Opción C</th>
+          <th>Opción D</th>
+          <th>Respuesta Correcta</th>
+          <th>Justificación</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for pregunta in page_object %}
+          <tr>
+            {#            <td>{{ pregunta.nombre_del_test.nombre_del_test }}</td>#}
+            <td>{{ pregunta.pregunta }}</td>
+            <td>{{ pregunta.opcion_a }}</td>
+            <td>{{ pregunta.opcion_b }}</td>
+            <td>{{ pregunta.opcion_c }}</td>
+            <td>{{ pregunta.opcion_d }}</td>
+            <td>{{ pregunta.respuesta_correcta }}</td>
+            <td>{{ pregunta.justificacion }}</td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="8">No se encontró ninguna pregunta.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      {% if page_object.has_previous %}
+        <a href="?page={{ page_object.previous_page_number }}{% if consulta %}&query={{ consulta }}{% endif %}">
+            Anterior
+        </a>
+      {% endif %}
+      <span>Página {{ page_object.number }} de {{ page_object.paginator.num_pages }}</span>
+      {% if page_object.has_next %}
+        <a href="?page={{ page_object.next_page_number }}{% if consulta %}&query={{ consulta }}{% endif %}">
+            Siguiente
+        </a>
+      {% endif %}
+    </div>
+  {% else %}
+    <p>No hay ninguna pregunta disponible.</p>
+  {% endif %}
+
+  {# Bloque con el Javascript adicional para hacer funcionar el plugin de datatables.net en mi Datatable #}
+  {% block extra_js %}
+
+    {# Esto renderiza mi tabla usando el plugin de datatables.net. Tuve que especificar la ID de mi tabla. #}
+
+    {# Problem 1: Multiple DataTable Initialization The warning occurs because the DataTable is being initialized #}
+    {#  multiple times on the same table. This happens when the JavaScript code runs again after the page has already #}
+    {#  loaded (common in Django templates with blocks). To prevent this, we need to check if the table is already #}
+    {#  initialized. #}
+
+    {# Fuente del datatable con scrolling horizontal: https://datatables.net/examples/basic_init/scroll_x.html  #}
+
+    {# I'll modify the JavaScript snippet to configure DataTables with Spanish language settings: #}
+    {# DataTables Spanish Language ConfigurationClick to open codeTap to open #}
+    {# The modifications include: #}
+    {# #}
+    {# Added a comprehensive language configuration object #}
+    {# Translated all default DataTables messages to Spanish #}
+    {# Maintained the original scrollX: true setting #}
+    {# Kept the existing check to prevent multiple initializations #}
+    {# #}
+    {# This configuration will: #}
+        {# Display all DataTables interface elements in Spanish #}
+        {# Provide user-friendly messages for searching, pagination, and table states #}
+    <script>
+        $(document).ready( function () {
+
+
+
+            // Esto solo renderiza el datatable si no ha sido renderizado antes. es para prevenir una alerta de JS.
+            if (!$.fn.DataTable.isDataTable('#tabla-con-resultados')) {
+
+                // Esto inicializa el datatable.
+                $('#tabla-con-resultados').DataTable({
+                    scrollX: true,   // Esto me permite hacer scroll horizontal en la tabla de manera responsive
+                    language: {  // Esto me permite traducir al español el texto del datatable
+                        processing:     "Procesando...",
+                        search:         "Buscar:",
+                        lengthMenu:     "Mostrar _MENU_ elementos",
+                        info:           "Mostrando _START_ a _END_ de _TOTAL_ elementos",
+                        infoEmpty:      "Mostrando 0 a 0 de 0 elementos",
+                        infoFiltered:   "(filtrado de _MAX_ elementos totales)",
+                        infoPostFix:    "",
+                        loadingRecords: "Cargando...",
+                        zeroRecords:    "No se encontraron resultados",
+                        emptyTable:     "No hay datos disponibles en la tabla",
+                        paginate: {
+                            first:      "Primero",
+                            previous:   "Anterior",
+                            next:       "Siguiente",
+                            last:       "Último"
+                        },
+                        aria: {
+                            sortAscending:  ": activar para ordenar la columna en orden ascendente",
+                            sortDescending: ": activar para ordenar la columna en orden descendente"
+                        }
+                    }
+                });
+
+            }
+        } );
+    </script>
+
+  {% endblock %}
+{% endblock %}

@@ -1,0 +1,203 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Wistarr{% endblock %}</title>
+
+    {# CSS de Bootstrap Local #}
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+
+    {#    <!-- Bootstrap CSS -->#}
+    {#    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"#}
+    {#          rel="stylesheet"#}
+    {#          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"#}
+    {#          crossorigin="anonymous">#}
+
+    {# CDN del CSS del plugin de datatables.net #}
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css" />
+
+    {# Para agregar CSS en mi template de disposicion, debo usar "extra_css", NO "block head" #}
+    {% block extra_css %}{% endblock %}
+
+    {# Esta es la Disposicion o Layout que usaré para los Datatables o Tablas con Datos. #}
+
+    {# Aquí tengo incluido los enlaces al CSS y el JS para hacer funcionar el plugin de datatables.net, #}
+    {# el cual le agrega estilos y funcionalidades de JavaScript a mis Tablas con Datos.  #}
+
+
+    {# This creates a layout template for my django web app. I have my layout.html template in the "project" folder of my web app in a #}
+    {# folder called "layouts". Well, generate me the code for my layout so that it includes both boostrap, and a call to the "messages" #}
+    {# django library to print any error or success flash messages. Then, explain to me how to integrate that layout to the rest of my  #}
+    {# templates. #}
+
+    {# Additional Notes: #}
+        {#    The  "url 'home'" %}" in the navbar assumes you have a 'home' URL pattern defined #}
+
+        {#    You can add more navigation items by overriding the nav_items block in child templates #}
+
+        {#    Static files (CSS/JS) are handled via CDN here, but you could use Django's static files system instead #}
+
+        {#    Make sure you have 'django.contrib.messages' in your INSTALLED_APPS in settings_NO_USAR.py #}
+
+        {#    This setup gives you a reusable base template with Bootstrap styling and message handling that you can extend  #}
+        {#     across your Django app! #}
+
+    {# El "load static" me renderiza todo el CSS, el Javascrtipt, y las imágenes que estén en mi carpeta "static" de la web app de #}
+    {# Django. Ese archivo debe ser la priemra línea de código de este template / archivo de disposicion. #}
+
+    {# Puse el logo de Wistarr en la barra de navegación. El logo lo tengo en la carpeta "img" de mi carpeta "static" con mis archivos  #}
+    {# estaticos de la web app de Django #}
+    {#  #}
+    {# To change the navbar and the navbar sub-menus to blue, use "bg-primary" to use Bootstrap's default blue.  #}
+
+</head>
+<body>
+    <style>
+        {#.navbar-dark .nav-link,#}
+        {#.navbar-dark .navbar-brand,#}
+        {#.navbar-dark .navbar-nav .nav-link {#}
+        {#    color: white !important;#}
+        {# }#}
+
+        .bg-dark-blue {
+            background-color: #0b0b64 !important;
+        }
+    </style>
+    <!-- Navigation bar -->
+    {# El bg-dark-blue hace que la barra de navegación se haga de color azul oscuro #}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark-blue">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'inicio' %}">
+                <!-- Wistarr -->
+                <img src="#" alt="Wistarr Logo" height="30">
+            </a>
+
+            {# Esto debe agregar el boton de menu de hamburguesa en pantallas de moviles. Debo agregar el ID del div que quiero  #}
+            {#    mostrar y ocultar con el boton de hamburguesa #}
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-oposiciones" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            {# Tuve que agregarle un ID a este div para poder mostrarlo si hgo clic al botón del menu de hamburguesa #}
+            <div class="collapse navbar-collapse" id="navbar-oposiciones">
+                <ul class="navbar-nav ms-auto">
+                
+                    {# Enlace a la página de Inicio #}
+                    <li class="nav-item">
+                        {# El "active" resalta el enlace de la pagina actual en el navbar #}
+                        <a class="nav-link" href="{% url 'inicio' %}">Inicio</a>
+                    </li>
+                
+                    {# Si el usuario ha iniciado sesión, se le mostrará solo el enlace para cerrar sesión #}
+                    {% if user.is_authenticated %}
+
+                        {# Submenú Dropdown de "Tests". Esto meterá todo los enlaces de Tests en 1 solo menu #}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="testsDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                Tests
+                            </a>
+                            {# Enlaces que estarán dentro del submenú negro de "Tests" de la barra de navegación #}
+                            <ul class="dropdown-menu bg-dark-blue" aria-labelledby="testsDropdown">
+                                <li class="nav-item"> {# Enlace a la Lista de Tests #}
+                                    <a href="{% url 'tests_clientes:lista_de_tests' %}" class="nav-link">
+                                        Lista de Tests
+                                    </a>
+                                </li>
+                                <li class="nav-item"> {# Lista de Resultados de Tests Pasados #}
+                                    <a href="{% url 'tests_clientes:lista_de_resultados_de_tests_pasados' %}"
+                                       class="nav-link">
+                                        Resultados
+                                    </a>
+                                </li>
+                                <li class="nav-item"> {# Lista de Tests Incompletos #}
+                                    <a href="{% url 'tests_clientes:lista_de_tests_incompletos' %}" class="nav-link">
+                                        Tests Incompletos
+                                    </a>
+                                </li>
+                            </ul>  {# Fin de los enlaces del menú dropdown de "Tests" #} 
+                        </li>   {# Fin del Submenu Dropdown de "Tests" #}
+                        
+                        <li class="nav-item"> {# Enlace a la página de Supuestos #}
+                            <a href="#" class="nav-link">Supuestos</a>
+                        </li>
+                        
+                        {# Enlace a "Temario" #}
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">Temario</a>
+                        </li>
+                        
+                        {# Enlace a "Convocatorias" #}
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">Convocatorias</a>
+                        </li>
+                        
+                        {# Enlace a "Estadísticas" #}
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">Estadísticas</a>
+                        </li>
+                        
+                        {% block nav_items %}
+                            {# Add navigation items in child templates if needed #}
+                        {% endblock %}
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'cerrar_sesion' %}">Cerrar Sesión</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {# Messages Section #}
+    <div class="container mt-3">
+        {# Messages Integration: #}
+            {#    Checks for Django messages using "if messages #}
+
+            {#    Loops through messages and displays them as Bootstrap alerts #}
+
+            {#    Maps Django message tags to Bootstrap alert classes (error → danger, others kept as-is) #}
+
+            {#    Includes dismiss button for each message #}
+
+        {# Es decir, ya esto agrega los mensajes flash de error y de confirmacion. Si los mensajes son de confirmacion  #}
+        {# o exito, seran verdes. Si son mensajes de error, serán rojos. Y si haces clic en la "X", podrás cerrar y eliminar  #}
+        {# los mensajes flash. #}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    {# Main content #}
+    <main class="container mt-4">
+        {% block content %}
+            {# Child templates will fill this block #}
+        {% endblock %}
+    </main>
+
+    {# JS de Boostrap Local. NO INCLUYE POPPER.js. #}
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+    {#    <!-- Bootstrap JS (with Popper.js included) -->#}
+    {#    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"#}
+    {#            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"#}
+    {#            crossorigin="anonymous"></script>#}
+    
+    {# CDN de jQuery (version minified) #}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+      
+    {# CDN con el JavaScript del plugin de datatables.net #}
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

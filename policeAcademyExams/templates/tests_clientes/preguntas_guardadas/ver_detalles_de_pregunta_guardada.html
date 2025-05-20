@@ -1,0 +1,101 @@
+{% extends 'disposiciones/disposicion_autenticacion.html' %}
+
+{# Necesito esto para cargar el CSS desde mi carpeta "static" #}
+{% load static %}
+
+{# Template con la Vista Detallada de la Pregunta Guardada Seleccionada. #}
+{#  #}
+{# This template:   #}
+{# 1. Uses a card layout for organized content presentation. #}
+{# 2. Shows the exam name in the header. #}
+{# 3. Displays the question and all options. #}
+{# 4. Only shows option D if it exists.  #}
+{# 5. Highlights the correct answer in green.    #}
+{# 6. Shows the explanation in a blue info box.     #}
+{# 7. Includes metadata like topic and regulation.   #}
+{# 8. Has a back button to return to the saved questions list.    #}
+
+
+{# Esto agrega el CSS extra que usaré en este template #}
+{% block extra_css %}
+
+    {# Enlace al CSS con los estilos para este template #}
+{#    <link rel="stylesheet" href="{% static 'css/lista_de_tests_por_anno.css' %}">#}
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="mb-4">Detalles de la Pregunta Guardada</h2>
+                <p class="mb-0">
+                    <strong>Examen:</strong> {{ instancia_de_pregunta_guardada.test.nombre_del_test }}
+                </p>
+            </div>
+
+            <div class="card-body">
+                <!-- Información de la pregunta -->
+                <div class="mb-4">
+                    <h4>Pregunta:</h4>
+                    <p class="lead">{{ instancia_de_pregunta_del_test.pregunta }}</p>
+                </div>
+
+                <!-- Opciones de respuesta -->
+                <div class="mb-4">
+                    <h4>Opciones:</h4>
+                    <div class="list-group">
+                        <div class="list-group-item">
+                            <strong>A)</strong> {{ instancia_de_pregunta_del_test.opcion_a }}
+                        </div>
+                        <div class="list-group-item">
+                            <strong>B)</strong> {{ instancia_de_pregunta_del_test.opcion_b }}
+                        </div>
+                        <div class="list-group-item">
+                            <strong>C)</strong> {{ instancia_de_pregunta_del_test.opcion_c }}
+                        </div>
+                        {% if instancia_de_pregunta_del_test.opcion_d %}
+                        <div class="list-group-item">
+                            <strong>D)</strong> {{ instancia_de_pregunta_del_test.opcion_d }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Respuesta correcta y justificación -->
+                <div class="mb-4">
+                    <h4>Respuesta Correcta:</h4>
+                    <p class="alert alert-success">
+                        <strong>{{ instancia_de_pregunta_del_test.respuesta_correcta }}</strong>
+                    </p>
+                </div>
+
+                <div class="mb-4">
+                    <h4>Justificación:</h4>
+                    <p class="alert alert-info">
+                        {{ instancia_de_pregunta_del_test.justificacion }}
+                    </p>
+                </div>
+
+                <!-- Metadata adicional -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <p><strong>Tema:</strong> {{ instancia_de_pregunta_del_test.tema }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p><strong>Normativa:</strong> {{ instancia_de_pregunta_del_test.normativa }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <a href="{% url 'tests_clientes:ver_preguntas_guardadas' %}"
+                   class="btn btn-primary">
+                    Volver a Preguntas Guardadas
+                </a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

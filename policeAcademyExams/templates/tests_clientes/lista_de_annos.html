@@ -1,0 +1,56 @@
+{% extends 'disposiciones/disposicion_autenticacion.html' %}
+
+{# Necesito esto para cargar el CSS desde mi carpeta "static" #}
+{% load static %}
+
+{# Esto me renderiza la lista de Años de los Tests por Año. Esto no me renderiza los tests. Solo me renderiza #}
+{# la lista de Años. #}
+
+
+{# Esto agrega el CSS extra que usaré en este template #}
+{% block extra_css %}
+
+    {# Enlace al CSS con los estilos para este template #}
+    <link rel="stylesheet" href="{% static 'css/lista_de_tests_por_anno.css' %}">
+
+{% endblock %}
+
+{% block content %}
+  <h2 class="mb-4">Selecciona un Año</h2>
+    
+  <div class="mb-4">
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Año</th>
+            {# Para que la columna de "acciones" esté siempre alineada, agrego la clase "Acciones Column" #}
+            <th class="acciones-column">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for year in annos_unicos %}
+            <tr>
+              {# Renderizar el número del año. Si el test no tiene año, imprimir "Sin Año". #}
+              {% if year == 'sin-año' %}
+                <td>Sin Año</td>
+              {% else %}
+                <td>
+                    {{ year }}
+                </td>
+              {% endif %}
+              {# Para que la columna de "acciones" esté siempre alineada, agrego la clase "Acciones Column" #}
+              <td>
+                {# Added year as a parameter to the URL tag to pass the current year to the view #}
+                <a href="{% url 'tests_clientes:lista_de_tests_por_anno' year %}" 
+                   class="btn btn-primary btn-sm boton-de-datatable">
+                  Ver Tests
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

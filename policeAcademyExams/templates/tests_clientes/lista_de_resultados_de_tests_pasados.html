@@ -1,0 +1,174 @@
+{% extends 'disposiciones/disposicion_datatables.html' %}
+
+{# Tests Hechos. Esta es la Lista de Resultados de Tests pasados que el usuario autenticado tomó. #}
+{# #}
+{#This template: #}
+{#  1. Shows a table of all test sessions #}
+{#  2. For each session displays: #}
+{#   - Test name #}
+{#   - Start and end times #}
+{#   - Score (if completed) #}
+{#   - Pass/Fail status #}
+{#   - Button to view results or continue test #}
+{#  3. Uses Bootstrap classes for styling #}
+{#  4. Shows a message if no tests have been taken #}
+{#  5. Formats dates nicely #}
+{#  6. Differentiates between completed and in-progress tests #}
+
+{# Agregué un botón que me permite continuar un Test Interrumpido, y ahora renderizo los tests interrumpidos. Así #}
+{# el usuario puede continuar con un test que no haya terminado, y que aún tenga tiempo de entregarlo. #}
+{% load static %}
+
+{% block title %}Lista de Resultados de Tests Anteriores{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2>Tests Hechos</h2>
+
+        {% if sesiones %}
+            <table id="tabla-lista-de-resultados" class="table table-striped">
+                <thead> {# Encabezados de la Tabla de Tests Incompletos #}
+                    <tr>
+                        <th>Nombre del Test</th>    {# Por los momentos, le dejaré el nombre a los tests #}
+                        <th>Día</th> {# Día en que se Inició el Test #}
+                        <th>Hora de Inicio</th> {# Hora en que se Inició el Test #}
+                        <th>Tipo</th>   {# Tipo de Test (Año, Normativa, o Tema) #}
+                        {#                        <th>Finalización</th>#}
+                        <th>Nota</th>
+                        <th>Resultado</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {# Por cada test tomado por el Cliente #}
+                    {% for sesion in sesiones %}
+                            <tr>
+                                <td>{{ sesion.nombre_del_test }}</td>   {# Nombre del Test #}
+                                <td>{{ sesion.hora_de_inicio|date:"d/m/Y" }}</td>   {# Día en que se Inició el Test #}
+                                <td>{{ sesion.hora_de_inicio|date:"H:i" }}</td>   {# Hora de Inicio #}
+                                <td>{{ sesion.nombre_del_test.tipo }}</td> {# Tipo de Test #}
+                                {#                                <td>#}
+                                                                {# Solo se van a renderizar los tests que tengan una puntuación (que tengan una hora de fin) #}
+                                {#                                {% if sesion.hora_del_fin_del_test %}#}
+                                {#                                    {{ sesion.hora_del_fin_del_test|date:"d/m/Y H:i" }}#}
+                                {#                                {% else %}#}
+                                {#                                    En Progreso#}
+                                {#                                {% endif %}#}
+                                {##}
+                                {#                                </td>#}
+                                <td>
+                                    {% if sesion.cliente_entrego_este_test %}
+                                        {{ sesion.puntuacion|floatformat:2 }}
+                                        {#                                {% else %}#}
+                                        {#                                    Not completed#}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if sesion.cliente_entrego_este_test %}
+                                        {% if sesion.puntuacion >= 5 %}
+                                            <span class="text-success">Passed</span>
+                                        {% else %}
+                                            <span class="text-danger">Failed</span>
+                                        {% endif %}
+                                        {#                                {% else %}#}
+                                        {#                                    Pending#}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if sesion.cliente_entrego_este_test %}
+                                        <a href="{% url 'tests_clientes:resultados_del_test' session_id=sesion.id %}"
+                                           class="btn btn-primary btn-sm">View Results</a>
+                                    {% else %}
+                                        {# Si el test está incompleto, el usuario podrá continuar con su test #}
+                                        {#                                        <a href="{% url 'tests_clientes:iniciar_el_test' nombre_del_test=sesion.nombre_del_test.id %}"#}
+                                        {#                                           class="btn btn-warning btn-sm">#}
+                                        {# Si el Test tiene Autocorrección #}
+                                        {% if sesion.test_autocorregido %}
+                                            {# Esto te deja continuar un test con Autocorrección #}
+                                            <a href="{% url 'tests_clientes:tomar_test_autocorregido' session_id=sesion.id question_number=1 %}"
+                                               class="btn btn-warning btn-sm"
+                                            >
+                                        {% else %} {# Si el test es un test normal SIN autocorrección #}
+                                            {# Esto te deja continuar un test SIN autocorrección #}
+                                            <a href="{% url 'tests_clientes:tomar_test' session_id=sesion.id question_number=1 %}"
+                                               class="btn btn-warning btn-sm"
+                                            >
+                                        {% endif %}
+                                            Continuar Test
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {# Fin del bucle "for" que revisa si el test tomado tenía una hora de fin #}
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>You haven't taken any tests yet.</p>
+            <a href="{% url 'tests_clientes:lista_de_tests' %}" class="btn btn-primary">View Available Tests</a>
+        {% endif %}
+    </div>
+
+  {# Bloque con el Javascript adicional para hacer funcionar el plugin de datatables.net #}
+  {% block extra_js %}
+
+    {# Esto renderiza mi tabla usando el plugin de datatables.net. Tuve que especificar la ID de mi tabla. #}
+
+    {# Problem 1: Multiple DataTable Initialization The warning occurs because the DataTable is being initialized #}
+    {#  multiple times on the same table. This happens when the JavaScript code runs again after the page has already #}
+    {#  loaded (common in Django templates with blocks). To prevent this, we need to check if the table is already #}
+    {#  initialized. #}
+
+    {# Fuente del datatable con scrolling horizontal: https://datatables.net/examples/basic_init/scroll_x.html  #}
+    
+    {# I'll modify the JavaScript snippet to configure DataTables with Spanish language settings: #}
+    {# DataTables Spanish Language ConfigurationClick to open codeTap to open #}
+    {# The modifications include: #}
+    {# #}
+    {# Added a comprehensive language configuration object #}
+    {# Translated all default DataTables messages to Spanish #}
+    {# Maintained the original scrollX: true setting #}
+    {# Kept the existing check to prevent multiple initializations #}
+    {# #}
+    {# This configuration will: #}
+        {# Display all DataTables interface elements in Spanish #}
+        {# Provide user-friendly messages for searching, pagination, and table states #}
+    <script>
+        $(document).ready( function () {
+
+            // Esto solo renderiza el datatable si no ha sido renderizado antes. es para prevenir una alerta de JS.
+            if (!$.fn.DataTable.isDataTable('#tabla-lista-de-resultados')) {
+
+                // Esto inicializa el datatable.
+                $('#tabla-lista-de-resultados').DataTable({
+                    scrollX: true,   // Esto me permite hacer scroll horizontal en la tabla de manera responsive
+                    language: {  // Esto me permite traducir al español el texto del datatable
+                        processing:     "Procesando...",
+                        search:         "Buscar:",
+                        lengthMenu:     "Mostrar _MENU_ elementos",
+                        info:           "Mostrando _START_ a _END_ de _TOTAL_ elementos",
+                        infoEmpty:      "Mostrando 0 a 0 de 0 elementos",
+                        infoFiltered:   "(filtrado de _MAX_ elementos totales)",
+                        infoPostFix:    "",
+                        loadingRecords: "Cargando...",
+                        zeroRecords:    "No se encontraron resultados",
+                        emptyTable:     "No hay datos disponibles en la tabla",
+                        paginate: {
+                            first:      "Primero",
+                            previous:   "Anterior",
+                            next:       "Siguiente",
+                            last:       "Último"
+                        },
+                        aria: {
+                            sortAscending:  ": activar para ordenar la columna en orden ascendente",
+                            sortDescending: ": activar para ordenar la columna en orden descendente"
+                        }
+                    }
+                });
+
+            }
+        } );
+    </script>
+
+  {% endblock %}
+{% endblock %}

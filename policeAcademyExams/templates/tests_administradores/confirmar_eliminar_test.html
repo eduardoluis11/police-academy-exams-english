@@ -1,0 +1,36 @@
+{% extends 'disposiciones/disposicion_autenticacion.html' %}
+
+{# Página para confirmar que quieres eliminar el test seleccionado  #}
+
+{% block content %}
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">Confirmar Eliminación</h2>
+
+                {# Esto muestra el nombre del test seleccionado que vas a eliminar #}
+                <p class="card-text">
+                    ¿Está seguro que desea eliminar el test "{{ test.nombre_del_test }}"?
+                </p>
+                <p class="text-danger">Esta acción no se puede deshacer.</p>
+
+                {# Formulario para Eliminar el test seleccionado #}
+                <div class="mt-4">
+                    <form method="post" action="{% url 'tests_administradores:eliminar_test' test.id %}">
+                        {% csrf_token %}
+
+                        {# Esto confirma que quieres eliminar el test seleccionado #}
+                        <button type="submit" class="btn btn-danger">
+                            Sí, eliminar test
+                        </button>
+                        
+                        {# Esto no te elimina el test. Esto cancela la operacion y te reenvía a la lista de tests. #}
+                        <a href="{% url 'tests_clientes:lista_de_tests' %}" class="btn btn-secondary ml-2">
+                            Cancelar
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

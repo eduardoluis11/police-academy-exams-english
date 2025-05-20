@@ -1,0 +1,92 @@
+{% extends 'disposiciones/disposicion_autenticacion.html' %}
+
+{# Esto me renderiza el título de la pagina en la pestaña del navegador  #}
+{% block title %}Iniciar Sesión{% endblock %}
+
+{# Esto me agrega los enlaces para la barra de navegación que tengo en mi template de disposicion de autenticacion #}
+{% block nav_items %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'inicio' %}">Inicio</a>
+    </li>
+    {% if user.is_authenticated %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'cerrar_sesion' %}">Cerrar Sesión</a>
+        </li>
+    {% else %}
+        {# Si el usuario no ha iniciado sesión, le mostraré los enlaces para autenticarse y para registrarse #}
+        <li class="nav-item">
+            {# El "active" resalta el enlace de la pagina actual en el navbar #}
+            <a class="nav-link active" href="{% url 'iniciar_sesion' %}">Iniciar Sesión</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'registrarse' %}">Registrarse</a>
+        </li>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+    {# Esto creará un Grid de Bootsrap de 1 fila y 3 columnas. Asi, pondre el formulario en el centro. #}
+    <div class="row">   {# Fila #}
+
+        {# Columna 1: Todo vacio #}
+        <div class="col-md-3"></div>
+
+        {# Columna 2: Todo el formulario.  #}
+        <div class="col-md-6">
+
+            <h1>Iniciar Sesión</h1>
+            <br>
+            <br>
+
+            {# Si el usuario no existe en Wordpress, o si su suscripcion esta caducada, se le mostrara un error generico. #}
+            {# Mientras tanto, si se intenta crear una cuenta con un nombre de usuario o email que ya existe en la base de datos de django, #}
+            {# se le mostrará un mensaje de error diciendo que el nombre de usuario o email ya existen. #}
+
+            <form method="post">
+                {% csrf_token %}
+
+                {# Formulario con los estilos de Bootsrap #}
+                {% for field in form %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="text-danger">
+                                {{ field.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                
+                <br>
+                <br>
+
+                {# Botón para Iniciar Sesión #}
+                <button class="btn btn-primary" type="submit">Iniciar Sesión</button>
+            </form>
+
+            <br>
+            <br>
+
+            {# Si al usuario se le olvidó la contraseña, la puede resetear aquí #}
+            <p>
+                ¿Olvidó su contraseña? <a href="{% url 'password_reset' %}">Clique aquí para crear una nueva.</a>
+            </p>
+
+        </div>  {# Fin de la Columna 2 #}
+
+        {# Columna 3: Todo vacio #}
+        <div class="col-md-3"></div>
+
+    </div>  {# Fin del grid de 1 fila y 2 columnas, y fin de la Fila #}
+
+    {# Esto imprime un mensaje después de que el usuario envíe el formulario. #}
+    {# Esto le dirá al usuario si pudo iniciar sesión o no, los datos de sus suscripcion, si est caducada o no, etc. #}
+    {% if message %}
+
+        {# El "safe" me permite transformar los <br> de Python a saltos de línea #}
+        <p>{{ message|safe }}</p>
+    {% endif %}
+
+{% endblock %}

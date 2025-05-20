@@ -1,0 +1,44 @@
+Credits
+
+1) Github's Copilot. I used Github's Copilot AI to generate part of the code. Link to the AI:
+https://github.com/features/copilot .
+
+2) Bing's Copilot. I used Bing's copilot AI to generate part of the code. Link to the AI:
+https://copilot.microsoft.com/
+
+3) Grok. I used Grok's AI to generate part of the code. Link to the AI: https://x.com/i/grok
+
+4) Code snippet of Django's back-end for sending emails to the console or the terminal. JeffP on 
+https://stackoverflow.com/questions/50117425/django-why-is-console-email-backend-not-sending-emails
+
+5) Datatables plugin from https://datatables.net/ . I used the plugin to display the data in a table format.
+
+6) Claude Sonnet. I generated some of my code using Claude Sonnet's AI. Link: https://claude.ai/ .
+
+7) Gemini's AI. I used Gemini's AI to generate some of the code. Link: https://gemini.google.com/ .
+Gemini's AI belongs to Google.
+
+8) canvas-confetti. Enlace a la biblioteca de canvas-confetti: https://github.com/catdad/canvas-confetti .
+
+This project uses the following third-party software:
+
+Library Name: canvas-confetti.
+License Type: ISC License.
+
+Copyright Notice:
+
+Copyright (c) 2020, Kiril Vatev
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+
+9) Foto de Tom Hermans en Unsplash:
+https://unsplash.com/es/fotos/lote-de-libros-en-la-mesa-9BoqXzEeQqM?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash
+
+10) Foto de Towfiqu barbhuiya en Unsplash:
+https://unsplash.com/es/fotos/un-calendario-con-pulsadores-rojos-fijados-bwOAixLG0uc?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash
+
+11) Photo by ClickerHappy: https://www.pexels.com/photo/business-college-composition-desk-419635/
+
+12) Fonts and icons by Font Awesome. We used the Free Tier of Font Awesome. Link: https://fontawesome.com/

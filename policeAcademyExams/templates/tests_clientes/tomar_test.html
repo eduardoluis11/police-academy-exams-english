@@ -1,0 +1,761 @@
+{% extends 'disposiciones/disposicion_autenticacion.html' %}
+
+{# Template que le permite al Cliente Hacer el Test, responder preguntas, y entregar el test, o también se puede  #}
+{# usar para Repasar un Test. Eso depende de si el cliente se está metiendo a este template desde la vista de  #}
+{# tomar_test(), o desde repasar_test_finalizado(). #}
+{#  #}
+{# Este mismo template creará múltiples páginas para el mismo test, en donde cada página mostrará 1 sola pregunta. #}
+{# Es decir, si mi test tiene 10 preguntas, este template va a renderizar 10 paginas: una por cada pregunta del  #}
+{# test. En otras palabras, este template usa paginación, en donde cada pagina muestra 1 sola pregunta. Y pues, #}
+{# como hay paginación que muestra 1 sola pregunta por página, no necesito un "for" loop para renderizar cada  #}
+{# pregunta en este template. Por eso es que no uso ningún "for" loop para renderizar las preguntas aquí. #}
+{# Lo que hago es crear varias paginas en este mismo template para el mismo test usando el view de tomar_test(), #}
+{# en donde cada pagina mostrara 1 sola pregunta. Cuando necesite ir a la 2da pagina and onwards, llamare otra #}
+{# vez al view de tomar_test() para que me envíe la siguiente pregunta, y la renderice en este mismo template. #}
+{#  #}
+{# The system uses URL parameters (question_number) to determine which question to show. When users click #}
+{# "Anterior" or "Siguiente", it: #}
+    {# 1) Saves their current answer #}
+    {# 2) Redirects to the same URL with a different question_number #}
+    {# 3) Loads the next/previous question #}
+{# This is a pagination-style approach where you show one question per page, rather than loading all questions at  #}
+{# once in a loop. #}
+
+{# En cada página, el cliente podrá responder la pregunta, y luego navegar a la siguiente pregunta, o a la anterior #}
+{# pregunta. #}
+{#  #}
+{# Al final, el cliente podrá entregar el test. #}
+{#  #}
+{# Este template también incluirá un temporizador que le dirá al cliente cuánto tiempo le queda para terminar el test. #}
+{#  #}
+{# Este template también incluirá una barra de navegación lateral con las preguntas del test. #}
+{#  #}
+{# Este template también incluirá botones para que el cliente pueda saltar a una pregunta específica. #}
+{#  #}
+{# Este template también incluirá un botón para que el cliente pueda ver las preguntas que ha respondido. #}
+{#  #}
+{# Este template también mostrará las preguntas que no ha respondido el cliente. #}
+{#  #}
+{# Este template también incluirá una cuadrícula para que el cliente pueda ver todas las preguntas del test. #}
+{#  #}
+{#  #}
+{# Para la cuadrícula / grid para mostrar todas las preguntas, para que te puedas saltar de una pregunta a otra: #}
+    {# Used "for question in questions" to iterate through the questions. #}
+    {# Used forloop.counter to display sequential numbers starting from 1. #}
+    {# Maintained the same button styling and functionality. #}
+    {# Kept the logic for highlighting current and answered questions. #}
+{#  #}
+{#  Let's modify that so that each button (or "a" link) redirects me to my tomar_test() view, but you need to  #}
+{# redirect me to the following URL: "current_session_id/pregunta/int:question_number/", where "question_number" will #}
+{# be the same number as in "forloop.counter". Please, modify the selected question grid like this. #}
+{# Key changes: #}
+{# Replaced form and button with an a tag #}
+    {# Used Django's url template tag to generate the correct URL. #}
+    {# Kept the same styling classes for consistency. #}
+    {# Used session.id for the current session ID. #}
+    {# Used forloop.counter for the question number. #}
+
+{# El inicio del temporizador lo tengo que inicializar con una variable de Jinja que venga desde la vista de #}
+{# tomar_test(). Eso lo voy a modificar después para tomar desde un botón o un campo de un formulario el tiempo que #}
+{# el cliente quiera asignarle a ese test. #}
+{#  #}
+{# Se van a renderizar los enlaces a 5 preguntas de manera horizontal por fila en el Grid con las preguntas en la  #}
+{# columna que está en la mitad derecha de la pantalla. Después, desde la 6ta pregunta en adelante, las 5 preguntas #}
+{# siguientes se van a renderizar en una nueva fila. Además, cada enlace a cada pregunta esta encerrada en un  #}
+{# cuadrado. #}
+{#  #}
+{# Si una pregunta ya está respondida en  el modelo de Respuestas Del Usuario, esa pregunta se va a colorear #}
+{# de verde en el grid de preguntas. Así, las preguntas respondidas estarán de verde en el grid de preguntas. #}
+{# Mientras tanto, si son incorrectas, se marcan de rojo. Y si están vacías, no se les hace nada. #}
+{#  #}
+{# Marcaré las respuestas como correctas o incorrectas tanto en la columna izquierda del navegador como el el grid #}
+{# de preguntas en el lado derecho del navegador #}
+{#  #}
+{# Solo debo marcar las preguntas como correctas o incorrectas en este template en dos casos: 1) Si el usuario esta #}
+{# repasando su test. 2) si el usuario seleccionó que quería autocorrección al tomar el test. #}
+{# #}
+{# Le asignaré la clase "correcto" o "incorrecto" a las preguntas respondidas. Si la respuesta a la pregunta #}
+{# seleccionada es correcta, le asignaré la clase "correcto". Mientras tanto, si la respuesta a la pregunta #}
+{# seleccionada es incorrecta, le asignaré la clase "incorrecto". Asi, podré poner de verde las preguntas respondidas #}
+{# correctamente en el grid de preguntas en la columna de la parte derecha de la pantalla, y pondré de roja las #}
+{# respuestas incorrectas. #}
+{#  #}
+{# Si el usuario está repasando el test o está tomándolo en modo de autocorrección, voy a renderizar cual era la #}
+{# respuesta correcta por encima de la justificación. #}
+{#  #}
+{# Si el usuario esta repasando su test, o si está en modo de autocorrección y ya ha respondido la pregunta #}
+{# seleccionada, voy a desactivar todas las 3 o 4 opciones. En el caso de un test autocorregido, quiero que los  #}
+{# botones radio del formulario estén activados para las preguntas sin responder, pero estén deshabilitados si #}
+{# la pregunta actual está respondida. Para que los 3 o 4 botones radio estén desactivados para una pregunta #}
+{# respondida, tengo que revisar con variables de Jinja si el test es de autocorrección, y si ya el usuario #}
+{# ha entregado una respuesta para la pregunta actual. #}
+{#  #}
+{# Crearé un “if” statement con Jinja para que renderice el boton “guardar y salir” con la funcion  #}
+{# saveAndExit() con tiempo si tienes un test con tiempo, o la funcion guardarYSalirTiempoIlimitado() si haces un #}
+{# test con tiempo ilimitado. #} 
+{# #}
+{# Para hacer que el botón de "Finalizar" ocupe todo el ancho de la columna derecha del grid de Bootstrap, y  #}
+{# que ocupe todo el ancho del grid de preguntas, haré los siguientes cambios:  #}
+{# 1) Wrapper Div: The button is wrapped in <div class="d-grid gap-2 mt-3">. #}
+    {# d-grid: This Bootstrap class turns the div into a grid container, allowing the button inside to easily span the #}
+    {# full width. #}
+    {# gap-2 (optional): Adds a small gap, useful if you were to place multiple buttons here. For a single button, it #}
+    {# doesn't have much effect but is common practice with d-grid. #}
+    {# mt-3 (optional): Adds a margin to the top of the button for better spacing from the question grid above it. #}
+{# 2) Button Class btn-lg (optional): I've added btn-lg to make the button larger, which often looks better when it's #}
+{# full-width. You can remove this if you prefer the standard button size. #}
+{#  #}
+{# This will make your "Finalizar" button stretch to the full width of the div.question-grid container, which is  #}
+{# within the col-md-3 right column. #}
+{# #}
+{# Since now the "Finalizar" button is outside the <form> tags, I need to modify it so that it still submits the  #}
+{# test. Otherwise, the button won't work. The key addition is the form="exam_form" attribute, which connects this  #}
+{# button to your main form even though it's located outside of it. This tells the browser that clicking this  #}
+{#    button should submit the form with ID "exam_form". #}
+
+{% load static %}
+
+{# Tengo que poner el bloque "extra CSS", porque sino, esto no se va a renderizar en mi template #}
+{% block extra_css %}
+    {# Esto importa el CSS de mi carpeta "static" a este template #}
+    <link rel="stylesheet" href="{% static 'css/tomar_test.css' %}">
+
+    {# CSS de Font Awesome. #}
+    {# Dado a que el CDN gratuito de Font Awesome solo se puede usar para web apps de hasta 1000 vistas al mes, #}
+    {# voy a instalar localmente Font Awesome. Así, no tendré que usar su CDN, y no tendré restricciones. #}
+    <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+  {# Titulo de la Pregunta #}
+
+  {#  Esto imprime el Nombre del Test. No imprime la ID de la pregunta.  #}
+  <h2>{{ session.nombre_del_test.nombre_del_test }}</h2>
+
+  {#  Por los momentos, esto imprime "(Numero) - Pregunta (Numero) de (Numero)". MODIFICAR DESPUES para que imprima #}
+  {#  "(Nombre del Test) - Pregunta (Numero) de (Numero)". #}
+  {#  <h2>{{ session.nombre_del_test }} - Pregunta {{ question_number }} de {{ total_questions }}</h2>#}
+    
+  {# Por los momentos, crearé un grid de Bootstrap de 1x2 para poner el grid de las preguntas en la parte  #}
+  {# derecha de la pantalla, y el resto del test en la parte izquierda. #}
+  <div class="row">
+
+    {# Esto renderiza el contenido del test en la columna izquierda de la pantalla. Esta es la columna más ancha. #}
+    <div class="col-md-9">
+    
+
+    
+      {# Formulario para responder las preguntas del Test #}
+      <form method="post" id="exam_form">
+        {% csrf_token %}
+
+        {# Este hidden input me permitirá detectar las 4 opciones como botones normales en lugar de botones "radio". #}
+        <input type="hidden" name="selected_answer" id="selected_answer"
+               value="{{ user_answer.respuesta_seleccionada }}">
+
+        {# Instancia del Modelo de Preguntas del Test #}
+        {# <p> question </p> #}
+
+        {# Campo con la Pregunta de la instancia del modelo de la Pregunta del Test #}
+        <p class="fs-4"> {# El fs-4 es una clase de Bootstrap que hace que el tamaño de la tipografía sea más grande. #}
+            <b>{{ question.pregunta }}</b> {# Displays the single question text  #}
+        </p>
+
+        {# Botones radio con las opciones para la pregunta dada. #}
+        {# Shows four radio button options (A, B, C, D) with:                                   #}
+        {#      1) Each option preserves the user's previous selection.                     #}
+        {#      2) Displays the option text using "question.opcion_a" through "question.opcion_d".  #}
+        {# Si el usuario está repasando su test, voy a deshabilitar los botones radio con las respuestas. #}
+        {# #}
+        {# The template with the layout that comes from the "include" snippet receives the option letter and text  #}
+        {#  as context variables and renders them appropriately while keeping all the conditional logic intact. #}
+        <div class="options">
+          {# Shows options for the currently selected question #}
+
+          {% with option_letter='A' option_text=question.opcion_a %}    {# Opción A #}
+
+              {# Voy a meter esta opción a la disposicion de las opciones para meterle el codigo Jinja, CSS, y JS #}
+              {% include 'tests_clientes/disposicion_de_opciones_de_cada_pregunta_del_test.html' %}
+          {% endwith %}
+
+          {% with option_letter='B' option_text=question.opcion_b %} {# Opción B #}
+              {% include 'tests_clientes/disposicion_de_opciones_de_cada_pregunta_del_test.html' %}
+          {% endwith %}
+
+          {% with option_letter='C' option_text=question.opcion_c %} {# Opción C #}
+              {% include 'tests_clientes/disposicion_de_opciones_de_cada_pregunta_del_test.html' %}
+          {% endwith %}
+
+          {% with option_letter='D' option_text=question.opcion_d %}    {# Opción D #}
+              {% include 'tests_clientes/disposicion_de_opciones_de_cada_pregunta_del_test.html' %}
+          {% endwith %} {# Fin de los 4 botones radio con las opciones del formulario #}
+        
+            {#          <label>   {# Opción A #}
+            {#              <input type="radio" name="selected_answer"#}
+            {#                     value="A"#}
+                                 {# Si el usuario está repasando, o está en autocorrección y la pregunta está respondida #}
+            {#                     {% if viewing_results or autocorreccion and user_answer %}disabled{% endif %}#}
+            {#                     {% if user_answer.respuesta_seleccionada == 'A' %}checked#}
+                                   {# Solo le cambio el color a la respuesta si el usuario esta repasando o tiene autocorrección #}
+            {#                       {% if viewing_results or autocorreccion and user_answer %}#}
+            {#                           {% if pregunta_seleccionada_es_correcta %}#}
+            {#                               style="accent-color: green"#}
+            {#                           {% elif pregunta_seleccionada_es_incorrecta %}#}
+            {#                               style="accent-color: red"#}
+            {#                           {% endif %}#}
+            {#                       {% endif %}#}
+            {#                     {% endif %}#}
+            {#              >#}
+                          {# Respuesta A / Opcion A de la Pregunta #}
+            {#              <b>A:</b> {{ question.opcion_a }}#}
+            {#          #}
+                          {# Si el usuario está repasando su test o está en autocorrección, se le muestra la respuesta #}
+            {#              {% if viewing_results or autocorreccion and user_answer %}#}
+                              {# Esto imprime un mensaje que le dice al usuario si su respuesta es correcta o no #}
+            {#                  {% if user_answer.respuesta_seleccionada == 'A' and pregunta_seleccionada_es_correcta %}#}
+            {#                    <span style="color: green"> (¡Correcto!)</span>#}
+            {#                  {% elif user_answer.respuesta_seleccionada == 'A' and pregunta_seleccionada_es_incorrecta %}#}
+            {#                    <span style="color: red"> (Respuesta Incorrecta)</span>#}
+            {#                  {% endif %}   {# Fin del mensaje que le dice al usuario si su respuesta es correcta #}
+            {#              {% endif %}#}
+            {#          </label>#}
+            {#          <br>#}
+            {#          <br>#}
+            {#          <label>   {# Opción B #}
+            {#              <input type="radio" name="selected_answer"#}
+            {#                     value="B" #}
+            {#                     {% if viewing_results or autocorreccion and user_answer %}disabled{% endif %}#}
+            {#                     {% if user_answer.respuesta_seleccionada == 'B' %}checked#}
+                                   {# Solo le cambio el color a la respuesta si el usuario esta repasando o tiene autocorrección #}
+            {#                       {% if viewing_results %}#}
+            {#                           {% if pregunta_seleccionada_es_correcta %}#}
+            {#                               style="accent-color: green"#}
+            {#                           {% elif pregunta_seleccionada_es_incorrecta %}#}
+            {#                               style="accent-color: red"#}
+            {#                           {% endif %}#}
+            {#                       {% endif %}#}
+            {#                     {% endif %}#}
+            {#              >#}
+                          {# Respuesta B / Opción B de la Pregunta #}
+            {#              <b>B:</b> {{ question.opcion_b }}#}
+            {#          #}
+                          {# Si el usuario está repasando su test o está en autocorrección, se le muestra la respuesta #}
+            {#              {% if viewing_results or autocorreccion and user_answer %}#}
+                              {# Esto imprime un mensaje que le dice al usuario si su respuesta es corrrecta o no #}
+            {#                  {% if user_answer.respuesta_seleccionada == 'B' and pregunta_seleccionada_es_correcta %}#}
+            {#                    <span style="color: green"> (¡Correcto!)</span>#}
+            {#                  {% elif user_answer.respuesta_seleccionada == 'B' and pregunta_seleccionada_es_incorrecta %}#}
+            {#                    <span style="color: red"> (Respuesta Incorrecta)</span>#}
+            {#                  {% endif %}   {# Fin del mensaje que le dice al usuario si su respuesta es correcta #}
+            {#              {% endif %}#}
+            {#          </label>#}
+            {#          <br>#}
+            {#          <br>#}
+            {#          <label>   {# Opción C #}
+            {#              <input type="radio" name="selected_answer"#}
+            {#                    value="C" #}
+            {#                     {% if viewing_results or autocorreccion and user_answer %}disabled{% endif %}#}
+            {#                     {% if user_answer.respuesta_seleccionada == 'C' %}checked#}
+                                    {# Solo le cambio el color a la respuesta si el usuario esta repasando o tiene autocorrección #}
+            {#                        {% if viewing_results or autocorreccion and user_answer %}#}
+            {#                            {% if pregunta_seleccionada_es_correcta %}#}
+            {#                               style="accent-color: green"#}
+            {#                            {% elif pregunta_seleccionada_es_incorrecta %}#}
+            {#                               style="accent-color: red"#}
+            {#                            {% endif %}#}
+            {#                        {% endif %}#}
+            {#                    {% endif %}#}
+            {#              >#}
+            {##}
+                          {# Respuesta C / Opción C de la Pregunta #}
+            {#              <b>C:</b> {{ question.opcion_c }}#}
+            {#          #}
+                          {# Si el usuario está repasando su test o está en autocorrección, se le muestra la respuesta #}
+            {#              {% if viewing_results or autocorreccion and user_answer %}#}
+                              {# Esto imprime un mensaje que le dice al usuario si su respuesta es corrrecta o no #}
+            {#                  {% if user_answer.respuesta_seleccionada == 'C' and pregunta_seleccionada_es_correcta %}#}
+            {#                    <span style="color: green"> (¡Correcto!)</span>#}
+            {#                  {% elif user_answer.respuesta_seleccionada == 'C' and pregunta_seleccionada_es_incorrecta %}#}
+            {#                    <span style="color: red"> (Respuesta Incorrecta)</span>#}
+            {#                  {% endif %}   {# Fin del mensaje que le dice al usuario si su respuesta es correcta #}
+            {#              {% endif %}#}
+            {#          </label>#}
+            {#          <br>#}
+            {#          <br>#}
+            {#          <label>   {# Opción D #}
+            {#              <input type="radio" name="selected_answer"#}
+            {#                     value="D" #}
+            {#                     {% if viewing_results or autocorreccion and user_answer %}disabled{% endif %}#}
+            {#                     {% if user_answer.respuesta_seleccionada == 'D' %}checked#}
+                                    {# Solo le cambio el color a la respuesta si el usuario esta repasando o tiene autocorrección #}
+            {#                        {% if viewing_results %}#}
+            {#                            {% if pregunta_seleccionada_es_correcta %}#}
+            {#                               style="accent-color: green"#}
+            {#                            {% elif pregunta_seleccionada_es_incorrecta %}#}
+            {#                               style="accent-color: red"#}
+            {#                            {% endif %}#}
+            {#                        {% endif %}#}
+            {#                     {% endif %}#}
+            {#              >#}
+            {##}
+                          {# Respuesta D / Opción D de la Pregunta #}
+            {#              <b>D:</b> {{ question.opcion_d }}#}
+            {#          #}
+                          {# Si el usuario está repasando su test o está en autocorrección, se le muestra la respuesta #}
+            {#              {% if viewing_results or autocorreccion and user_answer %}#}
+                              {# Esto imprime un mensaje que le dice al usuario si su respuesta es corrrecta o no #}
+            {#                  {% if user_answer.respuesta_seleccionada == 'D' and pregunta_seleccionada_es_correcta %}#}
+            {#                    <span style="color: green"> (¡Correcto!)</span>#}
+            {#                  {% elif user_answer.respuesta_seleccionada == 'D' and pregunta_seleccionada_es_incorrecta %}#}
+            {#                    <span style="color: red"> (Respuesta Incorrecta)</span>#}
+            {#                  {% endif %}   {# Fin del mensaje que le dice al usuario si su respuesta es correcta #}
+            {#              {% endif %}#}
+            {#          </label>#}
+          <br>
+          <br>
+        </div>  {# Fin de las 4 Opciones / botones radio del Formulario #}
+
+        {# Uses a hidden input (action) that's updated via JavaScript to determine which button was clicked: #}
+
+        {# Remove the JavaScript form submission and use regular form submission. #}
+        {#  #}
+        {#  The timer will still work with JavaScript, but form submission will use standard HTML forms. This ensures the #}
+        {#  selected answers are properly saved before navigation.   #}
+        {#    <input type="hidden" name="action" id="form_action" value="">#}
+
+        {# Has three buttons for navigation:    #}
+          {# 1) "Anterior" (Previous).          #}
+          {# 2) "Siguiente" (Next).             #}
+          {# 3) "Finalizar" (Finish).           #}
+        {# Remove these. #}
+        {#    <button type="button" onclick="submitForm('previous')">Anterior</button>#}
+        {#    <button type="button" onclick="submitForm('next')">Siguiente</button>#}
+        {#    <button type="button" onclick="submitForm('finish')">Finalizar</button>#}
+
+        {#   Add hidden session ID  #}
+        <input type="hidden" id="session_id" value="{{ session.id }}">
+      
+        {# Botón para Guardar la Pregunta Actual. #}
+        {# Quiero que el bóton tenga un icono en forma de marcador o marca-libro. #}
+        {# New bookmark icon implementation #}
+        <div class="bookmark-container" style="margin-bottom: 20px; cursor: pointer;">
+            <i class="{% if pregunta_esta_guardada %}fas fa-bookmark fa-3x text-primary{% else %}far fa-bookmark fa-2x text-secondary{% endif %}"
+               onclick="guardarPregunta({{ question.id }}, {{ session.nombre_del_test.id }}, {{ session.id }})"
+               id="botonGuardarPregunta"
+               style="
+                       {% if pregunta_esta_guardada %}color: #0d6efd;{% else %}color: #6c757d;{% endif %}
+                       transition: all 0.2s ease;"
+                       {#               title="{% if pregunta_esta_guardada %}Pregunta guardada{% else %}Guardar pregunta{% endif %}"#}
+            >
+            </i>
+        </div>
+
+        {#        <button type="button" #}
+                        {# Si la pregunta esta guardada, se marcara el boton de color verde. De lo contrario, será azul. #}
+                        {#                    class="btn {% if pregunta in request.user.preguntaguardadaporelusuario_set.all %}btn-success{% else %}btn-info{% endif %}" #}
+        {#                class="btn {% if pregunta_esta_guardada %}btn-success{% else %}btn-info{% endif %}" #}
+        {#                onclick="guardarPregunta({{ question.id }}, {{ session.nombre_del_test.id }}, {{ session.id }})"#}
+        {#                id="botonGuardarPregunta"#}
+        {#        >#}
+                    {#                {% if pregunta in request.user.preguntaguardadaporelusuario_set.all %}#}
+        {#        #}
+                    {# Esto revisa si esta pregunta esta guardada. De ser así, el usuario eliminará la pregunta.  #}
+        {#            {% if pregunta_esta_guardada %}#}
+        {#                Pregunta Guardada#}
+        {#            {% else %} {# Si la pregunta no esta guardada, el usuario podrá guardarla #}
+        {#                Guardar Pregunta#}
+        {#            {% endif %}#}
+        {#        </button>#}
+        <br>
+        <br>
+
+      
+        {# Si el usuario está repasando su test #}
+        {% if viewing_results %}
+
+
+            
+            {# Botones de "Siguiente" y "Anterior" para navegar entre las preguntas del test al clicar en ellos #}
+            <a href="{% url 'tests_clientes:repasar_test_finalizado' session.id question_number|add:'-1' %}" 
+               class="btn btn-primary" {% if question_number == 1 %}disabled{% endif %}>
+                Anterior
+            </a>
+            <a href="{% url 'tests_clientes:repasar_test_finalizado' session.id question_number|add:'1' %}" 
+               class="btn btn-primary" {% if question_number == total_questions %}disabled{% endif %}>
+                Siguiente
+            </a>
+            <br>
+            <br>
+            
+            {# Respuesta correcta de la pregunta actual. Siempre se debe renderizar después de responder. #}
+            {# Solo lo voy a renderizar si el usuario respondió incorrectamente la pregunta. #}
+            {#            {% if pregunta_seleccionada_es_incorrecta %}#}
+            {# Mostraré tanto la letra como todo el texto de la respuesta. #}
+            <p>
+                <b>Respuesta correcta: {{ respuesta_correcta }}) {{ texto_respuesta_correcta }}</b>
+            </p>
+            {#            {% endif %}#}
+            
+            <br>
+            <br>
+            
+            {# Botón para mostrar la Justificación de la respuesta correcta. ELIMINAR #}
+            {#            <button type="button" class="btn btn-primary" onclick="toggleJustificacion()">#}
+            {#                Justificación#}
+            {#            </button>#}
+            {#            <br>#}
+            {#            <br>#}
+            
+            {# Justificación de la respuesta actual. SIEMPRE se debe mostrar después de responder. #}
+            {#            <div id="justificacion" style="display: none">#}
+            <div id="justificacion">
+                <p><b>Justificación:</b></p>
+                <p>{{ question.justificacion }}</p>
+            </div>
+            
+            <br>
+            <br>
+            {# Botón para volver a los Resultados Totales de la Sesión Actual #}
+            <a href="{% url 'tests_clientes:resultados_del_test' session.id %}" class="btn btn-secondary">
+                Volver a los Resultados
+            </a>
+            <br>
+            <br>
+
+            
+        {% else %}  {# Si el usuario está tomando el test #}
+            
+            {# Esto guardará la URL en formato Jinja para llamar a la URL de tomar_test() desde mis scripts de JS #}
+            {# ESTO LO DEBO CAMBIAR PARA LOS TESTS AUTOCORREGIDOS para que redirijan a tomar_test_autocorregido() #}
+
+            {% if autocorreccion %} {# Si el test es un test con Autocorrección #}
+                
+                {# Esto guarda el tiempo restante del temporizador para la vista de tomar_test_autocorregido() #}
+                <div id="test-urls" 
+                     data-test-url="{% url 'tests_clientes:tomar_test_autocorregido' 999999 1 %}"
+                     data-session-id="{{ session.id }}">
+                </div>
+            {% else %}  {# Si el test NO es un test con Autocorrección #}
+                {# Esto guarda el tiempo restante del temporizador para la vista de tomar_test() #}
+                <div id="test-urls" 
+                     data-test-url="{% url 'tests_clientes:tomar_test' 999999 1 %}"
+                     data-session-id="{{ session.id }}">
+                </div>
+            {% endif %}
+            
+    
+            {# Modify your navigation buttons to also save the selected answer #}
+            {# Llamo a la función saveTimeOnly() para guardar el tiempo restante del temporizador #}
+            <button class="btn btn-primary" type="submit" name="action" value="previous" onclick="saveTimeOnly()">
+                Anterior
+            </button>
+            <button class="btn btn-primary" type="submit" name="action" value="next" onclick="saveTimeOnly()">
+                Siguiente
+            </button>
+            
+            <br>
+            <br>
+            {# Botón para Guardar y Salir del Test para dejarlo incompleto y continuarlo después #}
+            <button type="button" 
+               onclick="{% if tiempo_ilimitado %}guardarYSalirDeTestTiempoIlimitado(){% else %}saveAndExit(){% endif %}" 
+               class="btn btn-warning"
+            >
+                Guardar y Salir
+            </button>
+    
+
+        {% endif %} {# Fin del "if" que verifica si el usuario está repasando el test o no #}
+
+        {# Si el usuario respondió una pregunta de un test con autocorrección. #}
+        {# OPTIMIZAR DESPUES. #}
+        {% if autocorreccion and user_answer %}
+
+            {# Respuesta correcta de la pregunta actual seleccionada. Siempre se debe renderizar. #}
+            {#            {% if pregunta_seleccionada_es_incorrecta %}#}
+            <p>
+                {# Respuesta correcta de la pregunta actual seleccionada #}
+                <b>Respuesta correcta: {{ question.respuesta_correcta }}) {{ texto_respuesta_correcta }}</b>
+            </p>
+            {#            {% endif %}#}
+                
+            <br>
+            <br>
+
+            {# Botón para mostrar la Justificación de la respuesta correcta. ELIMINAR. #}
+            {#            <button type="button" class="btn btn-primary" onclick="toggleJustificacion()">#}
+            {#                Justificación#}
+            {#            </button>#}
+            {#            <br>#}
+            {#            <br>#}
+
+            {# Justificación de la respuesta actual. SIEMPRE se debe mostrar después de responder. #}
+            {#            <div id="justificacion" style="display: none">#}
+            <div id="justificacion">
+                <p><b>Justificación:</b></p>
+                <p>{{ question.justificacion }}</p>
+            </div>
+
+            <br>
+            <br>
+        {% endif %} {# Fin del "if" que verifica si el usuario respondió una pregunta de un test de autocorrección #}
+
+      </form>   {# Fin del formulario #}
+
+    </div> {# Fin del la columna de la izquierda del Boostrap Grid #}
+
+    {# In this template, I have a form on the left side of the browser, and I have a series of #}
+    {#  links on a grid on the right side of the browser. Well, the links work just fine. My issue is that, whenever #}
+    {#  I click on the "a" tag in the selected snippet, I want to send a POST request. That is because the selected  #}
+    {#  answer of the current page in my form on the left side of the browser will be saved on my database if I make #}
+    {#  any kind of POST request from this template. Could you modify my current code so that, if users click on the #}
+    {#  link of the "a" tag on the selected snippet, that a POST request should be sent? #}
+    {#  #}
+    {# Give me an algorithm on to modify my tomar_test template so that, if I click on any of the "a" links with  #}
+    {#  the forloop counter, that the currently selected answer from my template form will be sent to my view. #}
+    {#  #}
+    {# Here's what changed: #}
+    {# #}
+    {# For the div with id="timer": #}
+    {# #}
+    {# Added style="text-align: center;" to center its inline content, which includes the <p> tag and the div #}
+    {#  with id="time". #}
+    {# For the div with id="time": #}
+    {# #}
+    {# Added style="border: 1px solid black; display: inline-block; padding: 5px; text-align: center;" #}
+    {# border: 1px solid black;: This creates the black rectangular border. #}
+    {# display: block;: This makes the div take up the full width available in its parent container (div#timer). #}
+    {#  text-align: center; from the parent div#timer to center this block. #}
+    {# padding: 5px;: Adds a little space between the text and the border. #}
+    {# text-align: center;: Ensures the  inicio_temporizador  text itself is centered within this bordered #}
+    {#  box (though it might not be very noticeable if the text already fills the box). #}
+    {# width: 100%;: This explicitly tells the div to be 100% of the width of its containing block. While display: #}
+    {#  block; often achieves this, adding width: 100%; ensures it, especially within Bootstrap columns. #}
+    {#  #}
+    {# These changes will center both lines of text and draw a black rectangle around the  inicio_temporizador  #}
+    {#  value. #}
+    <div class="col-md-3"> {# Columna de la mitad derecha del navegador del grid de Boostrap #}
+    
+        {# BOOKMARK #}
+        {# El temporizador solo se debe renderizar si el usuario está tomando el test, NO si lo repasa, ni tampoco #}
+        {#  si tiene tiempo infinito. #}
+        {% if not viewing_results and not tiempo_ilimitado %}
+              {# Temporizador que dice cuando tiempo le queda al cliente para terminar el test #}
+              <div id="timer" style="text-align: center;">
+                  <p>Tiempo restante:</p> 
+                  <div id="time" 
+                       style="border: 1px solid black; display: block; padding: 5px; text-align: center; width: 100%;"
+                  >
+                      {{ inicio_temporizador }}
+                  </div>
+                  {#          Tiempo restante: <span id="time">{{ time_remaining }}</span> seconds#}
+              </div>
+              
+        {% elif not viewing_results and tiempo_ilimitado %}
+    
+            {# Si el tiempo para tomar el test es ilimitado. #}
+              
+            {# Mensaje que indica que el tiempo es ilimitado #}
+            <div class="alert alert-info">
+                Tiempo ilimitado para completar el test
+            </div>
+        {% endif %}
+    
+        <!-- Grid con el enlace a todas las preguntas del Test -->
+        <div class="question-grid">
+            <h3>Preguntas</h3>
+
+            {# Esto hará que aparezcan 5 preguntas de manera horizontal por fila #}
+              {#            <div class="grid-container" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;">#}
+              <div class="grid-container">
+
+                {# Esto renderiza todas las preguntas con un "for" loop #}
+                {% for question in questions %}
+
+                    {# Esto le mete un div con la clase "question-row" a cada fila de 5 preguntas #}
+                    {% if forloop.counter0|divisibleby:5 %}
+                      {% if not forloop.first %}
+                        </div>
+                      {% endif %}
+                      <div class="question-row" style="display: contents;">
+                    {% endif %}
+
+
+                    {# Si el usuario está repasando su test #}
+                    {% if viewing_results %}
+
+                        {# Cada enlace llevará al usuario a la pregunta que le corresponda a ese número de pregunta. #}
+                        {# El número de la pregunta se mete como el 3er parámetro del view de iniciar:test() (el #}
+                        {# número de la pregunta del test actual de la sesión actual). #}
+                        {# Esto solo enviará al usuario a esa pregunta, sin guardar el tiempo ni la respuesta. #}
+                        {#                    <a href="{% url 'tests_clientes:tomar_test' session_id=session.id question_number=forloop.counter %}"#}
+                        {# Las preguntas que fueron respondidas correctamente tendrán la clase "correcto". #}
+                        {# Las preguntas que fueron respondidas incorrectamente tendrán la clase "incorrecto". #}
+                        <a href="#"
+                        onclick="navegarAPreguntaAlRepasarElTest({{ session.id }}, {{ forloop.counter }}, event)"
+                           class="question-button {% if forloop.counter == question_number %}current{% endif %}
+                               {% if forloop.counter in preguntas_correctas %}correcto{% endif %}
+                               {% if forloop.counter in preguntas_incorrectas %}incorrecto{% endif %}
+
+                               {#                               {% if forloop.counter in answered_questions %}answered{% endif %}#}
+                               {#                                  {% if pregunta_seleccionada_es_correcta %}#}
+                               {#                                    correcto#}
+                               {#                                  {% elif pregunta_seleccionada_es_incorrecta %}#}
+                               {#                                    incorrecto#}
+                               {#                                  {% endif %}#}
+                           "
+                           style="display: inline-block;
+                              width: 40px;
+                              height: 40px;
+                              line-height: 40px;
+                              text-align: center;
+                              border: 1px solid #ddd;
+                              text-decoration: none;
+                              color: black;
+                           "
+                        >
+
+                    {% else %}  {# Si el usuario está tomando el test #}
+                        
+                        {# Si el Test es Autocorregido #}
+                        {% if autocorreccion %}
+                            {# Esto te lleva a la pregunta del grid seleccionada, y guarda el tiempo #}
+                            <a href="#"
+                            onclick="navegarAPreguntaDelGridDeLaBarraLateralAutocorregido({{ session.id }}, {{ forloop.counter }}, event)"
+                               class="question-button {% if forloop.counter == question_number %}current{% endif %}
+                                   {% if forloop.counter in preguntas_correctas %}correcto{% endif %}
+                                   {% if forloop.counter in preguntas_incorrectas %}incorrecto{% endif %}
+                               "
+                               style="display: inline-block;
+                                  width: 40px;
+                                  height: 40px;
+                                  line-height: 40px;
+                                  text-align: center;
+                                  border: 1px solid #ddd;
+                                  text-decoration: none;
+                                  color: black;"
+                            >
+
+                        {% else %}  {# Si el Test NO es Autocorregido #}
+
+                            {# Esto guarda el tiempo y la respuesta seleccionada, y te lleva a esa pregunta #}
+                            <a href="#"
+                            onclick="navegarAPreguntaDelGridDeLaBarraLateral({{ session.id }}, {{ forloop.counter }}, event)"
+                               class="question-button {% if forloop.counter == question_number %}current{% endif %}
+                                      {% if forloop.counter in answered_questions %}answered{% endif %}"
+                               style="display: inline-block;
+                                  width: 40px;
+                                  height: 40px;
+                                  line-height: 40px;
+                                  text-align: center;
+                                  border: 1px solid #ddd;
+                                  text-decoration: none;
+                                  color: black;"
+                            >
+                        {% endif %}  {# Fin del "if" que revisa si el test es autocorregido o no #}
+                    {% endif %}
+
+                        {# Esto renderiza el número de la pregunta #}
+                        {{ forloop.counter }}
+                        <br>
+                    </a>
+
+                    {#            <form method="post" class="question-button-form">#}
+                    {#                {% csrf_token %}#}
+                    {#                <button type="submit" #}
+                    {#                        name="action" #}
+                    {#                        value="goto_{{ forloop.counter }}"#}
+                    {#                        class="question-button {% if forloop.counter == question_number %}current{% endif %} #}
+                    {#                               {% if forloop.counter in answered_questions %}answered{% endif %}">#}
+                    {#                    {{ forloop.counter }}#}
+                    {#                </button>#}
+                    {#            </form>#}
+
+                    {# Esto cierra el div para la ultima fila del Grid de Preguntas #}
+                    {% if forloop.last %}
+                      </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {# Esto está justo debajo del grid de preguntas, pero sigue estando en la columna derecha del grid. #}
+            {# Si el usuario no está repasando su test #}
+            {% if not viewing_results %}
+                {# Botón para Finalizar y entregar el Test. Lo puse de verde. #}
+                <div class="d-grid gap-2 mt-3"> {# mt-3 adds some margin on top #}
+                    {# Added btn-lg for a larger button #}
+                    <button class="btn btn-success btn-lg" type="submit" name="action" value="finish" form="exam_form"> 
+                        Finalizar
+                    </button> 
+                </div>
+            {% endif %} {# Fin del "if" que revisa si el usuario está repasando su test o no #}
+        </div> {# Fin de la barra de navegacion lateral con las preguntas y de la columna de la derecha del Grid #}
+
+        {#    </div>  {# Fin del la columna de la derecha del Boostrap Grid #}
+
+  </div> {# Fin del Grid de Boostrap de 1x2 #}
+
+    {#    <!-- Question grid sidebar (right side) -->#}
+    {#    <div class="question-grid">#}
+    {#        <h3>Preguntas</h3>#}
+    {#        <div class="grid-container">#}
+    {#            {% for i in total_questions|get_range %}#}
+    {#                <form method="post" class="question-button-form">#}
+    {#                    {% csrf_token %}#}
+    {#                    <button type="submit" #}
+    {#                            name="action" #}
+    {#                            value="goto_{{ i|add:"1" }}"#}
+    {#                            class="question-button {% if i|add:"1" == question_number %}current{% endif %} #}
+    {#                                   {% if i|add:"1" in answered_questions %}answered{% endif %}">#}
+    {#                        {{ i|add:"1" }}#}
+    {#                    </button>#}
+    {#                </form>#}
+    {#            {% endfor %}#}
+    {#        </div>#}
+    {#    </div>  {# Fin de la barra de navegacion lateral con las preguntas #}
+
+  {# Esto llama a los scripts de JavaScript de mi carpeta "static" #}
+  {# Si necesito usar JS para repasar un test, aquí lo pondré #}
+  {% if viewing_results %}
+    
+    {# Esto llama al código JS para repasar un test, el cual esta en repasar_test_finalizado.js en "static" #}
+    <script src="{% static 'js/repasar_test_finalizado.js' %}"></script>
+      
+      
+  {% else %} {# Esto solo renderiza los archivos JS para hacer el test, sea autocorregido o no #}
+      
+      {# Archivo de JavaScript con la función del Temporizador #}
+      <script src="{% static 'js/exam_timer.js' %}"></script>
+      
+      {# Esto llama al resto del código JavaScript de este template, el cual esta en "static" #}
+      <script src="{% static 'js/script_para_todos_los_tests.js' %}"></script>
+
+      {% if autocorreccion %}   {# Si el test es autocorregido #}
+
+        {# Llamo al script de JavaScript para Tests Autocorregidos #}
+        <script src="{% static 'js/test_autocorregido.js' %}"></script>
+
+      {% else %} {# Si el Test no es Autocorregido #}
+          
+        {# Llamo al script de JavaScript para Tests SIN Autocorrección #}
+        <script src="{% static 'js/test_sin_autocorreccion.js' %}"></script>
+
+      {% endif %}   {# Fin de las llamadas a los archivos JS para Tomar Tests con o sin autocorrección #}
+
+  {% endif %}   {# Fin de los scripts de Javascript para este template #}
+
+  {#  <br>#}
+  {#  <br>#}
+  {#  <br>#}
+  {# Puedo poner un Footer o algo similar que diga "Fonts by Fontawesome". #}
+  <footer class="mt-5">  {# Footer de la página. Le puse margin top para agregar padding (espacio). #}
+        <p>Fonts and icons by <a href="https://fontawesome.com/" target="_blank">Font Awesome</a></p>
+  </footer>
+
+
+  {# Script de JavaScript que se va a ejecutar, sea al tomar o al repasar un test  #}
+  <script src="{% static 'js/script_para_tomar_y_para_repasar_tests.js' %}"></script>
+
+   
+    
+{% endblock %}

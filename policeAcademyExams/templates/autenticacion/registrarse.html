@@ -1,0 +1,137 @@
+{% extends 'disposiciones/disposicion_autenticacion.html' %}
+
+{# Esto me renderiza el título de la pagina en la pestaña del navegador  #}
+
+{% block title %}Registrarse{% endblock %}
+
+{# Agregue la disposicion / layout para ponerle el bootstrap y los mensajes de flash de error o confirmacion.  #}
+
+{# Esto me agrega los enlaces para la barra de navegación que tengo en mi template de disposicion de autenticacion #}
+{% block nav_items %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'inicio' %}">Inicio</a>
+    </li>
+    {% if user.is_authenticated %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'cerrar_sesion' %}">Cerrar Sesión</a>
+        </li>
+    {% else %}
+        {# Si el usuario no ha iniciado sesión, le mostraré los enlaces para autenticarse y para registrarse #}
+        <li class="nav-item">
+            {# El "active" resalta el enlace de la pagina actual en el navbar #}
+            <a class="nav-link" href="{% url 'iniciar_sesion' %}">Iniciar Sesión</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="{% url 'registrarse' %}">Registrarse</a>
+        </li>
+    {% endif %}
+{% endblock %}
+
+{# Esto me renderiza el contenido de esta pagina. Sin el "block content", nada se renderiza  #}
+{% block content %}
+
+    {# Esto creará un Grid de Bootsrap de 1 fila y 3 columnas. Asi, pondre el formulario en el centro. #}
+    <div class="row">   {# Fila #}
+
+        {# Columna 1: Todo vacio #}
+        <div class="col-md-3"></div>
+
+        {# Columna 2: Todo el formulario.  #}
+        <div class="col-md-6">
+
+        
+            <h1>Registrarse</h1>
+            <br>
+            <br>
+
+            {# Esto imprime un mensaje flash de error después de que el usuario envíe el formulario. #}
+
+            {# Si el usuario no existe en Wordpress, o si su suscripcion esta caducada, se le mostrara un error generico. #}
+            {# Mientras tanto, si se intenta crear una cuenta con un nombre de usuario o email que ya existe en la base de datos de django, #}
+            {# se le mostrará un mensaje de error diciendo que el nombre de usuario o email ya existen. #}
+
+            {#Add a check for password_form.non_field_errors() to display non-field errors (like the password mismatch) above or below #}
+            {# the form fields. #}
+
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- Campo del Email -->
+                <p>
+                    Inserta el Email que usaste para registrarte en la tienda de Wistarr. Tu cuenta debe tener una suscripción activa:
+                </p>
+
+                {# Campo de email con los estilos de Bootsrap #}
+                {% for field in emailForm %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="text-danger">
+                                {{ field.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <br>
+
+
+                <hr>
+
+                <br>
+
+
+                <!-- Campos de las Contraseñas -->
+                <p>
+                    Ahora, crea una nueva contraseña que sea distinta a la contraseña que usaste en la tienda de
+                    Wistarr:
+                </p>
+                {# Si las contraseñas no coinciden, esto imprimira el mensaje flash de error con estilos de Bootstrap #}
+                {% if passwordForm.non_field_errors %}
+                    <div class="mb-3">
+                        <div class="alert alert-danger" role="alert">
+                            {% for error in passwordForm.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+                
+                {# Formulario de contraseñas con los estilos de Bootstrap #}
+                {% for field in passwordForm %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="text-danger">
+                                {{ field.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <br>
+                <br>
+            
+                {# Botón para registrarse #}
+                <button class="btn btn-primary" type="submit">Registrarse</button>
+                <br>
+                <br>
+            </form>
+        </div>  {# Fin de la Columna 2 #}
+
+        {# Columna 3: Todo vacio #}
+        <div class="col-md-3"></div>
+
+
+    </div>  {# Fin del grid de 1 fila y 2 columnas, y fin de la Fila #}
+    {# Esto imprime un mensaje después de que el usuario envíe el formulario. #}
+    {# Esto le dirá al usuario si pudo registrarse o no, los datos de sus suscripcion, si esta caducada o no, etc. #}
+    {# BORRAR DESPUES #}
+    {% if message %}
+
+        {# El "safe" me permite transformar los <br> de Python a saltos de línea #}
+        <p>{{ message|safe }}</p>
+    {% endif %}
+{% endblock %}

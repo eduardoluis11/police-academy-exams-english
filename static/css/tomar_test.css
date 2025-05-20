@@ -1,0 +1,118 @@
+/* Estilos para el template para Tomar el Test.
+
+*/
+
+.question-button {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  border: 1px solid #ddd;
+  text-decoration: none;
+  color: black;       border-radius: 5px; /* Make them round */
+  margin: 2px; /* Add some margin between buttons */
+  cursor: pointer; /* Add a pointer cursor on hover */    }
+
+
+.question-button:hover {
+  background-color: #f0f0f0; /* Slight background change on hover */
+}
+
+
+/* Estilos para las preguntas que ya han sido respondidas en el grid de las preguntas en la columna a la derecha.
+
+Esto hará que las preguntas que ya han sido respondidas se vean de color gris. No las pondré de verde, para que así
+no parezca que fueron respondidas correctamente. Solo les asigno un color a estas respuestas para indicarle
+al usuario que ya ha respondido la pregunta seleccionada.
+*/
+.answered {
+  background-color: gray;
+  /*background-color: gray !important;*/
+
+  /* White text for answered questions */
+  /* color: white; */
+}
+
+/* Estilos para la pregunta actualmente seleccionada en el grid de las preguntas en la columna a la derecha
+del navegador.
+
+Esto hará que la pregunta actualmente seleccionada se vea de color amarillo, y en negrita.
+
+To make the yellow color of the `current` class take priority over the gray color of the `answered` class, you need to
+increase the specificity of the `.current` class. Here's how to fix it:
+
+**Problem 1: CSS specificity for current question color**
+The `!important` flag in both classes is causing a conflict, with the last defined rule (`.answered`) winning.
+
+The changes:
+1. Removed `!important` from `.answered`
+2. Moved `.current` after `.answered`
+3. Kept `!important` only on `.current`
+
+This ensures the yellow background will always show for the current question, even if it's also marked as answered.
+*/
+.current {
+  background-color: yellow !important; /* Yellow for the current question */
+  font-weight: bold;
+}
+
+
+.question-grid h3 {
+  margin-bottom: 10px;
+}
+
+/* Estilos para el div con la clase "grid-container" que contiene los enlaces a las preguntas en la barra de
+ navegación lateral con las preguntas. Esto hará que aparezcan 5 preguntas de manera horizontal por fila.
+
+ Moví estos estilos aqui en lugar de ponerselos in-line directamente en el div. Es para que el código
+ HTML sea más limpio.
+*/
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 columns grid */
+  gap: 10px;
+}
+
+
+.question-row {
+  display: contents; /* Allows children to participate in the grid layout */
+}
+
+/* Estilos para la clase "correcto".
+
+Esto hará que las preguntas que fueron respondidas correctamente se vean de color verde en el grid de preguntas
+en la columna a la derecha del navegador en el template de Tomar el Test.
+*/
+a.question-button.correcto {
+  background-color: #155724;
+  /*border-color: #c3e6cb;*/
+  /*color: #155724;*/
+}
+
+/* Estilos para la clase "incorrecto".
+
+Esto hará que las preguntas que fueron respondidas incorrectamente se vean de color rojo en el grid de preguntas
+en la columna a la derecha del navegador en el template de Tomar el Test.
+*/
+a.question-button.incorrecto {
+  background-color: red;
+  /*border-color: #f5c6cb;*/
+  /*color: #721c24;*/
+}
+
+/* Estilos para el icono del marcador o marca-libro para guardar una pregunta.
+
+Add these styles to your CSS file for hover effects.
+*/
+.bookmark-container i:hover {
+    transform: scale(1.1);
+}
+
+.bookmark-container i.fas:hover {
+    color: #0a58ca !important;
+}
+
+.bookmark-container i.far:hover {
+    color: #565e64 !important;
+}

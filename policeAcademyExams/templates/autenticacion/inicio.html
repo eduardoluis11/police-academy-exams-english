@@ -1,0 +1,156 @@
+{% extends 'disposiciones/disposicion_autenticacion.html' %}
+
+{% load static %}
+
+{# Página de Inicio #}
+
+{# "extends" tiene que ser la primera línea de codigo de este template. #}
+
+{# Tengo que cargar los archivos estáticos usando "load static". #}
+
+{# Esto me renderiza el título de la pagina en la pestaña del navegador  #}
+
+{% block title %}Inicio - Wistarr{% endblock %}
+
+{# Agregue la disposicion / layout para ponerle el bootstrap y los mensajes de flash de error o confirmacion.  #}
+
+{# Esto me agrega los enlaces para la barra de navegación que tengo en mi template de disposicion de autenticacion #}
+
+{# Hay enlaces que voy a meter automáticamente a todos o la mayoría de los templates en la disposicion. Esos #}
+{# enlaces NO los voy a poner aquí. #}
+
+{# Si el usuario ha iniciado sesión, se le mostrará solo el enlace para cerrar sesión #}
+{# Si el usuario no ha iniciado sesión, le mostraré los enlaces para autenticarse y para registrarse #}
+{% block nav_items %}
+
+
+    {#    {% if user.is_authenticated %}#}
+    {#        <li class="nav-item">#}
+    {#            <a class="nav-link" href="{% url 'cerrar_sesion' %}">Cerrar Sesión</a>#}
+    {#        </li>#}
+    {# Si el usuario no está autenticado / iniciado sesión #}
+    {% if not user.is_authenticated %}
+        {# Si el usuario no ha iniciado sesión, le mostraré los enlaces para autenticarse y para registrarse #}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'iniciar_sesion' %}">Iniciar Sesión</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'registrarse' %}">Registrarse</a>
+        </li>
+    {% endif %}
+{% endblock %}
+
+{# Esto me renderiza el contenido de esta pagina. Sin el "block content", nada se renderiza  #}
+{% block content %}
+
+    <!-- <h1>Inicio</h1> -->
+
+    {# Logo de Wistarr #}
+    <img src="#" alt="Oposiciones Logo" height="100">
+
+    <br>
+    <br>
+    <div class="welcome-message">
+
+        {# Esto imprime un mensaje flash de error después de que el usuario envíe el formulario. #}
+
+        {# Si el usuario inicia sesión, se le muestra su nombre de usuario #}
+        {% if user.is_authenticated %}
+            {#  User is logged   #}
+
+
+            
+            {# Panel de Control / Dashboard para Administradores. SOLO LOS ADMINISTRADORES PODRAN VER ESTO #}
+            {% if user.is_superuser %}
+
+                <br>
+                <br>
+                <p>
+                    <b>Panel de Control para Administradores.</b>
+                </p>
+
+                {# Enlace para ver la lista de Tests #}
+                <a href="{% url 'tests_clientes:lista_de_tests' %}" class="btn btn-primary">
+                    Ver la lista de Tests
+                </a>
+                <br>
+                <br>
+
+                {# Enlace para subir tests desde un Excel #}
+                <a href="{% url 'tests_administradores:upload_and_import_exams' %}" class="btn btn-primary">
+                    Subir un Test desde un archivo Excel
+                </a>
+                <br>
+                <br>
+
+                {# Enlace para crear un test desde cero, sin usar un Excel #}
+                <a href="{% url 'tests_administradores:crear_nuevo_test_sin_subir_un_archivo' %}" class="btn btn-primary">
+                    Crear Nuevo Test
+                </a>
+               <br>
+               <br>
+                
+                {# Enlace para ir al Buscador de Preguntas #}
+                <a href="{% url 'tests_administradores:buscador_de_preguntas' %}" class="btn btn-primary">
+                    Buscador de Preguntas
+                </a>
+                <br>
+                <br>
+
+
+                {# Fin del Panel de Control / Dashboard para Administradores.  #}
+            {% endif %}
+
+            {# Mensaje de bienvenida con el nombre de usuario #}
+            <p>Bienvenido, {{ user.username }}!</p>
+            <br>
+            <br>
+            
+            {# Enlaces a las funcionalidades para los clientes #}
+            {# Enlace a la Lista de Tests #}
+            <a href="{% url 'tests_clientes:menu_principal_tests' %}" class="btn btn-primary">
+                Tests
+            </a>
+            <br>
+            <br>
+            
+            {# Enlaces a las funcionalidades para los clientes #}
+            {# Enlace a la Lista de Tests #}
+            {#            <a href="{% url 'tests_clientes:lista_de_tests' %}" class="btn btn-primary">#}
+            {#                Ver la lista de Tests#}
+            {#            </a>#}
+            {#            <br>#}
+            {#            <br>#}
+            {#            #}
+                        {# Enlace a la Lista de Resultados de Tests Pasados #}
+            {#            <a href="{% url 'tests_clientes:lista_de_resultados_de_tests_pasados' %}" class="btn btn-primary">#}
+            {#                Ver la lista de Resultados de Tests Pasados#}
+            {#            </a>#}
+            {#            <br>#}
+            {#            <br>#}
+            {#            #}
+                        {# Enlace a la Lista de Tests Incompletos del usuario autenticado #}
+            {#            <a href="{% url 'tests_clientes:lista_de_tests_incompletos' %}" class="btn btn-primary">#}
+            {#                Ver la lista de Tests Incompletos#}
+            {#            </a>#}
+            {#            <br>#}
+            {#            <br>#}
+
+            <a href="{% url 'cerrar_sesion' %}">Cerrar Sesión</a>
+
+        {# Esto es lo que se le muestra al usuario si no inicia sesión en la web app #}
+        {% else %}
+            <!-- User is not logged in -->
+
+            <!-- Botón con el enlace para Iniciar Sesión -->
+            <a href="{% url 'iniciar_sesion' %}" class="btn btn-primary">Iniciar sesión</a>
+
+            <br>
+            <br>
+
+            <!-- Botón con el enlace para Registrarse -->
+            <a href="{% url 'registrarse' %}" class="btn btn-primary">Registrarse</a>
+
+        {% endif %}
+    </div>
+{% endblock %}

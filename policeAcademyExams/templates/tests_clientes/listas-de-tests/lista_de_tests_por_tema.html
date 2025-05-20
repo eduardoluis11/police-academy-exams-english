@@ -1,0 +1,77 @@
+{% extends 'disposiciones/disposicion_autenticacion.html' %}
+
+{# This template: #}
+    {# Extends the base authentication layout. #}
+    {# Shows a main heading. #}
+    {# Displays a single table with all tests of type "tema". #}
+    {# Each row shows test name, question count, and actions. #}
+
+      {# Groups tests by theme using the tests_por_tema dictionary. #}
+      {# Each theme section shows: #}
+          {# Theme number as heading. #}
+          {# Table with test names, question count and actions. #}
+          
+    {# Shows a message if no tests are available. #}
+{#  #}
+{# Cuando entre a esta vista me debe salir la lista de todos los tests, pero con un título que diga "tema 1", y  #}
+{# ahí salen todos los tests del tema 1; luego otro título que diga "tema 2", y salgan todos los tests del tema 2, y #}
+{# así sucesivamente. #}
+
+{% block content %}
+    <h2 class="mb-4">Lista de Tests por Tema</h2>
+    
+    {# Botón para Generar un Nuevo Test. Debería ser solo para generar el Test por Tema. #}
+    {# Consider adding a link here if needed: <a href="{% url '...' %}" class="btn btn-success mb-3">Generar Nuevo Test por Tema</a> #}
+    <a href="{% url 'tests_clientes:configure_new_test_by_topic' %}" class="btn btn-primary">
+        Generar Test por Tema
+    </a>
+
+    {#  {% for tema, tests in tests_por_tema.items %}#}
+    {% if tests %}
+      <div class="mb-4">
+        {# Para los tests que no tengan tema, pondré que el título sea solo "Sin Tema" #}
+        {#        {% if tema == "Sin Tema" %}#}
+        {#          <h3>Sin Tema</h3>#}
+        {#        {% else %}#}
+        {#          <h3>Tema {{ tema }}</h3>  {# Para los tests que tengan tema, pondré que el título sea "Tema X" #}
+        {#        {% endif %}#}
+
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Nombre del Test</th>
+                <th>Número de Preguntas</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for test in tests %}
+                <tr>
+                  <td>{{ test.nombre_del_test }}</td>
+                    
+                  {# Since 'preguntas' is the related_name for the ManyToManyField in PreguntaDelTest(), #}
+                  {# this prints the number of questions for each test. #}
+                  <td>{{ test.preguntadeltest_set.count }}</td>
+                    
+                  {#                  <td>{{ test.preguntas.count }}</td>#}
+                  <td>
+                    <a href="{% url 'tests_clientes:configurar_test' test.id %}" class="btn btn-primary btn-sm">
+                      Tomar Test
+                    </a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    {% else %}
+        <p class="alert alert-info">No hay tests por tema disponibles.</p>
+    {% endif %}
+    {#  {% endfor %}#}
+
+    {#  {% if not tests_por_tema %}#}
+    {#    <p class="alert alert-info">No hay tests disponibles.</p>#}
+    {#  {% endif %}#}
+{% endblock %}
