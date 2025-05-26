@@ -44,3 +44,6 @@ https://unsplash.com/es/fotos/un-calendario-con-pulsadores-rojos-fijados-bwOAixL
 12) Fonts and icons by Font Awesome. We used the Free Tier of Font Awesome. Link: https://fontawesome.com/
 
 13) Logos created using Ideogram's AI. Link to Ideogram: https://ideogram.ai/ .
+
+14) Pokémon Palette: I got one of the color palettes from Pokémon Palette by Yassen Shopov.
+Website: https://www.pokemonpalette.com/
