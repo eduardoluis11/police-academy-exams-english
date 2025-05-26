@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Wistarr{% endblock %}</title>
+    <title>{% block title %}Police Exams{% endblock %}</title>
     
     <!-- CSS de Bootstrap Local -->
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
@@ -70,13 +70,15 @@
     
         <div class="container-fluid">
             <a class="navbar-brand" href="{% url 'inicio' %}">
-                <!-- Wistarr -->
-                <img src="#" alt="Wistarr Logo" height="30">
+                <!-- Police Exams -->
+                <img src="#" alt="Police Exams" height="30">
             </a>
 
             {# Esto debe agregar el boton de menu de hamburguesa en pantallas de moviles. Debo agregar el ID del div que quiero  #}
             {#    mostrar y ocultar con el boton de hamburguesa #}
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-oposiciones" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-oposiciones"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"
+            >
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -86,7 +88,7 @@
                 
                     <li class="nav-item"> {# Enlace a la página de Inicio #}
                         {# El "active" resalta el enlace de la pagina actual en el navbar #}
-                        <a class="nav-link" href="{% url 'inicio' %}">Inicio</a>
+                        <a class="nav-link" href="{% url 'inicio' %}">Home</a>
                     </li>
                 
                     {# Si el usuario ha iniciado sesión, se le mostrarán estos enlaces #}
@@ -96,72 +98,72 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="testsDropdown" role="button"
                                data-bs-toggle="dropdown" aria-expanded="false">
-                                Tests
+                                Exams
                             </a>
                             {# Enlaces que estarán dentro del submenú negro de "Tests" de la barra de navegación #}
                             <ul class="dropdown-menu bg-dark-blue" aria-labelledby="testsDropdown">
                                 <li class="nav-item"> {# Enlace al Menú Principal de los Tests #}
                                     <a href="{% url 'tests_clientes:menu_principal_tests' %}" class="nav-link">
-                                        Menú Principal
+                                        Main Menu
                                     </a>
                                 </li>
                                 <li class="nav-item"> {# Enlace a la Lista de Tests #}
                                     <a href="{% url 'tests_clientes:lista_de_tests' %}" class="nav-link">
-                                        Lista de Tests
+                                        Exams' List
                                     </a>
                                 </li>
                                 <li class="nav-item"> {# Lista de Resultados de Tests Pasados #}
                                     <a href="{% url 'tests_clientes:lista_de_resultados_de_tests_pasados' %}"
                                        class="nav-link">
-                                        Resultados
+                                        Results
                                     </a>
                                 </li>
                                 <li class="nav-item"> {# Lista de Tests Incompletos #}
                                     <a href="{% url 'tests_clientes:lista_de_tests_incompletos' %}" class="nav-link">
-                                        Tests Incompletos
+                                        Incomplete Exams
                                     </a>
                                 </li>
                             </ul>  {# Fin de los enlaces del menú dropdown de "Tests" #} 
                         </li>   {# Fin del Submenu Dropdown de "Tests" #}
                         
-                        <li class="nav-item"> {# Enlace a la página de Supuestos #}
-                            <a href="#" class="nav-link">Supuestos</a>
-                        </li>
-                        
+{#                        <li class="nav-item"> {# Enlace a la página de Supuestos #}
+{#                            <a href="#" class="nav-link">Supuestos</a>#}
+{#                        </li>#}
+{#                        #}
                         {# Enlace a "Temario" #}
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">Temario</a>
-                        </li>
-                        
+{#                        <li class="nav-item">#}
+{#                            <a href="#" class="nav-link">Temario</a>#}
+{#                        </li>#}
+{#                        #}
                         {# Enlace a "Convocatorias" #}
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">Convocatorias</a>
-                        </li>
-                        
+{#                        <li class="nav-item">#}
+{#                            <a href="#" class="nav-link">Convocatorias</a>#}
+{#                        </li>#}
+{#                        #}
                         {# Enlace a "Estadísticas" #}
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">Estadísticas</a>
-                        </li>
+{#                        <li class="nav-item">#}
+{#                            <a href="#" class="nav-link">Estadísticas</a>#}
+{#                        </li>#}
     
                         {% block nav_items %}
                             {# Add navigation items in child templates if needed #}
                         {% endblock %}
                         
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'cerrar_sesion' %}">Cerrar Sesión</a>
+                            <a class="nav-link" href="{% url 'cerrar_sesion' %}">Log Out</a>
                         </li>
                     {% else %}
                         {# Si el usuario no ha iniciado sesión, se le mostrarán estos enlaces #}
                         
                         <li class="nav-item">   {# Enlace para Iniciar Sesión #}
                             <a class="nav-link" href="{% url 'iniciar_sesion' %}">
-                                Iniciar Sesión
+                                Log In
                             </a>
                         </li>
                         
                         <li class="nav-item">   {# Enlace para Registrarse #}
                             <a class="nav-link" href="{% url 'registrarse' %}">
-                                Registrarse
+                                Sign Up
                             </a>
                         </li>
                     {% endif %}

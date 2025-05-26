@@ -10,7 +10,7 @@
 
 {# Esto me renderiza el título de la pagina en la pestaña del navegador  #}
 
-{% block title %}Inicio - Wistarr{% endblock %}
+{% block title %}Home - Police Exams{% endblock %}
 
 {# Agregue la disposicion / layout para ponerle el bootstrap y los mensajes de flash de error o confirmacion.  #}
 
@@ -23,19 +23,14 @@
 {# Si el usuario no ha iniciado sesión, le mostraré los enlaces para autenticarse y para registrarse #}
 {% block nav_items %}
 
-
-    {#    {% if user.is_authenticated %}#}
-    {#        <li class="nav-item">#}
-    {#            <a class="nav-link" href="{% url 'cerrar_sesion' %}">Cerrar Sesión</a>#}
-    {#        </li>#}
     {# Si el usuario no está autenticado / iniciado sesión #}
     {% if not user.is_authenticated %}
         {# Si el usuario no ha iniciado sesión, le mostraré los enlaces para autenticarse y para registrarse #}
         <li class="nav-item">
-            <a class="nav-link" href="{% url 'iniciar_sesion' %}">Iniciar Sesión</a>
+            <a class="nav-link" href="{% url 'iniciar_sesion' %}">Log In</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{% url 'registrarse' %}">Registrarse</a>
+            <a class="nav-link" href="{% url 'registrarse' %}">Sign Up</a>
         </li>
     {% endif %}
 {% endblock %}
@@ -43,10 +38,8 @@
 {# Esto me renderiza el contenido de esta pagina. Sin el "block content", nada se renderiza  #}
 {% block content %}
 
-    <!-- <h1>Inicio</h1> -->
-
-    {# Logo de Wistarr #}
-    <img src="#" alt="Oposiciones Logo" height="100">
+    {# Police Exam's Logo #}
+    <img src="#" alt="Police Exam's Logo" height="100">
 
     <br>
     <br>
@@ -56,17 +49,14 @@
 
         {# Si el usuario inicia sesión, se le muestra su nombre de usuario #}
         {% if user.is_authenticated %}
-            {#  User is logged   #}
-
-
-            
+            {#  User is logged.   #}
             {# Panel de Control / Dashboard para Administradores. SOLO LOS ADMINISTRADORES PODRAN VER ESTO #}
             {% if user.is_superuser %}
 
                 <br>
                 <br>
                 <p>
-                    <b>Panel de Control para Administradores.</b>
+                    <b>Control Panel for Admins</b>
                 </p>
 
                 {# Enlace para ver la lista de Tests #}
@@ -90,66 +80,43 @@
                <br>
                <br>
                 
-                {# Enlace para ir al Buscador de Preguntas #}
+                {# Link to go to the Question Search functionality #}
                 <a href="{% url 'tests_administradores:buscador_de_preguntas' %}" class="btn btn-primary">
-                    Buscador de Preguntas
+                    Question Search
                 </a>
                 <br>
                 <br>
-
 
                 {# Fin del Panel de Control / Dashboard para Administradores.  #}
             {% endif %}
 
             {# Mensaje de bienvenida con el nombre de usuario #}
-            <p>Bienvenido, {{ user.username }}!</p>
+            <p>Welcome, {{ user.username }}!</p>
             <br>
             <br>
             
-            {# Enlaces a las funcionalidades para los clientes #}
-            {# Enlace a la Lista de Tests #}
+            {# Enlaces a las funcionalidades para los clientes. #}
+            {# Link to the Exams' Lists #}
             <a href="{% url 'tests_clientes:menu_principal_tests' %}" class="btn btn-primary">
-                Tests
+                Exams
             </a>
             <br>
             <br>
-            
-            {# Enlaces a las funcionalidades para los clientes #}
-            {# Enlace a la Lista de Tests #}
-            {#            <a href="{% url 'tests_clientes:lista_de_tests' %}" class="btn btn-primary">#}
-            {#                Ver la lista de Tests#}
-            {#            </a>#}
-            {#            <br>#}
-            {#            <br>#}
-            {#            #}
-                        {# Enlace a la Lista de Resultados de Tests Pasados #}
-            {#            <a href="{% url 'tests_clientes:lista_de_resultados_de_tests_pasados' %}" class="btn btn-primary">#}
-            {#                Ver la lista de Resultados de Tests Pasados#}
-            {#            </a>#}
-            {#            <br>#}
-            {#            <br>#}
-            {#            #}
-                        {# Enlace a la Lista de Tests Incompletos del usuario autenticado #}
-            {#            <a href="{% url 'tests_clientes:lista_de_tests_incompletos' %}" class="btn btn-primary">#}
-            {#                Ver la lista de Tests Incompletos#}
-            {#            </a>#}
-            {#            <br>#}
-            {#            <br>#}
 
-            <a href="{% url 'cerrar_sesion' %}">Cerrar Sesión</a>
+            <a href="{% url 'cerrar_sesion' %}">Log Out</a>
 
         {# Esto es lo que se le muestra al usuario si no inicia sesión en la web app #}
         {% else %}
             <!-- User is not logged in -->
 
             <!-- Botón con el enlace para Iniciar Sesión -->
-            <a href="{% url 'iniciar_sesion' %}" class="btn btn-primary">Iniciar sesión</a>
+            <a href="{% url 'iniciar_sesion' %}" class="btn btn-primary">Log In</a>
 
             <br>
             <br>
 
             <!-- Botón con el enlace para Registrarse -->
-            <a href="{% url 'registrarse' %}" class="btn btn-primary">Registrarse</a>
+            <a href="{% url 'registrarse' %}" class="btn btn-primary">Sign Up</a>
 
         {% endif %}
     </div>
