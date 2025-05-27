@@ -104,8 +104,10 @@
                     <button type="submit" class="btn btn-warning btn-lg">Generar</button>
 
                     <!-- Botón de "Cancelar". Esto hará que el usuario vuelva al menú de tests. -->
+                    {# I will remove the "btn-outline-secondary", and just use "btn-secondary" to make the button #}
+                    {# easier to read. #}
                     <a href="{% url 'tests_clientes:menu_principal_tests' %}" 
-                       class="btn btn-outline-secondary btn-lg ml-2"
+                       class="btn btn-secondary btn-lg ml-2"
                     >
                         Cancelar
                     </a>

@@ -52,12 +52,21 @@ new $primary and $secondary).
 
 I will use a color palette taken from Yassen Shopov's Pokemon Palette from https://www.pokemonpalette.com/. I'll
 try using Regice's color palette. However, I may change it later.
+
+I decided to use Kyogre Primal's color palette instead:
+Primary: #1457a3
+Secondary: #d5d5c6
+Accent: #141833
+
+This not only modifies the color for the btn-primary class, but all of other Boostrap classe that use the "-primary",
+"-secondary", and "-warning" classes (for instance, "bg-primary" and "bg-secondary", which is used for the navbar's
+color).
 */
 
 // Override Bootstrap variables to change these Bootstrap classes
-$primary: #669ec2; // New color for btn-primary (the "primary color" from Pokemon Palette)
-$secondary: #bfeaed; // New color for btn-secondary ("secondary color" from Pokemon Palette)
-$warning: #171f3e; // New color for btn-warning ("accent" from Pokemon Palette)
+$primary: #1457a3; // New color for btn-primary and "bg-primary" (the "primary color" from Pokemon Palette)
+$secondary: #d5d5c6; // New color for btn-secondary and "bg-secondary" ("secondary color" from Pokemon Palette)
+$warning: #141833; // New color for btn-warning and and "bg-warning" ("accent" from Pokemon Palette)
 
 
 // Import Bootstrap's variables to ensure defaults are loaded
