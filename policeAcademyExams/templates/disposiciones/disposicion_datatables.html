@@ -8,7 +8,10 @@
     <title>{% block title %}Wistarr{% endblock %}</title>
 
     {# CSS de Bootstrap Local #}
-    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap-5.3.6/dist/css/bootstrap.min.css' %}">
+
+    {# Custom CSS which overrides the styles of some of Bootstrap's classes #}
+    <link rel="stylesheet" href="{% static 'custom/custom-bootstrap.css' %}">
 
     {#    <!-- Bootstrap CSS -->#}
     {#    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"#}
@@ -52,6 +55,10 @@
     {# estaticos de la web app de Django #}
     {#  #}
     {# To change the navbar and the navbar sub-menus to blue, use "bg-primary" to use Bootstrap's default blue.  #}
+    {#  #}
+    {# This is what I need to change to modify the navbar color using one of the colors from the Pokémon palette: #}
+    {# add "bg-primary", "bg-secondary", or "bg-warning" where I define the "navbar" class. If I use "navbar-dark", #}
+    {# the text will be white. If I use "navbar-light", the text will be black. #}
 
 </head>
 <body>
@@ -67,8 +74,12 @@
         }
     </style>
     <!-- Navigation bar -->
-    {# El bg-dark-blue hace que la barra de navegación se haga de color azul oscuro #}
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark-blue">
+    {# El bg-dark-blue es CSS customizado hace que la barra de navegación se haga de color azul oscuro. #}
+    {# Navbar-dark just makes the text white. #} 
+    {# I will change the color of the navbar to be one of my Pokemon Palette colors. #}
+    {#    <nav class="navbar navbar-expand-lg navbar-dark bg-dark-blue">#}
+    {#  #}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
             <a class="navbar-brand" href="{% url 'inicio' %}">
                 <!-- Police Exams -->

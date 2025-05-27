@@ -1,0 +1,72 @@
+/* Custom Bootstrap Sass to generate custom CSS styles for Bootstrap.
+
+I will use this to override the btn-primary and btn-secondary Boostrap classes, alongside any other classes that I may
+want to edit.
+
+Method 1: Modify Bootstrap Using Sass (Recommended)
+1. Set Up Sass Compilation
+Install Sass: You’ll need the Sass compiler to convert .scss files to .css. On PythonAnywhere or locally:
+bash
+
+npm install -g sass
+
+If you don’t have Node.js on PythonAnywhere, you can install it locally on your machine, compile the CSS, and upload
+the result to PythonAnywhere. Alternatively, use PythonAnywhere’s Bash console to install a Dart Sass binary:
+
+Verify Installation:
+
+
+2. Create a Custom Sass File
+Instead of editing Bootstrap’s _variables.scss directly (which can cause issues if you update Bootstrap later), create
+a custom Sass file to override the variables.
+
+In your static/ directory, create a new folder and file:
+
+In custom-bootstrap.scss, import Bootstrap’s variables, override the colors, and then import the rest of Bootstrap:
+
+You can choose any colors that match your app’s design (use a color picker tool or hex codes like #RRGGBB).
+
+3. Compile the Custom Sass File
+Compile custom-bootstrap.scss into a CSS file:
+
+This generates custom-bootstrap.css with your new colors applied to btn-primary and btn-secondary.
+
+4. Update Your Django Template
+In your Django templates (e.g., base.html), replace the default Bootstrap CSS with your custom CSS:
+
+
+Ensure static files are configured in settings.py:
+
+On PythonAnywhere, set up static file mappings:
+
+Run python manage.py collectstatic to serve the new CSS.
+
+5. Test the Changes
+Reload your app and check buttons with btn-primary (e.g., “Submit Exam”) and btn-secondary (e.g., “Cancel”). They
+should now use your new colors (#ff4500 and #228b22, respectively).
+
+Test hover, focus, and disabled states to ensure they look good (Bootstrap automatically adjusts these based on the
+new $primary and $secondary).
+
+(Source of this code and documentation: Grok's AI.)
+
+I will use a color palette taken from Yassen Shopov's Pokemon Palette from https://www.pokemonpalette.com/. I'll
+try using Regice's color palette. However, I may change it later.
+*/
+
+// Override Bootstrap variables to change these Bootstrap classes
+$primary: #669ec2; // New color for btn-primary (the "primary color" from Pokemon Palette)
+$secondary: #bfeaed; // New color for btn-secondary ("secondary color" from Pokemon Palette)
+$warning: #171f3e; // New color for btn-warning ("accent" from Pokemon Palette)
+
+
+// Import Bootstrap's variables to ensure defaults are loaded
+@import "../bootstrap-5.3.6/scss/functions";
+@import "../bootstrap-5.3.6/scss/variables";
+@import "../bootstrap-5.3.6/scss/variables-dark";
+@import "../bootstrap-5.3.6/scss/maps";
+@import "../bootstrap-5.3.6/scss/mixins";
+@import "../bootstrap-5.3.6/scss/utilities";
+
+// Import the rest of Bootstrap
+@import "../bootstrap-5.3.6/scss/bootstrap";

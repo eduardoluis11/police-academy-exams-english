@@ -185,4 +185,7 @@ static/fontawesome/metadata
 static/fontawesome/webfonts
 static/fontawesome/sprites
 static/fontawesome/svgs
+
+# Archivos de Bootstrap
 /static/bootstrap/
+/static/bootstrap-5.3.6
