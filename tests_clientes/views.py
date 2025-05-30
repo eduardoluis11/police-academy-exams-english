@@ -805,7 +805,7 @@ def configurar_test_predefinido(request, test_id):
         # ]
     }
 
-    return render(request, 'tests_clientes/configurar_test.html', context)
+    return render(request, 'tests_clientes/configurar_test/configurar_test.html', context)
 
 
 """ Vista para Configurar un Test que Se Tiene Que Generar desde Cero.
@@ -1109,7 +1109,7 @@ def configurar_nuevo_test_a_generar(request):
         # 'default_questions': default_questions,
     }
 
-    return render(request, 'tests_clientes/configurar_nuevo_test_a_generar.html', context)
+    return render(request, 'tests_clientes/configurar_test/configurar_nuevo_test_a_generar.html', context)
 
 
 """ Vista para Configurar un Nuevo Test por Tema.
@@ -1266,7 +1266,7 @@ def configure_new_test_by_topic(request):
         # 'default_questions': default_questions,
     }
 
-    return render(request, 'tests_clientes/configurar_test_por_tema_o_normativa.html', context)
+    return render(request, 'tests_clientes/configurar_test/configurar_test_por_tema_o_normativa.html', context)
 
 
 """ Vista para Configurar un Nuevo Test por Normativa.
@@ -1425,7 +1425,7 @@ def configure_new_test_by_regulation(request):
         # 'default_questions': default_questions,
     }
 
-    return render(request, 'tests_clientes/configurar_test_por_tema_o_normativa.html', context)
+    return render(request, 'tests_clientes/configurar_test/configurar_test_por_tema_o_normativa.html', context)
 
 
 """ Vista para Iniciar el Test.

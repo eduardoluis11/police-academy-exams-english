@@ -54,38 +54,38 @@ Agregaré una opción adicional para que el usuario tenga tiempo infinito para h
 class ConfigurarTestSinIncluirPreguntasForm(forms.Form):
     # Difficulty level choices
     DIFFICULTY_CHOICES = [
-        ('1', 'Errores No Restan'),
-        ('2', '4:1 (4 respuestas malas restan 1 buena)'),
-        ('3', '3:1 (3 respuestas malas restan 1 buena)'),
-        ('4', '2:1 (2 respuestas malas restan 1 buena)'),
-        ('5', '1:1 (1 respuesta mala resta 1 respuesta buena)'),
+        ('1', 'Errors Do Not Deduct Points'),
+        ('2', '4:1 (Every 4 Incorrect Answers Deduct 1 Correct Answer)'),
+        ('3', '3:1 (Every 3 Incorrect Answers Deduct 1 Correct Answer)'),
+        ('4', '2:1 (Every 2 Incorrect Answers Deduct 1 Correct Answer)'),
+        ('5', '1:1 (Every 1 Incorrect Answers Deduct 1 Correct Answer)'),
     ]
 
     # Time limit choices (in seconds)
     TIME_CHOICES = [
-        (600, '10 minutos'),
-        (1800, '30 minutos'),
-        (3600, '1 hora'),
-        (7200, '2 horas'),
-        ('ilimitado', 'Tiempo Ilimitado'),  # Added unlimited time option
-        (0, 'Customizado'),  # Added custom option
+        (600, '10 minutes'),
+        (1800, '30 minutes'),
+        (3600, '1 hour'),
+        (7200, '2 hours'),
+        ('ilimitado', 'Unlimited Time'),  # Added unlimited time option
+        (0, 'Customized'),  # Added custom option
 
     ]
 
     # Form fields
     difficulty = forms.ChoiceField(
         choices=DIFFICULTY_CHOICES,
-        label='Nivel de Dificultad',
+        label='Difficulty Level',
         widget=forms.Select(attrs={'class': 'form-control'}),
-        help_text='El nivel de dificultad determina cómo se calculará tu puntuación final.'
+        help_text='The difficulty level will determine how your final score will be calculated.'
     )
 
     # Límite de Tiempo. Esto es para que el cliente pueda elegir cuánto tiempo quiere tener para hacer el test.
     time_limit = forms.ChoiceField(
         choices=TIME_CHOICES,
-        label='Tiempo Límite',
+        label='Time Limit',
         widget=forms.Select(attrs={'class': 'form-control'}),
-        help_text='Selecciona cuánto tiempo tendrás para completar el test.'
+        help_text='Select how much time you want for your test.'
     )
 
     # Si el cliente selecciona la opción "Customizado", entonces se le mostrarán los campos para que escriba el tiempo.
@@ -94,10 +94,10 @@ class ConfigurarTestSinIncluirPreguntasForm(forms.Form):
         required=False,
         min_value=0,
         max_value=180,
-        label='Minutos',
+        label='Minutes',
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Minutos',
+            'placeholder': 'Minutes',
             # 'style': 'display: none;' # ELIMINAR, ya que el input ya se hace visible e invisible usando JS
         })
     )
@@ -116,23 +116,23 @@ class ConfigurarTestSinIncluirPreguntasForm(forms.Form):
     # )
 
     autocorrect = forms.ChoiceField(
-        choices=[('false', 'No'), ('true', 'Sí')],
-        label='Autocorrección',
+        choices=[('false', 'No'), ('true', 'Yes')],
+        label='Autocorrected',
         widget=forms.Select(attrs={'class': 'form-control'}),
-        help_text='¿Deseas que el test se autocorrija a penas selecciones una respuesta?'
+        help_text='Do you want the test to automatically correct itself as soon as you select an answer?'
     )
 
     # Campo que renderiza el número total de Preguntas Disponibles (solo lectura)
     # numero_de_preguntas = forms.IntegerField(
     preguntas_disponibles = forms.IntegerField(
         required=False,
-        label='Preguntas Disponibles',
+        label='Available Questions',
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
             'readonly': 'readonly',  # Esto solo renderiza las preguntas disponibles, por lo que no se debe editar
             'style': 'background-color: #e9ecef;'  # Gray background to indicate read-only
         }),
-        help_text='Número total de preguntas disponibles en este test.'
+        help_text='Total number of questions available for this test'
     )
 
     # Esto devuelve el tiempo customizado en minutos validado
@@ -289,9 +289,9 @@ class ConfigurarNuevoTestAGenerarForm(forms.Form):
     # Lista de Python con los Tipos de Test
     TIPO_DE_TEST = [
         ('', '------'),  # Add blank default option
-        ('tema', 'Por Tema'),
+        ('tema', 'By Topic'),
         # ('año', 'Por Examen (Por Año)'),
-        ('normativa', 'Por Normativa'),
+        ('normativa', 'By Regulation'),
         # ('aleatorio', 'Aleatorio'),
     ]
 
@@ -301,12 +301,12 @@ class ConfigurarNuevoTestAGenerarForm(forms.Form):
     # Esto es para que el cliente seleccione el tipo de test que quiere generar
     tipo_de_test = forms.ChoiceField(
         choices=TIPO_DE_TEST,
-        label='Tipo de Test',
+        label='Exam Type',
         widget=forms.Select(attrs={
             'class': 'form-control',
             'id': 'tipo_de_test'  # Added ID for JavaScript
         }),
-        help_text='Selecciona el tipo de test que deseas generar.'
+        help_text='Select the type of exam that you wish to generate.'
     )
 
     # Campo para seleccionar el tema (inicialmente oculto).
@@ -315,7 +315,7 @@ class ConfigurarNuevoTestAGenerarForm(forms.Form):
         choices=[],  # Empty initially, will populate in __init__
         # choices=TEMAS,
         # choices=[('', '------')] + TEMAS,  # Add blank option as first choice
-        label='Tema',
+        label='Topic',
         widget=forms.CheckboxSelectMultiple(attrs={
             'class': 'tema-checkbox',
             'data-url': '/tests/get-question-count/',
@@ -329,7 +329,7 @@ class ConfigurarNuevoTestAGenerarForm(forms.Form):
         #     # 'style': 'display: none;'
         # }),
         required=False,
-        help_text='Selecciona uno o más temas para tu examen'
+        help_text='Select one or more topics for your exam'
     )
 
     # # Campo para seleccionar el año (inicialmente oculto)
@@ -350,13 +350,13 @@ class ConfigurarNuevoTestAGenerarForm(forms.Form):
     # Replace the existing tema ChoiceField with a MultipleChoiceField.
     normativa = forms.MultipleChoiceField(
         choices=[],  # Empty initially, will populate in __init__
-        label='Normativa',
+        label='Regulation',
         widget=forms.CheckboxSelectMultiple(attrs={
             'class': 'normativa-checkbox',
             'data-url': '/tests/get-question-count/',
         }),
         required=False,
-        help_text='Selecciona una o más normativas para tu examen'
+        help_text='Select one or more regulations for your exam'
     )
 
     # normativa = forms.ChoiceField(
@@ -374,13 +374,13 @@ class ConfigurarNuevoTestAGenerarForm(forms.Form):
 
     # Campo para que el Usuario inserte cuantas Preguntas quiere para el test
     numero_de_preguntas = forms.IntegerField(
-        label='Número de Preguntas',
+        label='Number of questions',
         min_value=1,
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Ingrese el número de preguntas'
+            'placeholder': 'Type the number of questions'
         }),
-        help_text='Indica cuántas preguntas deseas que tenga el test'
+        help_text='Type the number of questions that you want for the test.'
     )
 
     def __init__(self, *args, **kwargs):
@@ -400,7 +400,7 @@ class ConfigurarNuevoTestAGenerarForm(forms.Form):
         temas_with_questions = PreguntaDelTest.objects.values_list('tema', flat=True).distinct().order_by('tema')
 
         # Convert to list of tuples for choices, filtering out None values
-        tema_choices = [(str(tema), f'Tema {tema}') for tema in temas_with_questions if tema is not None]
+        tema_choices = [(str(tema), f'Topic {tema}') for tema in temas_with_questions if tema is not None]
 
         # Assign to field choices
         self.fields['tema'].choices = tema_choices
@@ -435,7 +435,7 @@ class ConfigurarNuevoTestAGenerarForm(forms.Form):
 
         # Validate required fields based on test type
         if tipo_test == 'tema' and not cleaned_data.get('tema'):
-            raise forms.ValidationError('Debes seleccionar un tema.')
+            raise forms.ValidationError('You need to select a topic.')
         # elif tipo_test == 'año' and not cleaned_data.get('year'):
         #     raise forms.ValidationError('Debes seleccionar un año.')
         elif tipo_test == 'normativa' and not cleaned_data.get('normativa'):
@@ -463,7 +463,7 @@ class ConfigureNewTestByTopicForm(forms.Form):
     # Replace the existing tema ChoiceField with a MultipleChoiceField.
     tema = forms.MultipleChoiceField(
         choices=[],  # Empty initially, will populate in __init__
-        label='Tema',
+        label='Topic',
         widget=forms.CheckboxSelectMultiple(attrs={
             'class': 'tema-checkbox',
             'data-url': '/tests/get-question-count/',
@@ -477,18 +477,18 @@ class ConfigureNewTestByTopicForm(forms.Form):
         #     # 'style': 'display: none;'
         # }),
         required=False,
-        help_text='Selecciona uno o más temas para tu examen'
+        help_text='Select one or more topics for your exam.'
     )
 
     # Campo para que el Usuario inserte cuantas Preguntas quiere para el test
     numero_de_preguntas = forms.IntegerField(
-        label='Número de Preguntas',
+        label='Number of Questions',
         min_value=1,
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Ingrese el número de preguntas'
+            'placeholder': 'Type the number of questions'
         }),
-        help_text='Indica cuántas preguntas deseas que tenga el test'
+        help_text='Type how many questions you want for the exam.'
     )
 
     def __init__(self, *args, **kwargs):
@@ -499,7 +499,7 @@ class ConfigureNewTestByTopicForm(forms.Form):
         temas_with_questions = PreguntaDelTest.objects.values_list('tema', flat=True).distinct().order_by('tema')
 
         # Convert to list of tuples for choices, filtering out None values
-        tema_choices = [(str(tema), f'Tema {tema}') for tema in temas_with_questions if tema is not None]
+        tema_choices = [(str(tema), f'Topic {tema}') for tema in temas_with_questions if tema is not None]
 
         # Assign to field choices
         self.fields['tema'].choices = tema_choices
@@ -543,7 +543,7 @@ class ConfigureNewTestByRegulationForm(forms.Form):
     # Replace the existing tema ChoiceField with a MultipleChoiceField.
     normativa = forms.MultipleChoiceField(
         choices=[],  # Empty initially, will populate in __init__
-        label='Normativa',
+        label='Regulation',
         widget=forms.CheckboxSelectMultiple(attrs={
             'class': 'normativa-checkbox',
             'data-url': '/tests/get-question-count/',
@@ -621,11 +621,11 @@ para configurar un Test por Normativa o por Tema para que también use este form
 class NumeroDePreguntasARealizarFormulario(forms.Form):
     # Esto es para que el cliente escriba el número de preguntas que quiere para el test
     numero_de_preguntas_a_realizar = forms.IntegerField(
-        label='Número de Preguntas',
+        label='Number of Questions',
         min_value=1,
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Ingrese el número de preguntas'
+            'placeholder': 'Type the number of questions'
         }),
-        help_text='Indica cuántas preguntas deseas que tenga el test'
+        help_text='Type the number of questions that you want for the test.'
     )
