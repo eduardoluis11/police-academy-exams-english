@@ -25,15 +25,28 @@
 <div class="container mt-4">
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
-            <h3 class="mb-0">Configurar Nuevo Test por Tema</h3>
+            
+            {% if is_test_by_topic %}   {# If the test is by topic ("Tema") #}
+                <h3 class="mb-0">Configurar Nuevo Test por Tema</h3>
+            {% else %}  {# If the test is by Regulation ("Normativa") #}
+                <h3 class="mb-0">Configurar Nuevo Test por Normativa</h3>
+            {% endif %}
         </div>
         <div class="card-body">
 
-            {# Formulario para Configurar un Test Pre-hecho #}
-            <form method="POST" action="{% url 'tests_clientes:configure_new_test_by_topic' %}">
+                {# Formulario para Configurar un Test Pre-hecho #}
+                {% if is_test_by_topic %}   {# If the test is by topic ("Tema") #}
+                    
+                    {# The form will be submitted to the configure_new_test_by_topic() view #}
+                    <form method="POST" action="{% url 'tests_clientes:configure_new_test_by_topic' %}">
+                {% else %}  {# If the test is by Regulation ("Normativa") #}
+                    
+                    {# The form will be submitted to the configure_new_test_by_regulation() view #}
+                    <form method="POST" action="{% url 'tests_clientes:configure_new_test_by_regulation' %}">
+                {% endif %}
+
+                {# Hidden input that always has "tema" as its value #}
                 {% csrf_token %}
-
-
 
                 {# Formulario para Configurar los mismos ajustes que en un test predefinido (ej: tiempo límite) #}
                 {{ formulario_parte_1.as_p }}
@@ -53,7 +66,7 @@
                     {% endif %}
                 </div>
 
-                {# If the test is by topic #}
+                {# If the test is by topic ("Tema") #}
                 {% if is_test_by_topic %}
 
                     {# Hidden input that always has "tema" as its value #}
@@ -72,7 +85,7 @@
                             <div class="invalid-feedback d-block">{{ formulario_parte_2.tema.errors }}</div>
                         {% endif %}
                     </div>
-                {% else %}  {# If the test is by Regulation #}
+                {% else %}  {# If the test is by Regulation ("Normativa") #}
                     
                     {# Hidden input that always has "Normativa" as its value #}
                     <input type="hidden" id="tipo_de_test_tema_o_normativa" name="tipo_de_test_fixed" value="normativa">
@@ -89,6 +102,9 @@
                         {% if formulario_parte_2.normativa.errors %}
                             <div class="invalid-feedback d-block">{{ formulario_parte_2.normativa.errors }}</div>
                         {% endif %}
+                    
+                        <!-- DEBUGGEO: Aqui se debería imprimir algo en el formulario de configurar un test de normativa -->
+                    <p>Aqui se debería imprimir algo en el formulario de configurar un test de normativa </p>
                     </div>
                 {% endif %}
                 
@@ -110,7 +126,7 @@
 
                     <!-- Botón de "Cancelar". Esto hará que el usuario vuelva al menú de tests. -->
                     <a href="{% url 'tests_clientes:menu_principal_tests' %}" 
-                       class="btn btn-secondary btn-lg ml-2"
+                       class="btn btn-outline-secondary btn-lg ml-2"
                     >
                         Cancelar
                     </a>

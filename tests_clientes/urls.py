@@ -35,6 +35,11 @@ urlpatterns = [
     # Vista para ver la Lista de Tests por Normativa
     path('tests-por-normativa/', views.lista_de_tests_por_normativa, name='lista_de_tests_por_normativa'),
 
+    # Vista para Configurar un Test por Normativa desde Cero
+    path('configurar-test-por-normativa/', views.configure_new_test_by_regulation,
+         name='configure_new_test_by_regulation'
+         ),
+
     # Vista que crea una nueva sesión para el test seleccionado por el cliente. No pondré la dificultad aquí.
     path('iniciar/<str:nombre_del_test>', views.iniciar_el_test, name='iniciar_el_test'),
     # path('test/<str:nombre_del_test>/<int:difficulty>/iniciar/', views.iniciar_el_test, name='iniciar_el_test'),

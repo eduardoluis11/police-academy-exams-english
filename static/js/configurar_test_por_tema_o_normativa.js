@@ -303,9 +303,9 @@ function updateQuestionCount(event) {
         const params = new URLSearchParams();
         params.append('tipo_test', 'normativa');
 
-        // De aquí viene la variable "temas" que usé en el back-end para coger la lista de "temas" seleccionados
-        normativasSeleccionadas.forEach(topic => {
-            params.append('normativas', topic);
+        // De aquí viene la variable "normativas" que usé en el back-end para coger la lista de "temas" seleccionados
+        normativasSeleccionadas.forEach(regulation => {
+            params.append('normativas', regulation);
         });
 
         // Get data-url from a reliable source: an INPUT checkbox that has the attribute.

@@ -13,7 +13,13 @@
 
 
 {% block content %}
-  <h2 class="mb-4">Lista de Tests por Normativa</h2>
+    <h2 class="mb-4">Lista de Tests por Normativa</h2>
+    
+    {# Botón para Generar un Nuevo Test por Normativa. #}
+    {# Consider adding a link here if needed: <a href="{% url '...' %}" #}
+    <a href="{% url 'tests_clientes:configure_new_test_by_regulation' %}" class="btn btn-primary">
+        Generar Test por Normativa
+    </a>
 
     {#  {% for normativa, tests in tests_por_normativa.items %}#}
     {% if tests %}

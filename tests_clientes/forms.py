@@ -537,13 +537,23 @@ Este formulario es muy similar al formulario para configurar un nuevo test por T
 """
 
 
+""" Formulario para Configurar un Nuevo Test por Normativa.
+
+Este formulario es muy similar al formulario para configurar un nuevo test por Tema.
+
+Esto me va a generar todas las casillas con todas las regulaciones tomadas de la base de datos. Esto verá todas
+las preguntas de PreguntaDelTest() que tengan una normativa asignada. Luego, el cliente podrá seleccionar
+las normativas que quiera.
+"""
+
+
 class ConfigureNewTestByRegulationForm(forms.Form):
 
     # Campo para seleccionar el tema (inicialmente oculto).
     # Replace the existing tema ChoiceField with a MultipleChoiceField.
     normativa = forms.MultipleChoiceField(
         choices=[],  # Empty initially, will populate in __init__
-        label='Regulation',
+        label='Normativa',
         widget=forms.CheckboxSelectMultiple(attrs={
             'class': 'normativa-checkbox',
             'data-url': '/tests/get-question-count/',
@@ -579,7 +589,7 @@ class ConfigureNewTestByRegulationForm(forms.Form):
         regulations_with_questions = PreguntaDelTest.objects.values_list('normativa', flat=True).distinct().order_by('normativa')
 
         # Convert to list of tuples for choices, filtering out None values
-        regulation_choices = [(str(normativa), f'Normativa {normativa}') for normativa in regulations_with_questions if normativa is not None]
+        regulation_choices = [(str(normativa), f'{normativa}') for normativa in regulations_with_questions if normativa is not None]
 
         # Assign to field choices
         self.fields['normativa'].choices = regulation_choices

@@ -1277,6 +1277,165 @@ Pondré algún boolean o algo para decir si el test es por normativa o por tema.
 que diga “es un test por tema”, y enviarlo por Jinja. En este caso, debe ser "false", ya que este no será un test
 por tema.
 
+"""
+
+
+@login_required(login_url='iniciar_sesion')
+def configure_new_test_by_regulation(request):
+    # Get all available questions from database
+    all_available_questions = PreguntaDelTest.objects.all().order_by('id')
+
+    # Boolean that tells me if the test is by topic. For this view, it will be set to "false".
+    is_test_by_topic = False
+
+    # Si el usuario envía el formulario (para comenzar el Test)
+    if request.method == 'POST':
+
+        formulario_parte_1 = ConfigurarTestSinIncluirPreguntasForm(request.POST)
+
+        # Esto contiene los nuevos campos que son específicos para esta vista de Configurar un Test
+        formulario_parte_2 = ConfigureNewTestByRegulationForm(request.POST)
+
+        # Validar / Sanitizar el formulario. En caso de que sea válido:
+        if formulario_parte_1.is_valid() and formulario_parte_2.is_valid():
+
+            # Validar / Sanitizar el Formulario
+
+            # Check if unlimited time was selected
+            time_choice = formulario_parte_1.cleaned_data['time_limit']
+            if time_choice == 'ilimitado':
+                # Use None or a special value to indicate unlimited time
+                time_limit = None
+            else:
+                # Convert to integer if not unlimited.
+                # Esto agarra el tiempo que el usuario seleccionó en el formulario de manera validada.
+                time_limit = int(time_choice)
+
+            # # Esto agarra el tiempo que el usuario seleccionó en el formulario de manera validada
+            # time_limit = int(formulario_parte_1.cleaned_data['time_limit'])
+
+            # Get number of questions requested by user
+            numero_de_preguntas = formulario_parte_2.cleaned_data['numero_de_preguntas']
+
+            # The type of exam will "by regulation" ("normativa"), since this view is only for exams by regulation
+            tipo_test = "normativa"
+
+            # Get filtered questions based on test type and specific selection.
+            # Replace the existing regulation filtering with multi-regulation support.
+            normativas_seleccionadas = formulario_parte_2.cleaned_data['normativa']
+
+            # tema = formulario_parte_2.cleaned_data['tema']
+
+            if not normativas_seleccionadas:  # If you don't select any regulation
+
+                # Shows an error message, and reloads the current page / template with the form
+                messages.error(request, 'Debes seleccionar al menos una normativa.')
+                return redirect('tests_clientes:configure_new_test_by_regulation')
+
+            # Use Q objects to create OR conditions for multiple topics.
+            # Usa objetos Q para crear condiciones "OR" para coger múltiples temas.
+
+            query = Q()
+            for normativa in normativas_seleccionadas:
+                query |= Q(normativa=normativa)
+
+            available_questions = PreguntaDelTest.objects.filter(query)
+
+            # available_questions = PreguntaDelTest.objects.filter(tema=tema)
+
+            # Create custom message showing selected topics
+            temas_texto = ", ".join([f"Normativa {t}" for t in normativas_seleccionadas])
+            tipo_mensaje = f"normativas '{temas_texto}'"
+
+            # Count of available questions for the specific selection
+            available_question_count = available_questions.count()
+
+            # Si el número de preguntas escrito por el usuario es mayor que las disponibles
+            if numero_de_preguntas > available_question_count:
+                # Mostrar un mensaje de error
+                messages.error(request,
+                               f'El número de preguntas solicitadas ({numero_de_preguntas}) es mayor que el '
+                               f'número de preguntas disponibles para el {tipo_mensaje} ({available_question_count}). '
+                               f'Por favor, seleccione un número menor o igual a {available_question_count}.')
+
+                # Vuelvo a renderizar el formulario con el error
+                return redirect('tests_clientes:configure_new_test_by_regulation')
+
+            # Create timestamp for the test name
+            timestamp = timezone.now().strftime('%Y-%m-%d %H:%M')
+
+            # Create new Test() instance with procedurally generated name, and of type "regulation" ("normativa").
+            nuevo_test = Test.objects.create(
+                nombre_del_test=f"Test de {request.user.username} - {timestamp}",
+                tipo="normativa",  # The exam type will be "by normativa"
+                fue_generado_proceduralmente=True,  # Test debe marcarse como que fue generado proceduralmente
+            )
+
+            # Para que las preguntas cogidas sean realmente aleatorias, le voy a agregar un seed
+            seed(int(datetime.now().timestamp()))
+
+            # This will sort the questions in a random order
+            # Use the same Q object for random question selection (with the selected topics from the form)
+            preguntas_random = PreguntaDelTest.objects.filter(query).order_by('?')[:numero_de_preguntas]
+
+            # Esto agrega cada pregunta al test a tomar. La manera que lo hace es agregando el test a cada pregunta.
+            for pregunta in preguntas_random:
+                pregunta.nombre_del_test.add(nuevo_test)
+
+            # Esto crea una nueva Sesión con los datos validados del formulario
+            session = SesionDelTest.objects.create(
+                usuario=request.user,
+                nombre_del_test=nuevo_test,  # INSTANCIA DE UN TEST EXISTENTE
+                nivel_de_dificultad=formulario_parte_1.cleaned_data['difficulty'],
+                limite_de_tiempo=formulario_parte_1.cleaned_data.get('custom_time_limit') or time_limit,
+                tiempo_restante=formulario_parte_1.cleaned_data.get('custom_time_limit') or time_limit,
+                # Agrega "True" o "False" para decir si el test es autocorregido
+                test_autocorregido=formulario_parte_1.cleaned_data['autocorrect'] == 'true'
+            )
+
+            # Redirijo al usuario a la 1era pregunta del Test para que lo tome.
+            # Esto redirige al cliente a la vista de Tomar el Test con Autocorrección (si lo quiere con autocorrección)
+            if session.test_autocorregido:
+                return redirect('tests_clientes:tomar_test_autocorregido', session_id=session.id, question_number=1)
+
+            else:
+                # Esto redirige al usuario a la vista de Tomar el Test sin autocorrección
+                return redirect('tests_clientes:tomar_test', session_id=session.id, question_number=1)
+
+        else:  # Si el formulario no es válido, entonces le muestro un mensaje de error
+            messages.error(request, f"Error al enviar el formulario")
+
+            # Esto renderiza los formularios con los errores
+            formulario_parte_1 = ConfigurarTestSinIncluirPreguntasForm(request.POST)
+            formulario_parte_2 = ConfigureNewTestByRegulationForm(request.POST)
+
+            # Vuelvo a renderizar el formulario con el error
+            return redirect('tests_clientes:configure_new_test_by_regulation')
+
+    else:  # Esto renderiza los formularios si entras a esta página, es decir, si no has enviado el formulario
+        formulario_parte_1 = ConfigurarTestSinIncluirPreguntasForm()
+        formulario_parte_2 = ConfigureNewTestByRegulationForm()
+
+    # Prepare context for the form
+    context = {
+        'formulario_parte_1': formulario_parte_1,
+        'formulario_parte_2': formulario_parte_2,
+        'is_test_by_topic': is_test_by_topic,  # Booleano que dice si el test es por tema (debe ser falso)
+        # 'test': test,
+        # 'default_questions': default_questions,
+    }
+
+    return render(request, 'tests_clientes/configurar_test/configurar_test_por_tema_o_normativa.html',
+                  context)
+
+""" Vista para Configurar un Nuevo Test por Normativa.
+
+Esto será similar a la vista de Generar un nuevo test desde cero, pero será solo para generar un test por Normativa.
+
+Pondré algún boolean o algo para decir si el test es por normativa o por tema. Para evitar bugs, puedo poner un boolean 
+que diga “es un test por tema”, y enviarlo por Jinja. En este caso, debe ser "false", ya que este no será un test
+por tema.
+
 
 BOOKMARK.
 """
