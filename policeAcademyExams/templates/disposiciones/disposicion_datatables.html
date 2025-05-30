@@ -112,7 +112,7 @@
                                 Tests
                             </a>
                             {# Enlaces que estarán dentro del submenú negro de "Tests" de la barra de navegación #}
-                            <ul class="dropdown-menu bg-dark-blue" aria-labelledby="testsDropdown">
+                            <ul class="dropdown-menu bg-primary" aria-labelledby="testsDropdown">
                                 <li class="nav-item"> {# Enlace a la Lista de Tests #}
                                     <a href="{% url 'tests_clientes:lista_de_tests' %}" class="nav-link">
                                         Lista de Tests
@@ -132,24 +132,24 @@
                             </ul>  {# Fin de los enlaces del menú dropdown de "Tests" #} 
                         </li>   {# Fin del Submenu Dropdown de "Tests" #}
                         
-                        <li class="nav-item"> {# Enlace a la página de Supuestos #}
-                            <a href="#" class="nav-link">Supuestos</a>
-                        </li>
+                        {#                        <li class="nav-item"> {# Enlace a la página de Supuestos #}
+                        {#                            <a href="#" class="nav-link">Supuestos</a>#}
+                        {#                        </li>#}
                         
                         {# Enlace a "Temario" #}
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">Temario</a>
-                        </li>
+                        {#                        <li class="nav-item">#}
+                        {#                            <a href="#" class="nav-link">Temario</a>#}
+                        {#                        </li>#}
                         
                         {# Enlace a "Convocatorias" #}
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">Convocatorias</a>
-                        </li>
+                        {#                        <li class="nav-item">#}
+                        {#                            <a href="#" class="nav-link">Convocatorias</a>#}
+                        {#                        </li>#}
                         
                         {# Enlace a "Estadísticas" #}
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">Estadísticas</a>
-                        </li>
+                        {#                        <li class="nav-item">#}
+                        {#                            <a href="#" class="nav-link">Estadísticas</a>#}
+                        {#                        </li>#}
                         
                         {% block nav_items %}
                             {# Add navigation items in child templates if needed #}
