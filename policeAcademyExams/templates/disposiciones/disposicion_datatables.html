@@ -74,12 +74,14 @@
         }
     </style>
     <!-- Navigation bar -->
-    {# El bg-dark-blue es CSS customizado hace que la barra de navegación se haga de color azul oscuro. #}
-    {# Navbar-dark just makes the text white. #} 
-    {# I will change the color of the navbar to be one of my Pokemon Palette colors. #}
-    {#    <nav class="navbar navbar-expand-lg navbar-dark bg-dark-blue">#}
+    {#    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">#}
+    {# El bg-dark-blue hace que la barra de navegación se haga de color azul oscuro. #}
     {#  #}
+    {# Navbar-dark just makes the text white. #}
+    {#    {# I will change the color of the navbar to be one of my Pokemon Palette colors. #}
+    {#    <nav class="navbar navbar-expand-lg navbar-dark bg-dark-blue">#}
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    
         <div class="container-fluid">
             <a class="navbar-brand" href="{% url 'inicio' %}">
                 <!-- Police Exams -->
@@ -88,7 +90,9 @@
 
             {# Esto debe agregar el boton de menu de hamburguesa en pantallas de moviles. Debo agregar el ID del div que quiero  #}
             {#    mostrar y ocultar con el boton de hamburguesa #}
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-oposiciones" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-oposiciones"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"
+            >
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -96,37 +100,41 @@
             <div class="collapse navbar-collapse" id="navbar-oposiciones">
                 <ul class="navbar-nav ms-auto">
                 
-                    {# Enlace a la página de Inicio #}
-                    <li class="nav-item">
+                    <li class="nav-item"> {# Enlace a la página de Inicio #}
                         {# El "active" resalta el enlace de la pagina actual en el navbar #}
-                        <a class="nav-link" href="{% url 'inicio' %}">Inicio</a>
+                        <a class="nav-link" href="{% url 'inicio' %}">Home</a>
                     </li>
                 
-                    {# Si el usuario ha iniciado sesión, se le mostrará solo el enlace para cerrar sesión #}
+                    {# Si el usuario ha iniciado sesión, se le mostrarán estos enlaces #}
                     {% if user.is_authenticated %}
 
                         {# Submenú Dropdown de "Tests". Esto meterá todo los enlaces de Tests en 1 solo menu #}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="testsDropdown" role="button"
                                data-bs-toggle="dropdown" aria-expanded="false">
-                                Tests
+                                Exams
                             </a>
                             {# Enlaces que estarán dentro del submenú negro de "Tests" de la barra de navegación #}
                             <ul class="dropdown-menu bg-primary" aria-labelledby="testsDropdown">
+                                <li class="nav-item"> {# Enlace al Menú Principal de los Tests #}
+                                    <a href="{% url 'tests_clientes:menu_principal_tests' %}" class="nav-link">
+                                        Main Menu
+                                    </a>
+                                </li>
                                 <li class="nav-item"> {# Enlace a la Lista de Tests #}
                                     <a href="{% url 'tests_clientes:lista_de_tests' %}" class="nav-link">
-                                        Lista de Tests
+                                        Exams' List
                                     </a>
                                 </li>
                                 <li class="nav-item"> {# Lista de Resultados de Tests Pasados #}
                                     <a href="{% url 'tests_clientes:lista_de_resultados_de_tests_pasados' %}"
                                        class="nav-link">
-                                        Resultados
+                                        Results
                                     </a>
                                 </li>
                                 <li class="nav-item"> {# Lista de Tests Incompletos #}
                                     <a href="{% url 'tests_clientes:lista_de_tests_incompletos' %}" class="nav-link">
-                                        Tests Incompletos
+                                        Incomplete Exams
                                     </a>
                                 </li>
                             </ul>  {# Fin de los enlaces del menú dropdown de "Tests" #} 
@@ -135,35 +143,50 @@
                         {#                        <li class="nav-item"> {# Enlace a la página de Supuestos #}
                         {#                            <a href="#" class="nav-link">Supuestos</a>#}
                         {#                        </li>#}
-                        
-                        {# Enlace a "Temario" #}
+                        {#                        #}
+                                                {# Enlace a "Temario" #}
                         {#                        <li class="nav-item">#}
                         {#                            <a href="#" class="nav-link">Temario</a>#}
                         {#                        </li>#}
-                        
-                        {# Enlace a "Convocatorias" #}
+                        {#                        #}
+                                                {# Enlace a "Convocatorias" #}
                         {#                        <li class="nav-item">#}
                         {#                            <a href="#" class="nav-link">Convocatorias</a>#}
                         {#                        </li>#}
-                        
-                        {# Enlace a "Estadísticas" #}
+                        {#                        #}
+                                                {# Enlace a "Estadísticas" #}
                         {#                        <li class="nav-item">#}
                         {#                            <a href="#" class="nav-link">Estadísticas</a>#}
                         {#                        </li>#}
-                        
+    
                         {% block nav_items %}
                             {# Add navigation items in child templates if needed #}
                         {% endblock %}
                         
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'cerrar_sesion' %}">Cerrar Sesión</a>
+                            <a class="nav-link" href="{% url 'cerrar_sesion' %}">Log Out</a>
+                        </li>
+                    {% else %}
+                        {# Si el usuario no ha iniciado sesión, se le mostrarán estos enlaces #}
+                        
+                        <li class="nav-item">   {# Enlace para Iniciar Sesión #}
+                            <a class="nav-link" href="{% url 'iniciar_sesion' %}">
+                                Log In
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item">   {# Enlace para Registrarse #}
+                            <a class="nav-link" href="{% url 'registrarse' %}">
+                                Sign Up
+                            </a>
                         </li>
                     {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
-
+    
+    
     {# Messages Section #}
     <div class="container mt-3">
         {# Messages Integration: #}
