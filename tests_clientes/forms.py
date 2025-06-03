@@ -553,7 +553,7 @@ class ConfigureNewTestByRegulationForm(forms.Form):
     # Replace the existing tema ChoiceField with a MultipleChoiceField.
     normativa = forms.MultipleChoiceField(
         choices=[],  # Empty initially, will populate in __init__
-        label='Normativa',
+        label='Regulation',
         widget=forms.CheckboxSelectMultiple(attrs={
             'class': 'normativa-checkbox',
             'data-url': '/tests/get-question-count/',
@@ -567,18 +567,21 @@ class ConfigureNewTestByRegulationForm(forms.Form):
         #     # 'style': 'display: none;'
         # }),
         required=False,
-        help_text='Selecciona una o más normativas para tu examen'
+        help_text='Select one or more regulations for your test'
+
+        # help_text='Selecciona una o más normativas para tu examen'
     )
 
     # Campo para que el Usuario inserte cuantas Preguntas quiere para el test
     numero_de_preguntas = forms.IntegerField(
-        label='Número de Preguntas',
+        label='Number of Questions',
         min_value=1,
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Ingrese el número de preguntas'
+            'placeholder': 'Type the number of questions'
         }),
-        help_text='Indica cuántas preguntas deseas que tenga el test'
+        help_text='Type how many questions you want for the test'
+        # help_text='Indica cuántas preguntas deseas que tenga el test'
     )
 
     def __init__(self, *args, **kwargs):

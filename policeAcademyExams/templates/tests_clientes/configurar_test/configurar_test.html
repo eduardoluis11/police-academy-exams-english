@@ -4,13 +4,13 @@
 {# Página para configurar los ajustes del Test Pre-hecho antes de tomarlo (escoger su nivel de dificultad, el #}
 {# tiempo, etc). #}
 
-{% block title %}Configurar Test - {{ test.nombre_del_test }}{% endblock %}
+{% block title %}Configure Test - {{ test.nombre_del_test }}{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
-            <h3 class="mb-0">Configurar Test: {{ test.nombre_del_test }}</h3>
+            <h3 class="mb-0">Configure Test: {{ test.nombre_del_test }}</h3>
         </div>
         <div class="card-body">
 
@@ -204,9 +204,9 @@
 
                 <!-- Submit Button -->
                 <div class="text-center mt-4">
-                    <button type="submit" class="btn btn-warning btn-lg">Comenzar Test</button>
+                    <button type="submit" class="btn btn-warning btn-lg">Begin Test</button>
                     <a href="{% url 'tests_clientes:menu_principal_tests' %}" class="btn btn-secondary btn-lg ml-2">
-                        Cancelar
+                        Cancel
                     </a>
                 </div>
             </form> {# Fin del Formulario #}

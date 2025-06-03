@@ -19,7 +19,7 @@
 {# If you're using this only for JavaScript purposes and don't need it to be submitted with the form, the name #}
 {# attribute is optional and can be removed. #}
 
-{% block title %} Configurar Nuevo Test por Tema {% endblock %}
+{% block title %}Configure New Test by Topic {% endblock %}
 
 {% block content %}
 <div class="container mt-4">
@@ -27,9 +27,9 @@
         <div class="card-header bg-primary text-white">
             
             {% if is_test_by_topic %}   {# If the test is by topic ("Tema") #}
-                <h3 class="mb-0">Configurar Nuevo Test por Tema</h3>
+                <h3 class="mb-0">Configure New Test by Topic</h3>
             {% else %}  {# If the test is by Regulation ("Normativa") #}
-                <h3 class="mb-0">Configurar Nuevo Test por Normativa</h3>
+                <h3 class="mb-0">Configure New Test by Regulation</h3>
             {% endif %}
         </div>
         <div class="card-body">
@@ -103,8 +103,8 @@
                             <div class="invalid-feedback d-block">{{ formulario_parte_2.normativa.errors }}</div>
                         {% endif %}
                     
-                        <!-- DEBUGGEO: Aqui se debería imprimir algo en el formulario de configurar un test de normativa -->
-                    <p>Aqui se debería imprimir algo en el formulario de configurar un test de normativa </p>
+                        {#                        <!-- DEBUGGEO: Aqui se debería imprimir algo en el formulario de configurar un test de normativa -->#}
+                        {#                    <p>Aqui se debería imprimir algo en el formulario de configurar un test de normativa </p>#}
                     </div>
                 {% endif %}
                 
@@ -122,13 +122,13 @@
 
                 <div class="text-center mt-4">
                     {# Botón de Submit para Generar el Test #}
-                    <button type="submit" class="btn btn-warning btn-lg">Generar</button>
+                    <button type="submit" class="btn btn-warning btn-lg">Begin Test</button>
 
                     <!-- Botón de "Cancelar". Esto hará que el usuario vuelva al menú de tests. -->
                     <a href="{% url 'tests_clientes:menu_principal_tests' %}" 
-                       class="btn btn-outline-secondary btn-lg ml-2"
+                       class="btn btn-secondary btn-lg ml-2"
                     >
-                        Cancelar
+                        Cancel
                     </a>
                 </div>
             </form> {# Fin del Formulario #}

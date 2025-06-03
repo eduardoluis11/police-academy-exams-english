@@ -283,7 +283,8 @@ function updateQuestionCount(event) {
                 const numPreguntasInput = document.getElementById('id_preguntas_disponibles');
                 numPreguntasInput.value = data.count;
                 const helpText = numPreguntasInput.nextElementSibling;
-                helpText.textContent = `Puedes escoger hasta un máximo de ${data.count} preguntas para este test.`;
+                helpText.textContent = `You can select up to a maximum of ${data.count} questions for this test.`;
+                // helpText.textContent = `Puedes escoger hasta un máximo de ${data.count} preguntas para este test.`;
             })
             .catch(error => console.error('Error:', error));
     } // Fin del API call para los temas elegidos
