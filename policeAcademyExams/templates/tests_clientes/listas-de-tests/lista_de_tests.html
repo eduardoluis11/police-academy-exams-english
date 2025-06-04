@@ -28,7 +28,7 @@
 
 
 {% block content %}
-  <h2>Tests Disponibles</h2>
+  <h2>Available Tests</h2>
 
   {# Si el Usuario Autenticado es un Administrador, él podrá crear nuevos tests, sea manualmente, o con un Excel. #}
   {% if user.is_superuser %}
@@ -37,7 +37,7 @@
       <br>
       {# Si el usuario autenticado es un administrador, él podrá crear un nuevo test #}
       <a href="{% url 'tests_administradores:crear_nuevo_test_sin_subir_un_archivo' %}" class="btn btn-primary">
-          Crear Nuevo Test
+          Create New Test
       </a>
       <br>
       <br>

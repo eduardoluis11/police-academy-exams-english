@@ -45,19 +45,19 @@
 {# ese test interrumpido. Si el usuario no respondio ninguna pregunta, el usuario empezará desde la 1era pregunta. #}
 {% load static %}
 
-{% block title %}Lista de Tests Incompletos{% endblock %}
+{% block title %}Unfinished Tests{% endblock %}
 
 {% block content %}
     <div class="container mt-4">
-        <h2>Tests Incompletos</h2>
+        <h2>Unfinished Tests</h2>
 
         {% if sesiones_con_tests_incompletos %}
             <table id="tabla-tests-incompletos" class="table table-striped">
                 <thead> {# Encabezados de la Tabla de Tests Incompletos #}
                     <tr>
-                        <th>Nombre del Test</th>
-                        <th>Hora de Inicio</th>
-                        <th>Acción</th>
+                        <th>Test's Name</th>
+                        <th>Start Time</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -83,7 +83,7 @@
                                            class="btn btn-warning btn-sm"
                                         >
                                     {% endif %}
-                                        Continuar Test
+                                        Continue Test
                                     </a>
                                 </td>
                             </tr>
@@ -93,7 +93,7 @@
             </table>
         {% else %}
             <p>No tienes ningún test incompleto.</p>
-            <a href="{% url 'tests_clientes:lista_de_tests' %}" class="btn btn-primary">View Available Tests</a>
+            <a href="{% url 'tests_clientes:menu_principal_tests' %}" class="btn btn-primary">View Available Tests</a>
         {% endif %}
     </div>
     

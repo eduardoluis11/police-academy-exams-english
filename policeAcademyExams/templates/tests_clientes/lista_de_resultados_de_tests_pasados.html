@@ -19,24 +19,24 @@
 {# el usuario puede continuar con un test que no haya terminado, y que aún tenga tiempo de entregarlo. #}
 {% load static %}
 
-{% block title %}Lista de Resultados de Tests Anteriores{% endblock %}
+{% block title %}List of past test results{% endblock %}
 
 {% block content %}
     <div class="container mt-4">
-        <h2>Tests Hechos</h2>
+        <h2>List of Past Test Results</h2>
 
         {% if sesiones %}
             <table id="tabla-lista-de-resultados" class="table table-striped">
                 <thead> {# Encabezados de la Tabla de Tests Incompletos #}
                     <tr>
-                        <th>Nombre del Test</th>    {# Por los momentos, le dejaré el nombre a los tests #}
-                        <th>Día</th> {# Día en que se Inició el Test #}
-                        <th>Hora de Inicio</th> {# Hora en que se Inició el Test #}
-                        <th>Tipo</th>   {# Tipo de Test (Año, Normativa, o Tema) #}
+                        <th>Test's Name</th>    {# Por los momentos, le dejaré el nombre a los tests #}
+                        <th>Day</th> {# Día en que se Inició el Test #}
+                        <th>Start Time</th> {# Hora en que se Inició el Test #}
+                        <th>Type</th>   {# Tipo de Test (Año, Normativa, o Tema) #}
                         {#                        <th>Finalización</th>#}
-                        <th>Nota</th>
-                        <th>Resultado</th>
-                        <th>Acción</th>
+                        <th>Note</th>
+                        <th>Result</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -94,7 +94,7 @@
                                                class="btn btn-warning btn-sm"
                                             >
                                         {% endif %}
-                                            Continuar Test
+                                            Continue Test
                                         </a>
                                     {% endif %}
                                 </td>
