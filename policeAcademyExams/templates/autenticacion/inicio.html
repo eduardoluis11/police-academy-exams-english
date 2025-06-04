@@ -10,7 +10,7 @@
 
 {# Esto me renderiza el título de la pagina en la pestaña del navegador  #}
 
-{% block title %}Home - Police Exams{% endblock %}
+{% block title %}Home - Police Tests{% endblock %}
 
 {# Agregue la disposicion / layout para ponerle el bootstrap y los mensajes de flash de error o confirmacion.  #}
 
@@ -39,7 +39,7 @@
 {% block content %}
 
     {# Police Exam's Logo #}
-    <img src="#" alt="Police Exam's Logo" height="100">
+    <img src="#" alt="Police Test's Logo" height="100">
 
     <br>
     <br>
@@ -61,7 +61,7 @@
 
                 {# Enlace para ver la lista de Tests #}
                 <a href="{% url 'tests_clientes:lista_de_tests' %}" class="btn btn-primary">
-                    Ver la lista de Tests
+                    View Tests's List
                 </a>
                 <br>
                 <br>
@@ -75,7 +75,7 @@
 
                 {# Enlace para crear un test desde cero, sin usar un Excel #}
                 <a href="{% url 'tests_administradores:crear_nuevo_test_sin_subir_un_archivo' %}" class="btn btn-primary">
-                    Crear Nuevo Test
+                    Create New Test
                 </a>
                <br>
                <br>
@@ -98,7 +98,7 @@
             {# Enlaces a las funcionalidades para los clientes. #}
             {# Link to the Exams' Lists #}
             <a href="{% url 'tests_clientes:menu_principal_tests' %}" class="btn btn-primary">
-                Exams
+                Tests
             </a>
             <br>
             <br>
