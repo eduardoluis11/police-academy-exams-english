@@ -152,9 +152,11 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-""" Idioma del Panel de Administración de Django.
+""" Language of the entire Django project.
 
-La voy a cambiar a español.
+Among other things, this sets the language of the Django Admin Panel.
+
+I will set it to English.
 """
 LANGUAGE_CODE = 'en-us'
 
