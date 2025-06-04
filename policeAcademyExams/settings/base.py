@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     'autenticacion',  # App de autenticacion
     'tests_administradores',  # App de Tests para Administradores
     'tests_clientes',  # App de Tests para Usuarios
+    'import_export',  # App de Django para importar y exportar registros de los modelos a un archivo CSV
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
