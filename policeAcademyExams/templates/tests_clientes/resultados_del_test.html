@@ -34,35 +34,35 @@
 {% endblock %}
 
 {% block content %}
-  <h2>Resultados del Test - {{ session.nombre_del_test }}</h2>
+  <h2>{{ session.nombre_del_test }} - Test's Results</h2>
 
   {# Puntuación del Test en escala del 1 al 10 con 2 decimales #}
-  <p>Has obtenido un {{ score|floatformat:2 }}</p>
+  <p>Score: {{ score|floatformat:2 }}</p>
 
   {# Nivel de Dificultad / criterios de corrección del test #}
-  <p>Criterios de corrección: {{ nombre_de_dificultad }}</p>
+  <p>Difficulty Level: {{ nombre_de_dificultad }}</p>
 
   {# Respuestas Correctas / Aciertos #}
-  <p>Aciertos: {{ correct_answers }}</p>
+  <p>Right Answers: {{ correct_answers }}</p>
 
   {# Respuestas Incorrectas / Errores #}
-  <p>Errores: {{ incorrect_answers }}</p>
+  <p>Wrong Answers: {{ incorrect_answers }}</p>
 
   {# Preguntás que el usuario dejó en blanco #}
-  <p>En blanco: {{ respuestas_vacias }}</p>
+  <p>Empty Answers: {{ respuestas_vacias }}</p>
 
   {# Número total de preguntas en el test #}
   <p>Número Total de Preguntas: {{ total_questions }}</p>
     
   {# Si el usuario ha pasado el test, se le mostrará un mensaje de "Aprobado". #}
   {# Si el usuario no ha pasado el test, se le mostrará un mensaje de "Suspendido". #}
-  <p>Resultado:
+  <p>Results:
 
       {# Si el usuario aprobó el test #}
       {% if passed %}
 
           {# Le muestro al usuario que aprobó el test #}
-          <span id="resultadoAprobado">Aprobado</span>
+          <span id="resultadoAprobado">Passed</span>
 
           {# Le muestro al usuario una animación de confetti volando. Usé la biblioteca de canvas-confetti.  #}
           <script>
@@ -92,7 +92,7 @@
           </script>
           
       {% else %}    {# Si el usuario suspendió el test #}
-          <span id="resultadoSuspendido">Suspendido</span>
+          <span id="resultadoSuspendido">Failed</span>
       {% endif %}
   </p>
 
@@ -100,7 +100,9 @@
   {#  <h3>Repasar Test</h3>#}
     
     {# Enlace para repasar el test. Debo meter la ID de la sesión, y quiero empezar por la 1era pregunta. #}
-    <a href="{% url 'tests_clientes:repasar_test_finalizado' session.id 1 %}">Repasar Test</a>
+    <a href="{% url 'tests_clientes:repasar_test_finalizado' session.id 1 %}">
+        Review Test
+    </a>
     <br>
     <br>
     
@@ -126,8 +128,12 @@
     {#  </ul>#}
 
   {# Enlace para volver a la página de Inicio #}
+  <!-- Left Arrow -->
+  &larr; 
   <a href="{% url 'inicio' %}">
-      Volver al Inicio
+    {#      &lAarr; Go Back Home#}
+    {#    &larr; Go Back Home#}
+    Go Back Home
   </a>
 
   <br>
@@ -135,7 +141,7 @@
   {# Puedo poner un Footer o algo similar que diga "La animación de Confetti es copyright de Kiril Vatev". #}
   <footer>  {# Footer de la página. #}
         <p>
-            La animación de confeti está protegida por derechos de autor © 2020 de
+            The confetti animation is copyright © 2020 by
             <a href="https://github.com/catdad/canvas-confetti" target="_blank">Kiril Vatev</a>.
         </p>
   </footer>

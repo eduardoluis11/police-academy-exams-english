@@ -374,17 +374,15 @@
       
         {# Si el usuario está repasando su test #}
         {% if viewing_results %}
-
-
             
             {# Botones de "Siguiente" y "Anterior" para navegar entre las preguntas del test al clicar en ellos #}
             <a href="{% url 'tests_clientes:repasar_test_finalizado' session.id question_number|add:'-1' %}" 
                class="btn btn-primary" {% if question_number == 1 %}disabled{% endif %}>
-                Anterior
+                Previous
             </a>
             <a href="{% url 'tests_clientes:repasar_test_finalizado' session.id question_number|add:'1' %}" 
                class="btn btn-primary" {% if question_number == total_questions %}disabled{% endif %}>
-                Siguiente
+                Next
             </a>
             <br>
             <br>
@@ -411,7 +409,7 @@
             {# Justificación de la respuesta actual. SIEMPRE se debe mostrar después de responder. #}
             {#            <div id="justificacion" style="display: none">#}
             <div id="justificacion">
-                <p><b>Justificación:</b></p>
+                <p><b>Review:</b></p>
                 <p>{{ question.justificacion }}</p>
             </div>
             
@@ -419,7 +417,7 @@
             <br>
             {# Botón para volver a los Resultados Totales de la Sesión Actual #}
             <a href="{% url 'tests_clientes:resultados_del_test' session.id %}" class="btn btn-secondary">
-                Volver a los Resultados
+                Go Back to Results
             </a>
             <br>
             <br>
@@ -449,10 +447,10 @@
             {# Modify your navigation buttons to also save the selected answer #}
             {# Llamo a la función saveTimeOnly() para guardar el tiempo restante del temporizador #}
             <button class="btn btn-primary" type="submit" name="action" value="previous" onclick="saveTimeOnly()">
-                Anterior
+                Previous
             </button>
             <button class="btn btn-primary" type="submit" name="action" value="next" onclick="saveTimeOnly()">
-                Siguiente
+                Next
             </button>
             
             <br>
@@ -462,21 +460,20 @@
                onclick="{% if tiempo_ilimitado %}guardarYSalirDeTestTiempoIlimitado(){% else %}saveAndExit(){% endif %}" 
                class="btn btn-warning"
             >
-                Guardar y Salir
+                Save and Exit
             </button>
     
 
         {% endif %} {# Fin del "if" que verifica si el usuario está repasando el test o no #}
 
         {# Si el usuario respondió una pregunta de un test con autocorrección. #}
-        {# OPTIMIZAR DESPUES. #}
         {% if autocorreccion and user_answer %}
 
             {# Respuesta correcta de la pregunta actual seleccionada. Siempre se debe renderizar. #}
             {#            {% if pregunta_seleccionada_es_incorrecta %}#}
             <p>
                 {# Respuesta correcta de la pregunta actual seleccionada #}
-                <b>Respuesta correcta: {{ question.respuesta_correcta }}) {{ texto_respuesta_correcta }}</b>
+                <b>Correct answer: {{ question.respuesta_correcta }}) {{ texto_respuesta_correcta }}</b>
             </p>
             {#            {% endif %}#}
                 
@@ -493,7 +490,7 @@
             {# Justificación de la respuesta actual. SIEMPRE se debe mostrar después de responder. #}
             {#            <div id="justificacion" style="display: none">#}
             <div id="justificacion">
-                <p><b>Justificación:</b></p>
+                <p><b>Review:</b></p>
                 <p>{{ question.justificacion }}</p>
             </div>
 
@@ -537,7 +534,6 @@
     {#  value. #}
     <div class="col-md-3"> {# Columna de la mitad derecha del navegador del grid de Boostrap #}
     
-        {# BOOKMARK #}
         {# El temporizador solo se debe renderizar si el usuario está tomando el test, NO si lo repasa, ni tampoco #}
         {#  si tiene tiempo infinito. #}
         {% if not viewing_results and not tiempo_ilimitado %}
@@ -558,13 +554,13 @@
               
             {# Mensaje que indica que el tiempo es ilimitado #}
             <div class="alert alert-info">
-                Tiempo ilimitado para completar el test
+                Unlimited time to complete the test
             </div>
         {% endif %}
     
         <!-- Grid con el enlace a todas las preguntas del Test -->
         <div class="question-grid">
-            <h3>Preguntas</h3>
+            <h3>Questions</h3>
 
             {# Esto hará que aparezcan 5 preguntas de manera horizontal por fila #}
               {#            <div class="grid-container" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;">#}
@@ -685,7 +681,7 @@
                 <div class="d-grid gap-2 mt-3"> {# mt-3 adds some margin on top #}
                     {# Added btn-lg for a larger button #}
                     <button class="btn btn-success btn-lg" type="submit" name="action" value="finish" form="exam_form"> 
-                        Finalizar
+                        Finish and Submit
                     </button> 
                 </div>
             {% endif %} {# Fin del "if" que revisa si el usuario está repasando su test o no #}
