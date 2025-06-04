@@ -28,7 +28,7 @@
     
     {# Enlace para Generar un Test con Preguntas Aleatorias desde Cero #}
     <a href="{% url 'tests_clientes:configurar_nuevo_test_a_generar' %}" class="btn btn-primary w-100">
-        Generate a new Exam
+        Generate a new Test
     </a>
     
     <br>
@@ -51,7 +51,7 @@
           font-weight: bold; /* Enhance the text visibility */
           "
     >
-        Exams by Topic
+        Tests by Topic
     </a>
     <br>
     <br>
@@ -69,7 +69,7 @@
           font-weight: bold; /* Enhance the text visibility */
           "
     >
-        Exams by Year
+        Tests by Year
     </a>
     <br>
     <br>
@@ -87,7 +87,7 @@
           font-weight: bold; /* Enhance the text visibility */
           "
     >
-        Exams by Regulation
+        Tests by Regulation
     </a>    {# Fin de los Enlaces a los Tests por Normativa, por Año, y por Tema #}
     <br>
     <br>
@@ -96,7 +96,7 @@
         {# Enlace a la Lista de Tests Sin Agrupar (lista de todos los tests de la base de datos). #}
         {# ESTO SOLO LO DEBE VER EL AMINISTRADOR. LOS CLIENTES NO. #}
         <a href="{% url 'tests_clientes:lista_de_tests' %}" class="btn btn-primary w-100">
-            List of Incomplete Exams
+            List of Incomplete Tests
         </a>
         <br>
         <br>
@@ -104,7 +104,7 @@
     
     {# Enlace a la los Tests Hechos (Lista de Resultados de Tests Pasados) #}
     <a href="{% url 'tests_clientes:lista_de_resultados_de_tests_pasados' %}" class="btn btn-secondary w-100">
-        Test Hechos
+        List of Results of Past Tests
     </a>
     <br>
     <br>
@@ -118,7 +118,7 @@
     
     {# Enlace a la Lista de Tests Incompletos del usuario autenticado #}
     <a href="{% url 'tests_clientes:lista_de_tests_incompletos' %}" class="btn btn-primary w-100">
-        List of Incomplete Exams
+        List of Incomplete Tests
     </a>
     <br>
     <br>

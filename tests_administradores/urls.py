@@ -15,23 +15,23 @@ app_name = 'tests_administradores'
 urlpatterns = [
 
     # Vista para Subir y Procesar archivos de Excel con Tests / Exámenes para escanearlos y así extraerles los datos
-    path('subir-tests/', views.upload_and_import_exams, name='upload_and_import_exams'),
+    path('upload-tests/', views.upload_and_import_exams, name='upload_and_import_exams'),
 
     # Vista para Crear un Nuevo Test Manualmente sin Subir un Archivo de Excel
-    path('crear-nuevo-test/', views.crear_nuevo_test_sin_subir_un_archivo,
+    path('create-new-test/', views.crear_nuevo_test_sin_subir_un_archivo,
          name='crear_nuevo_test_sin_subir_un_archivo'),
 
     # Vista para Confirmar Si Quieres Eliminar un Test. Tengo que poner "test_id" si pongo "test_id" en el view
-    path('confirmar-eliminar-test/<int:test_id>/', views.confirmar_eliminar_test, name='confirmar_eliminar_test'),
+    path('confirm-test-deletion/<int:test_id>/', views.confirmar_eliminar_test, name='confirmar_eliminar_test'),
 
     # Vista para Eliminar un Test
-    path('eliminar-test/<int:test_id>/', views.eliminar_test, name='eliminar_test'),
+    path('delete-test/<int:test_id>/', views.eliminar_test, name='eliminar_test'),
 
     # Vista para Editar un Test
-    path('editar-test/<int:test_id>/', views.editar_test, name='editar_test'),
+    path('edit-test/<int:test_id>/', views.editar_test, name='editar_test'),
 
     # Vista para Buscar alguna pregunta en específico
-    path('buscador-de-preguntas/', views.buscador_de_preguntas, name='buscador_de_preguntas'),
+    path('question-search/', views.buscador_de_preguntas, name='buscador_de_preguntas'),
 
     # # Vista para Registrarse
     # path('registrarse/', registrarse, name='registrarse'),
