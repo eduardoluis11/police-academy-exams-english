@@ -14,9 +14,9 @@ Eduardo Salinas
 
 I) **Install Python and pip**:
 
-* Make sure you have Python installed on your machine. You can download it from [python.org](https://www.python.org/).
-* During installation, check the box that says “Add Python to PATH.”
-* Once installed, verify that Python and pip are working by running in the console:
+- Make sure you have Python installed on your machine. You can download it from [python.org](https://www.python.org/).
+- During installation, check the box that says “Add Python to PATH.”
+- Once installed, verify that Python and pip are working by running in the console:
 ```bash
   python --version
   pip --version
@@ -59,7 +59,7 @@ II) **Activate a virtual environment**:
 
 III) **Deactivate the virtual environment**:
 
--When you're done working, deactivate the virtual environment with:
+- When you're done working, deactivate the virtual environment with:
 ```bash
     deactivate
 ```
@@ -73,7 +73,7 @@ pip install -r requirements.txt
 
 ---
 
-3. If you're going to use a MySQL database, insert your database credentials into the .env file. Delete my MySQL credentials from that file and insert yours instead.
+3. If you're going to use a PostgreSQL database, insert your database credentials into the .env file. Delete my PostgreSQL credentials from that file and insert yours instead.
 
 If you just want to run quick tests, you can use the default SQLite database and skip this step.
 
