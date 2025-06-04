@@ -220,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // console.log("Hola Mundo");
 
                     // Esto reenvía al usuario a la Lista de Tests Interrumpidos
-                    window.location.href = '/tests/tests-incompletos/';  // Redirect to test list
+                    window.location.href = '/tests/unfinished-tests/';  // Redirect to test list
                 });
             } catch (error) {
             console.error('Error saving:', error);

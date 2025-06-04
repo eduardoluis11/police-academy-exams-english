@@ -75,7 +75,7 @@ async function guardarPregunta(preguntaId, testId, sessionId) {
         // Check if question is saved by looking for the solid bookmark class (fas)
         const isSaved = icon.classList.contains('fas');
 
-        const endpoint = isSaved ? '/tests/eliminar-pregunta-guardada/' : '/tests/guardar-pregunta/';
+        const endpoint = isSaved ? '/tests/delete-saved-question/' : '/tests/save-question/';
 
 
         // Make POST request to save question.

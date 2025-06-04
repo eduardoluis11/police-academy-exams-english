@@ -82,7 +82,7 @@ async function guardarYSalirDeTestTiempoIlimitado() {
         });
 
         // Redirect to the incomplete tests page
-        window.location.href = '/tests/tests-incompletos/';
+        window.location.href = '/tests/unfinished-tests/';
     } catch (error) {
         console.error('Error saving answer:', error);
     }
