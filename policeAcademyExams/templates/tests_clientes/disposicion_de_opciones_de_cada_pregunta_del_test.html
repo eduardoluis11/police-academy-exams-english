@@ -67,14 +67,14 @@
         {% comment %} Feedback text inside the button {% endcomment %}
         {% if viewing_results or autocorreccion and user_answer %}
             {% if user_answer.respuesta_seleccionada == option_letter and pregunta_seleccionada_es_correcta %}
-                <span class="badge rounded-pill bg-light text-dark ms-2">¡Correcto!</span>
+                <span class="badge rounded-pill bg-light text-dark ms-2">Correct!</span>
             {% elif user_answer.respuesta_seleccionada == option_letter and pregunta_seleccionada_es_incorrecta %}
-                <span class="badge rounded-pill bg-light text-dark ms-2">Respuesta Incorrecta</span>
+                <span class="badge rounded-pill bg-light text-dark ms-2">Wrong Answer</span>
             {% elif option_letter == respuesta_correcta %}
                 {#                 Cuando el usuario responda incorrectamente, se le mostrará cual de las 4 opciones era la correcta. #}
                 {#                 Similarmente, al repasar un test, si dejo la pregunta en blanco, se le mostrará la respuesta. #}
                 {% if pregunta_seleccionada_es_incorrecta or not user_answer.respuesta_seleccionada %}
-                    <span class="badge rounded-pill bg-light text-dark ms-2">Respuesta Correcta</span>
+                    <span class="badge rounded-pill bg-light text-dark ms-2">Correct Answer</span>
                 {% endif %}
             {% endif %}
         {% endif %}
