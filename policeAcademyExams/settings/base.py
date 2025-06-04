@@ -156,7 +156,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 La voy a cambiar a español.
 """
-LANGUAGE_CODE = 'es-es'
+LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
