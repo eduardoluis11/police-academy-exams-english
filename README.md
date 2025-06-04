@@ -6,104 +6,117 @@ This is my Django web app, translated into English, that lets you practice entra
 
 Eduardo Salinas
 
-## TODO
+## Usage Instructions
 
-I need to translate the rest of the text of this README file into English.
+1. Create a virtual environment. There are several ways to do this. I use mkvirtualenv on Windows. To install mkvirtualenv on Windows, follow these steps:
 
-## Instrucciones de uso
+### Installing mkvirtualenv on Windows
 
-1) Crea un entorno virtual. Hay varias formas de hacer esto. Yo uso mkvirtualenv en Windows. Para instalar mkvirtualenv en Windows, sigue estos pasos:
+I) **Install Python and pip**:
 
-### Instalación de `mkvirtualenv` en Windows
-I) **Instalar Python y pip**:
-   - Asegúrate de tener Python instalado en tu máquina. Puedes descargarlo desde [python.org](https://www.python.org/).
-   - Durante la instalación, marca la casilla "Add Python to PATH".
-   - Una vez instalado, verifica que Python y pip están funcionando ejecutando en la consola:
-     ```bash
-     python --version
-     pip --version
-     ```
+* Make sure you have Python installed on your machine. You can download it from [python.org](https://www.python.org/).
+* During installation, check the box that says “Add Python to PATH.”
+* Once installed, verify that Python and pip are working by running in the console:
+```bash
+  python --version
+  pip --version
+  ```
+  
 
-II) **Instalar `virtualenvwrapper-win`**:
-   - `mkvirtualenv` es parte de `virtualenvwrapper`, pero en Windows necesitas instalar una versión adaptada llamada `virtualenvwrapper-win`.
-   - Ejecuta el siguiente comando en la terminal para instalarlo:
-     ```bash
-     pip install virtualenvwrapper-win
-     ```
+II) **Install `virtualenvwrapper-win`**:
 
-III) **Configurar la variable de entorno `WORKON_HOME` (opcional)**:
-   - Por defecto, los entornos virtuales se almacenan en `%USERPROFILE%\Envs`. Si deseas cambiar esta ubicación:
-     - Ve a "Configuración avanzada del sistema" > "Variables de entorno".
-     - Crea una nueva variable de entorno llamada `WORKON_HOME` y establece la ruta donde deseas almacenar los entornos virtuales.
+- mkvirtualenv is part of virtualenvwrapper, but on Windows you need to install a version adapted for Windows called virtualenvwrapper-win.
+- Run the following command in the terminal to install it:
+```bash
+    pip install virtualenvwrapper-win
+```
+
+III) **Set up the `WORKON_HOME` environment variable (optional)**:
+
+- By default, virtual environments are stored in %USERPROFILE%\Envs. If you want to change this location:
+
+  - Go to “Advanced system settings” > “Environment Variables.”
+  - Create a new environment variable named WORKON_HOME and set the path where you want to store your virtual environments.
 
 ---
 
-### Activar y usar `mkvirtualenv`
-I) **Crear un entorno virtual**:
-   - Usa el comando `mkvirtualenv` para crear un nuevo entorno virtual. Por ejemplo:
-     ```bash
-     mkvirtualenv mi_entorno
-     ```
+### Activating and using mkvirtualenv
 
-II) **Activar un entorno virtual**:
-   - Para activar un entorno virtual existente, usa el comando:
-     ```bash
-     workon mi_entorno
-     ```
+I) **Create a virtual environment**:
 
-III) **Desactivar el entorno virtual**:
-   - Cuando termines de trabajar, desactiva el entorno virtual con:
-     ```bash
-     deactivate
-     ```
+- Use the mkvirtualenv command to create a new virtual environment. For example:
+```bash
+    mkvirtualenv my_env
+```
+
+II) **Activate a virtual environment**:
+
+- To activate an existing virtual environment, use:
+```bash
+    workon my_env
+```
+  
+
+III) **Deactivate the virtual environment**:
+
+-When you're done working, deactivate the virtual environment with:
+```bash
+    deactivate
+```
+
 ---
 
-2) Instala las dependencias del proyecto. Para hacer esto, primero activa tu entorno virtual, y después ejecuta el siguiente comando en la consola:
+2. Install the project dependencies. To do this, first activate your virtual environment, then run the following command in the console:
 ```bash
 pip install -r requirements.txt
 ```
 
 ---
 
-3) Si vas a usar la base de datos de MySQL, inserta las credenciales de tu base de datos en el archivo .env. Elimina mis credenciales de MySQL de mi archivo .env, e inserta las credenciales de tu base de datos.
+3. If you're going to use a MySQL database, insert your database credentials into the .env file. Delete my MySQL credentials from that file and insert yours instead.
 
-Mientras tanto, si quieres hacer pruebas rápidas, puedes usar la base de datos SQLite que viene por defecto, e ignora este paso.
+If you just want to run quick tests, you can use the default SQLite database and skip this step.
 
-4) Migra la base de datos. Para hacer esto, ejecuta el siguiente comando en la consola:
+4. Migrate the database. Run the following command in the console:
+
 ```bash
 python manage.py migrate
-``` 
+```
 
-5) Crea un superusuario. Para hacer esto, ejecuta el siguiente comando en la consola:
+5. Create a superuser. To do this, run:
+
 ```bash
 python manage.py createsuperuser
 ```
 
-6) Corre el servidor. Para hacer esto, ejecuta el siguiente comando en la consola:
+6. Run the server. Execute:
 ```bash
 python manage.py runserver
 ```
 
-7) Abre tu navegador y ve a la dirección `localhost:8000`. Ahí podrás ver la web app.
+7. Open your browser and go to `localhost:8000`. There you will see the web app.
 
-8) Para ir al panel de administración de Django, debes ir a la dirección `localhost:8000/admin` y autenticarte con las credenciales del superusuario que creaste en el paso 5.
+8. To access the Django admin panel, go to `localhost:8000/admin` and log in with the superuser credentials you created in step 5.
+
+---
 
 ## Legal
 
-### Uso de Inteligencias Artificiales Generativas
+### Use of Generative AI Models
 
-Se usaron inteligencias artificiales generativas tipo LLM para generar y crear parte del código de esta web app.
+Generative AI models such as LLMs were used to help write parts of the code in this web app.
 
-Hasta donde sabemos, todo el código que ha sido generado es original, pero hay un pequeño riesgo de que algún snippet de código generado sea similar a otro snippet de código existente de un repositorio de código abierto que pueda tener copyright.. 
+As far as we know, all generated code is original. However, there is a small risk that some generated snippets may resemble existing open-source code that could be under copyright.
 
-Si crees que se ha generado código que infringe tus derechos de autor, por favor contacta con nosotros en el siguiente email, y tomaremos las medidas necesarias:
-wistarrcompany@gmail.com
+If you believe any code infringes on your copyright, please contact us at the following email, and we will take the necessary action:
+[wistarrcompany@gmail.com](mailto:wistarrcompany@gmail.com)
 
-Para ver la lista completa de las inteligencias artificiales generativas usadas, ver el archivo `credits.txt`.
+For a full list of the generative AIs used, see the file `credits.txt`.
 
-## Créditos y fuentes usadas
+## Credits and External Sources
 
-Ver el archivo `credits.txt` para ver todas las fuentes de todos los recursos usados por terceros en este proyecto.
+See the file `credits.txt` for a full list of third-party resources and sources used in this project.
+
 
 ### Third-Party Software Notice for canvas-confetti
 
