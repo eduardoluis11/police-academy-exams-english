@@ -44,7 +44,8 @@
       
       {# Enlace para que el administrador pueda Subir un Archivo Excel para importar tests #}
       <a href="{% url 'tests_administradores:upload_and_import_exams' %}" class="btn btn-primary">
-        Subir Archivo Excel para Importar Tests
+        {#        Subir Archivo Excel para Importar Tests#}
+        Upload Excel File to Import Tests
       </a>
       <br>
       <br>
@@ -64,12 +65,12 @@
   <table id="testsTable" class="table table-striped">
       <thead>
           <tr>
-              <th>Nombre del Test</th>
+              <th>Test's Name</th>
                 {#              <th>Difficulty Level</th>#}
-              <th>Acciones</th>
+              <th>Actions</th>
               {% if user.is_superuser %}
-                  <th>Editar</th>
-                  <th>Eliminar</th>
+                  <th>Edit</th>
+                  <th>Delete</th>
               {% endif %}
           </tr>
       </thead>
@@ -96,7 +97,7 @@
                         {#                      >#}
                       <a href="{% url 'tests_clientes:iniciar_el_test' test.id %}?new_session=true" 
                                    class="btn btn-primary btn-sm">
-                          Configurar y Tomar Test
+                          Configure Test
                       </a>
                         {#                      </button>#}
                   </td>
@@ -106,13 +107,13 @@
                     {# Editar el Test #}
                     <td>
                         <a href="{% url 'tests_administradores:editar_test' test.id %}" class="text-warning">
-                            Editar
+                            Edit
                         </a>
                     </td>
                     {# Eliminar el Test #}
                     <td>
                         <a href="{% url 'tests_administradores:confirmar_eliminar_test' test.id %}" class="text-danger">
-                            Eliminar
+                            Delete
                         </a>
                     </td>
                   {% endif %}

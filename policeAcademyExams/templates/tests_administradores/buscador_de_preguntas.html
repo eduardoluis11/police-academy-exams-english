@@ -23,7 +23,7 @@
 
 
 {% block content %}
-  <h2>Buscador de Preguntas</h2>
+  <h2>Question Search</h2>
 
   <!-- Formulario de Búsqueda -->
   <form method="get" class="search-form">
@@ -32,25 +32,25 @@
     {{ form.as_p }}
 
     {# Botón para Enviar el Formulario  #}
-    <button type="submit">Buscar</button>
+    <button type="submit">Search</button>
   </form>
 
   <!-- Results -->
   {% if page_object %}
-    <h3>Resultados{% if consulta %} para "{{ consulta }}"{% endif %}</h3>
+    <h3>Results{% if consulta %} for "{{ consulta }}"{% endif %}</h3>
 
     {# Le puse una ID a la tabla para poder renderizarla con el plugin de datatables.net #}
     <table class="table" id="tabla-con-resultados">
       <thead>
         <tr>
           {#          <th>Nombre del Test</th>#}
-          <th>Pregunta</th>
-          <th>Opción A</th>
-          <th>Opción B</th>
-          <th>Opción C</th>
-          <th>Opción D</th>
-          <th>Respuesta Correcta</th>
-          <th>Justificación</th>
+          <th>Question</th>
+          <th>Option A</th>
+          <th>Option B</th>
+          <th>Option C</th>
+          <th>Option D</th>
+          <th>Correct Answer</th>
+          <th>Explanation</th>
         </tr>
       </thead>
       <tbody>
@@ -67,7 +67,7 @@
           </tr>
         {% empty %}
           <tr>
-            <td colspan="8">No se encontró ninguna pregunta.</td>
+            <td colspan="8">No question was found.</td>
           </tr>
         {% endfor %}
       </tbody>
@@ -77,18 +77,18 @@
     <div class="pagination">
       {% if page_object.has_previous %}
         <a href="?page={{ page_object.previous_page_number }}{% if consulta %}&query={{ consulta }}{% endif %}">
-            Anterior
+            Previous
         </a>
       {% endif %}
-      <span>Página {{ page_object.number }} de {{ page_object.paginator.num_pages }}</span>
+      <span>Page {{ page_object.number }} of {{ page_object.paginator.num_pages }}</span>
       {% if page_object.has_next %}
         <a href="?page={{ page_object.next_page_number }}{% if consulta %}&query={{ consulta }}{% endif %}">
-            Siguiente
+            Next
         </a>
       {% endif %}
     </div>
   {% else %}
-    <p>No hay ninguna pregunta disponible.</p>
+    <p>There aren't any questions available.</p>
   {% endif %}
 
   {# Bloque con el Javascript adicional para hacer funcionar el plugin de datatables.net en mi Datatable #}

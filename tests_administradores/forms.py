@@ -24,8 +24,8 @@ Best Practices: Limits file size to prevent abuse and restricts to .xlsx for con
 
 class SubirExcelConTestsFormulario(forms.Form):
     excel_file = forms.FileField(
-        label='Sube un Archivo de Excel',
-        help_text='Solo se aceptan archivos del tipo .xlsx',
+        label='Upload an Excel File',
+        help_text='Only .xlsx files are allowed',
         widget=forms.FileInput(attrs={'accept': '.xlsx'})
     )
 
@@ -58,10 +58,11 @@ class NombreDelTestFormulario(forms.ModelForm):
     class Meta:
         model = Test
         fields = ['nombre_del_test', 'year']    # Aqui le digo que solo quiero el campo "nombre del test" y el año
+        label = 'Name of the test'
 
         # Optional: Add widgets, Bootstrap styles, labels, or help_text
         widgets = {
-            'nombre_del_test': forms.TextInput(attrs={'class': 'form-control'}),
+            'nombre_del_test': forms.TextInput(attrs={'class': 'form-control', 'label': 'Name of the test'}),
             'year': forms.NumberInput(attrs={'class': 'form-control'}),
         }
 
@@ -133,7 +134,7 @@ class CrearTestSinExcelFormulario(forms.ModelForm):
             'opcion_c': forms.Textarea(attrs={'class': 'form-control'}),
             'opcion_d': forms.Textarea(attrs={'class': 'form-control'}),
 
-            # La respuesta correcta la elimine de aqui y la defini como un ChoiceField arriba
+            # La respuesta correcta la elimine de aqui y la definí como un ChoiceField arriba
             # 'respuesta_correcta': forms.TextInput(attrs={'class': 'form-control'}),
             'justificacion': forms.Textarea(attrs={'class': 'form-control'})
         }
@@ -210,8 +211,8 @@ Best Practice: The required=False allows empty searches (which can show all ques
 
 class BuscadorDePreguntasFormulario(forms.Form):
     consulta = forms.CharField(
-        label='Buscar pregunta',
+        label='Search Question',
         max_length=100,
         required=False,
-        widget=forms.TextInput(attrs={'placeholder': 'Introduce una pregunta o el nombre de un test'})
+        widget=forms.TextInput(attrs={'placeholder': 'Question'})
     )

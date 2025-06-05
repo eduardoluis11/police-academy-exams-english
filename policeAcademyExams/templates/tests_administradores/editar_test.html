@@ -21,7 +21,7 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2>Editar Test: {{ test.nombre_del_test }}</h2>
+    <h2>Edit Test: {{ test.nombre_del_test }}</h2>
 
     <form method="post" class="mb-4">
         {% csrf_token %}
@@ -38,7 +38,7 @@
             {% for form in formset %}
                 <div class="pregunta-form card mb-4">
                     <div class="card-body">
-                        <h4>Pregunta #{{ forloop.counter }}</h4>
+                        <h4>Question #{{ forloop.counter }}</h4>
                         
                         {# Campos ocultos #}
                         {% for hidden in form.hidden_fields %}
@@ -74,9 +74,9 @@
 
         {# Botones #}
         <div class="mt-4">
-            <button type="button" id="add-form" class="btn btn-secondary">Añadir pregunta</button>
-            <button type="submit" class="btn btn-primary">Guardar cambios</button>
-            <a href="{% url 'tests_clientes:lista_de_tests' %}" class="btn btn-secondary">Cancelar</a>
+            <button type="button" id="add-form" class="btn btn-secondary">Add Question</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+            <a href="{% url 'tests_clientes:lista_de_tests' %}" class="btn btn-secondary">Cancel</a>
         </div>
     </form>
 </div>
