@@ -9,7 +9,7 @@
 {% load static %}
 
 {% block content %}
-  <h2 class="mb-4">Lista de Tests por Año</h2>
+  <h2 class="mb-4">Tests By Year</h2>
 
   {% for anno, tests in tests_por_anno.items %}
     {% if tests %}
@@ -18,7 +18,7 @@
           {# Botón con el título de Cada Año. Si lo clicas, el año aparece o desaparece. #}
           <button class="btn btn-primary" onclick="toggleTableVisibility('{{ anno }}_table')">
             {% if anno == "Sin Año" %}
-                Sin Año {# Para los tests que no tengan tema, pondré que el título sea solo "Sin Año" #}
+                No Year {# Para los tests que no tengan tema, pondré que el título sea solo "Sin Año" #}
             {% else %}
                 {{ anno }} {# Para los tests que tengan su respectivo Año, pondré que el título sea "(Año)" #}
             {% endif %}
@@ -38,9 +38,9 @@
           <table class="table table-striped year-table">
             <thead>
               <tr>
-                <th>Nombre del Test</th>
+                <th>Test's Name</th>
                 {#                <th>Número de Preguntas</th>#}
-                <th>Acciones</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -50,7 +50,7 @@
                     {#                  <td>{{ test.preguntas.count }}</td>#}
                   <td>
                     <a href="{% url 'tests_clientes:configurar_test' test.id %}" class="btn btn-primary btn-sm">
-                      Tomar Test
+                      Begin Test
                     </a>
                   </td>
                 </tr>

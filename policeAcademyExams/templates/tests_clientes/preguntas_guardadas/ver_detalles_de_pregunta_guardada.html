@@ -29,22 +29,22 @@
     <div class="container mt-4">
         <div class="card">
             <div class="card-header">
-                <h2 class="mb-4">Detalles de la Pregunta Guardada</h2>
+                <h2 class="mb-4">Saved Question's Details</h2>
                 <p class="mb-0">
-                    <strong>Examen:</strong> {{ instancia_de_pregunta_guardada.test.nombre_del_test }}
+                    <strong>Test:</strong> {{ instancia_de_pregunta_guardada.test.nombre_del_test }}
                 </p>
             </div>
 
             <div class="card-body">
                 <!-- Información de la pregunta -->
                 <div class="mb-4">
-                    <h4>Pregunta:</h4>
+                    <h4>Question:</h4>
                     <p class="lead">{{ instancia_de_pregunta_del_test.pregunta }}</p>
                 </div>
 
                 <!-- Opciones de respuesta -->
                 <div class="mb-4">
-                    <h4>Opciones:</h4>
+                    <h4>Options:</h4>
                     <div class="list-group">
                         <div class="list-group-item">
                             <strong>A)</strong> {{ instancia_de_pregunta_del_test.opcion_a }}
@@ -65,14 +65,14 @@
 
                 <!-- Respuesta correcta y justificación -->
                 <div class="mb-4">
-                    <h4>Respuesta Correcta:</h4>
+                    <h4>Correct Answer:</h4>
                     <p class="alert alert-success">
                         <strong>{{ instancia_de_pregunta_del_test.respuesta_correcta }}</strong>
                     </p>
                 </div>
 
                 <div class="mb-4">
-                    <h4>Justificación:</h4>
+                    <h4>Explanation:</h4>
                     <p class="alert alert-info">
                         {{ instancia_de_pregunta_del_test.justificacion }}
                     </p>
@@ -81,18 +81,21 @@
                 <!-- Metadata adicional -->
                 <div class="row">
                     <div class="col-md-4">
-                        <p><strong>Tema:</strong> {{ instancia_de_pregunta_del_test.tema }}</p>
+                        <p><strong>Topic:</strong> {{ instancia_de_pregunta_del_test.tema }}</p>
                     </div>
                     <div class="col-md-4">
-                        <p><strong>Normativa:</strong> {{ instancia_de_pregunta_del_test.normativa }}</p>
+                        <p><strong>Regulation:</strong> {{ instancia_de_pregunta_del_test.normativa }}</p>
                     </div>
                 </div>
             </div>
 
             <div class="card-footer">
+
                 <a href="{% url 'tests_clientes:ver_preguntas_guardadas' %}"
-                   class="btn btn-primary">
-                    Volver a Preguntas Guardadas
+                   class="btn btn-primary"
+                >
+                    {#                   &larr; Back to Saved Questions#}
+                    Back to Saved Questions
                 </a>
             </div>
         </div>

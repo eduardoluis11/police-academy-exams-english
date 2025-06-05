@@ -18,12 +18,12 @@
 {# así sucesivamente. #}
 
 {% block content %}
-    <h2 class="mb-4">Lista de Tests por Tema</h2>
+    <h2 class="mb-4">Tests by Topic</h2>
     
     {# Botón para Generar un Nuevo Test. Debería ser solo para generar el Test por Tema. #}
     {# Consider adding a link here if needed: <a href="{% url '...' %}" class="btn btn-success mb-3">Generar Nuevo Test por Tema</a> #}
     <a href="{% url 'tests_clientes:configure_new_test_by_topic' %}" class="btn btn-primary">
-        Generar Test por Tema
+        Generate Test by Topic
     </a>
 
     {#  {% for tema, tests in tests_por_tema.items %}#}
@@ -40,9 +40,9 @@
           <table class="table table-striped">
             <thead>
               <tr>
-                <th>Nombre del Test</th>
-                <th>Número de Preguntas</th>
-                <th>Acciones</th>
+                <th>Test's Name</th>
+                <th>Number of Questions</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -57,7 +57,7 @@
                   {#                  <td>{{ test.preguntas.count }}</td>#}
                   <td>
                     <a href="{% url 'tests_clientes:configurar_test' test.id %}" class="btn btn-primary btn-sm">
-                      Tomar Test
+                      Begin Test
                     </a>
                   </td>
                 </tr>

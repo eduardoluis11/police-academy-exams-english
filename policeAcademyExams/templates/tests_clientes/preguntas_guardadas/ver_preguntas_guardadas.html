@@ -16,21 +16,21 @@
 {% endblock %}
 
 {% block content %}
-  <h2 class="mb-4">Ver Preguntas Guardadas</h2>
+  <h2 class="mb-4">View Saved Questions</h2>
     
   <div class="mb-4">
     <div class="table-responsive">
       <table class="table table-striped">
         <thead>
           <tr>
-            <th>Pregunta</th>   {# Pregunta #}
-            <th>Examen</th> {# Examen #}
-            <th>Normativa</th> {# Normativa #}
-            <th>Tema</th> {# Tema #}
-            <th>Respuesta correcta</th> {# Respuesta Correcta #}
+            <th>Question</th>   {# Pregunta #}
+            <th>Test</th> {# Examen #}
+            <th>Regulation</th> {# Normativa #}
+            <th>Topic</th> {# Tema #}
+            <th>Correct Answer</th> {# Respuesta Correcta #}
 
             {# Para que la columna de "acciones" esté siempre alineada, agrego la clase "Acciones Column" #}
-            <th class="acciones-column">Ver Pregunta</th>
+            <th class="acciones-column">View Question</th>
           </tr>
         </thead>
         <tbody>
@@ -58,7 +58,7 @@
                 <a href="{% url 'tests_clientes:ver_detalles_de_pregunta_guardada_seleccionada' pregunta.id %}"
 
                    class="btn btn-primary btn-sm boton-de-datatable">
-                  Ver Pregunta
+                  View Question
                 </a>
               </td>
             </tr>

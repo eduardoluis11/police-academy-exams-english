@@ -13,12 +13,12 @@
 
 
 {% block content %}
-    <h2 class="mb-4">Lista de Tests por Normativa</h2>
+    <h2 class="mb-4">Tests by Regulation</h2>
     
     {# Botón para Generar un Nuevo Test por Normativa. #}
     {# Consider adding a link here if needed: <a href="{% url '...' %}" #}
     <a href="{% url 'tests_clientes:configure_new_test_by_regulation' %}" class="btn btn-primary">
-        Generar Test por Normativa
+        Generate Test by Regulation
     </a>
 
     {#  {% for normativa, tests in tests_por_normativa.items %}#}
@@ -32,9 +32,9 @@
           <table class="table table-striped">
             <thead>
               <tr>
-                <th>Nombre del Test</th>
-                <th>Número de Preguntas</th>
-                <th>Acciones</th>
+                <th>Test's Name</th>
+                <th>Number of Questions</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -49,7 +49,7 @@
                   {#                  <td>{{ test.preguntas.count }}</td>#}
                   <td>
                     <a href="{% url 'tests_clientes:configurar_test' test.id %}" class="btn btn-primary btn-sm">
-                      Tomar Test
+                      Begin Test
                     </a>
                   </td>
                 </tr>
@@ -59,7 +59,7 @@
         </div>
       </div>
     {% else %}
-        <p class="alert alert-info">No hay tests por normativa disponibles.</p>
+        <p class="alert alert-info">There aren't any tests by regulation available</p>
     {% endif %}
 
     {#  {% endfor %}#}
