@@ -1020,7 +1020,7 @@ def configurar_nuevo_test_a_generar(request):
 
             # Create new Test() instance with procedurally generated name, and the selected type
             nuevo_test = Test.objects.create(
-                nombre_del_test=f"Test de {request.user.username} - {timestamp}",
+                nombre_del_test=f"{request.user.username}'s Test - {timestamp}",
                 tipo=formulario_parte_2.cleaned_data['tipo_de_test'],  # Tipo de test que el usuario seleccionó
                 fue_generado_proceduralmente=True,  # Test debe marcarse como que fue generado proceduralmente
             )
@@ -1210,7 +1210,7 @@ def configure_new_test_by_topic(request):
 
             # Create new Test() instance with procedurally generated name, and of type "topic"
             nuevo_test = Test.objects.create(
-                nombre_del_test=f"Test de {request.user.username} - {timestamp}",
+                nombre_del_test=f"{request.user.username}'s Test - {timestamp}",
                 tipo="tema",  # The exam type will be "by topic"
                 fue_generado_proceduralmente=True,  # Test debe marcarse como que fue generado proceduralmente
             )
@@ -1366,7 +1366,7 @@ def configure_new_test_by_regulation(request):
 
             # Create new Test() instance with procedurally generated name, and of type "regulation" ("normativa").
             nuevo_test = Test.objects.create(
-                nombre_del_test=f"Test de {request.user.username} - {timestamp}",
+                nombre_del_test=f"{request.user.username}'s Test - {timestamp}",
                 tipo="normativa",  # The exam type will be "by normativa"
                 fue_generado_proceduralmente=True,  # Test debe marcarse como que fue generado proceduralmente
             )
