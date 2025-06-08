@@ -1,4 +1,9 @@
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+
+# Change the User import at the top of the file
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
 from django.test import TestCase, Client
 
 from tests_administradores.models import Test, PreguntaDelTest

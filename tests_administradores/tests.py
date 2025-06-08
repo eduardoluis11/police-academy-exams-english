@@ -1,7 +1,12 @@
 from django.test import TestCase, Client
 
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+
+# Change the User import at the top of the file
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
 from django.urls import reverse
 import os
 
@@ -13,7 +18,7 @@ import pandas as biblioteca_pandas
 
 from django.test import TestCase, Client
 from django.urls import reverse
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 
 # Esto importa mis modelos
 from tests_administradores.models import Test, PreguntaDelTest
@@ -105,7 +110,7 @@ class CrearNuevoTestViewTestCase(TestCase):
         response = self.client.get(reverse('tests_administradores:crear_nuevo_test_sin_subir_un_archivo'))
 
         # Assert non-staff user is redirected to admin login
-        self.assertRedirects(response, '/admin/login/?next=/tests-administradores/crear-nuevo-test/')
+        self.assertRedirects(response, '/admin/login/?next=/tests-administradores/create-new-test/')
         # Corregiré esto, ya que no quiero que me redirija al login de admin, sino que me redirija al login de la app
         # self.assertRedirects(response, '/admin/login/')
 
@@ -170,6 +175,7 @@ class CrearNuevoTestViewTestCase(TestCase):
         # print("Response Content:", response.content.decode('utf-8'))
 
         # Check redirect after successful creation
+        # BUG: AssertionError: 302 != 200 : Couldn't retrieve redirection page '/tests/tests-list/': response code was 302 (expected 200)
         self.assertRedirects(response, reverse('tests_clientes:lista_de_tests'))
 
         # Verify test was created
@@ -289,16 +295,16 @@ class UploadAndImportExamsViewTests(TestCase):
 
         # Create valid Excel file content with required columns
         excel_data = {
-            'Examen': ['Test 1'],
-            'Tema': ['Topic 1'],
-            'Normativa': ['Law 1'],
-            'Pregunta': ['Question 1?'],
+            'Exam': ['Test 1'],
+            'Topic': ['Topic 1'],
+            'Regulation': ['Law 1'],
+            'Question': ['Question 1?'],
             'A': ['Option A'],
             'B': ['Option B'],
             'C': ['Option C'],
             'D': ['Option D'],
-            'Correcta': ['A'],
-            'Justificación': ['Because A is correct']
+            'Correct': ['A'],
+            'Explanation': ['Because A is correct']
         }
         excel_file = biblioteca_pandas.DataFrame(excel_data)
 
