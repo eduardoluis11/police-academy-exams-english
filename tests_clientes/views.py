@@ -2252,21 +2252,21 @@ def resultados_del_test(request, session_id):
 
         case "3":
             # 3:1 penalty: every 3 wrong answers eliminate 1 correct answer
-            nombre_de_dificultad = "3:1 (3 respuestas malas restan 1 buena)"
+            nombre_de_dificultad = "3:1 (3 incorrect answers deduct 1 correct answer)"
             respuestas_eliminadas = respuestas_incorrectas // 3
             respuestas_correctas_ajustadas = max(0, respuestas_correctas - respuestas_eliminadas)
             score = (respuestas_correctas_ajustadas / numero_total_de_preguntas) * 10
 
         case "4":
             # 2:1 penalty: every 2 wrong answers eliminate 1 correct answer
-            nombre_de_dificultad = "2:1 (2 respuestas malas restan 1 buena)"
+            nombre_de_dificultad = "2:1 (2 incorrect answers deduct 1 correct answer)"
             respuestas_eliminadas = respuestas_incorrectas // 2
             respuestas_correctas_ajustadas = max(0, respuestas_correctas - respuestas_eliminadas)
             score = (respuestas_correctas_ajustadas / numero_total_de_preguntas) * 10
 
         case "5":
             # 1:1 penalty: each wrong answer eliminates 1 correct answer
-            nombre_de_dificultad = "1:1 (1 respuesta mala resta 1 respuesta buena)"
+            nombre_de_dificultad = "1:1 (1 incorrect answer deducts 1 correct answer)"
             respuestas_correctas_ajustadas = max(0, respuestas_correctas - respuestas_incorrectas)
             score = (respuestas_correctas_ajustadas / numero_total_de_preguntas) * 10
 

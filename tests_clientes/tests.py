@@ -546,7 +546,7 @@ class ResultadosTestsViewTestCase(TestCase):
 
         self.assertEqual(response.context['correct_answers'], 7)
         self.assertEqual(response.context['incorrect_answers'], 3)
-        self.assertEqual(response.context['nombre_de_dificultad'], '3:1 (3 respuestas malas restan 1 buena)')
+        self.assertEqual(response.context['nombre_de_dificultad'], '3:1 (3 incorrect answers deduct 1 correct answer)')
         self.assertEqual(response.context['score'], (6 / 10) * 10)  # 7 correct - 1 penalty (3 wrong) = 6 correct
 
     # Caso 2:1: este test chequea 7 preguntas buenas y 3 malas. Las malas penalizan (2 malas me quita 1 buena).
@@ -625,7 +625,7 @@ class ResultadosTestsViewTestCase(TestCase):
 
         self.assertEqual(response.context['correct_answers'], 7)
         self.assertEqual(response.context['incorrect_answers'], 3)
-        self.assertEqual(response.context['nombre_de_dificultad'], '2:1 (2 respuestas malas restan 1 buena)')
+        self.assertEqual(response.context['nombre_de_dificultad'], '2:1 (2 incorrect answers deduct 1 correct answer)')
 
         # 7 correct - 1 penalty (from 2 wrong answers) = 6 correct
         self.assertEqual(response.context['score'], (6 / 10) * 10)
@@ -711,7 +711,7 @@ class ResultadosTestsViewTestCase(TestCase):
         self.assertEqual(response.context['incorrect_answers'], 3)
 
         # Tuve que especificar el nombre correcto de la dificultad como un string como lo tengo en el modelo
-        self.assertEqual(response.context['nombre_de_dificultad'], '1:1 (1 respuesta mala resta 1 respuesta buena)')
+        self.assertEqual(response.context['nombre_de_dificultad'], '1:1 (1 incorrect answer deducts 1 correct answer)')
         self.assertEqual(response.context['score'], (4 / 10) * 10)  # 7 correct - 3 penalty (3 wrong) = 4 correct
 
     # Caso sin penalización, pero con algunas preguntas sin responder
@@ -911,7 +911,7 @@ class ResultadosTestsViewTestCase(TestCase):
 
         self.assertEqual(response.context['correct_answers'], 5)
         self.assertEqual(response.context['incorrect_answers'], 3)
-        self.assertEqual(response.context['nombre_de_dificultad'], '3:1 (3 respuestas malas restan 1 buena)')
+        self.assertEqual(response.context['nombre_de_dificultad'], '3:1 (3 incorrect answers deduct 1 correct answer)')
 
         # 5 correct - 1 penalty (3 wrong) = 4 correct out of 10 total
         self.assertEqual(response.context['score'], (4/10) * 10)
@@ -980,7 +980,7 @@ class ResultadosTestsViewTestCase(TestCase):
 
         self.assertEqual(response.context['correct_answers'], 5)
         self.assertEqual(response.context['incorrect_answers'], 3)
-        self.assertEqual(response.context['nombre_de_dificultad'], '2:1 (2 respuestas malas restan 1 buena)')
+        self.assertEqual(response.context['nombre_de_dificultad'], '2:1 (2 incorrect answers deduct 1 correct answer)')
         # 5 correct - 1 penalty (3 wrong) = 4 correct out of 10 total
         self.assertEqual(response.context['score'], (4/10) * 10)
 
@@ -1042,6 +1042,6 @@ class ResultadosTestsViewTestCase(TestCase):
 
         self.assertEqual(response.context['correct_answers'], 5)
         self.assertEqual(response.context['incorrect_answers'], 2)
-        self.assertEqual(response.context['nombre_de_dificultad'], '1:1 (1 respuesta mala resta 1 respuesta buena)')
+        self.assertEqual(response.context['nombre_de_dificultad'], '1:1 (1 incorrect answer deducts 1 correct answer)')
         # 5 correct - 2 penalty (2 wrong) = 3 correct out of 10 total
         self.assertEqual(response.context['score'], (3/10) * 10)
