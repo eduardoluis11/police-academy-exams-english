@@ -6,6 +6,10 @@ This is my Django web app, translated into English, that lets you practice entra
 
 Eduardo Salinas
 
+## Demo
+
+https://youtu.be/lfv2mXHcS08?si=VdlrjdpJRw2B9YRo
+
 ## Usage Instructions
 
 1. Create a virtual environment. There are several ways to do this. I use mkvirtualenv on Windows. To install mkvirtualenv on Windows, follow these steps:
