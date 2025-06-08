@@ -55,10 +55,10 @@ class ConfigurarTestSinIncluirPreguntasForm(forms.Form):
     # Difficulty level choices
     DIFFICULTY_CHOICES = [
         ('1', 'Errors Do Not Deduct Points'),
-        ('2', '4:1 (Every 4 Incorrect Answers Deduct 1 Correct Answer)'),
-        ('3', '3:1 (Every 3 Incorrect Answers Deduct 1 Correct Answer)'),
-        ('4', '2:1 (Every 2 Incorrect Answers Deduct 1 Correct Answer)'),
-        ('5', '1:1 (Every 1 Incorrect Answers Deduct 1 Correct Answer)'),
+        ('2', '4:1 (4 incorrect answers deduct 1 correct answer)'),
+        ('3', '3:1 (3 incorrect answers deduct 1 correct answer)'),
+        ('4', '2:1 (2 incorrect answers deduct 1 correct answer)'),
+        ('5', '1:1 (1 incorrect answer deducts 1 correct answer)'),
     ]
 
     # Time limit choices (in seconds)

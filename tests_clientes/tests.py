@@ -345,7 +345,8 @@ class ResultadosTestsViewTestCase(TestCase):
         self.client.force_login(self.superuser)
 
         # Llamo a la URL con la vista que me muestra los resultados (resultados_del_test())
-        response = self.client.get(f'/tests/test/sesion/{sesion_caso_1.id}/resultados/')
+        # I had to fix this URL since I changed the name of the URL
+        response = self.client.get(f'/tests/test/session/{sesion_caso_1.id}/results/')
 
         # Verify score calculation, when there are a total of 3 questions.
         # These assertions verify that your view is:
@@ -450,7 +451,7 @@ class ResultadosTestsViewTestCase(TestCase):
         # Esto hace que el superusuario se autentique. Si no pongo esto, el "self.assertEqual" no funcionará.
         self.client.force_login(self.superuser)
 
-        response = self.client.get(f'/tests/test/sesion/{sesion_caso_2.id}/resultados/')
+        response = self.client.get(f'/tests/test/session/{sesion_caso_2.id}/results/')
 
         self.assertEqual(response.context['correct_answers'], 6)
         self.assertEqual(response.context['incorrect_answers'], 4)
@@ -547,7 +548,7 @@ class ResultadosTestsViewTestCase(TestCase):
         )
 
         self.client.force_login(self.superuser)
-        response = self.client.get(f'/tests/test/sesion/{sesion_caso_3.id}/resultados/')
+        response = self.client.get(f'/tests/test/session/{sesion_caso_3.id}/results/')
 
         self.assertEqual(response.context['correct_answers'], 7)
         self.assertEqual(response.context['incorrect_answers'], 3)
@@ -626,7 +627,7 @@ class ResultadosTestsViewTestCase(TestCase):
         )
 
         self.client.force_login(self.superuser)
-        response = self.client.get(f'/tests/test/sesion/{sesion_caso_4.id}/resultados/')
+        response = self.client.get(f'/tests/test/session/{sesion_caso_4.id}/results/')
 
         self.assertEqual(response.context['correct_answers'], 7)
         self.assertEqual(response.context['incorrect_answers'], 3)
@@ -710,7 +711,7 @@ class ResultadosTestsViewTestCase(TestCase):
         )
 
         self.client.force_login(self.superuser)
-        response = self.client.get(f'/tests/test/sesion/{sesion_caso_5.id}/resultados/')
+        response = self.client.get(f'/tests/test/session/{sesion_caso_5.id}/results/')
 
         self.assertEqual(response.context['correct_answers'], 7)
         self.assertEqual(response.context['incorrect_answers'], 3)
@@ -773,7 +774,7 @@ class ResultadosTestsViewTestCase(TestCase):
         )
 
         self.client.force_login(self.superuser)
-        response = self.client.get(f'/tests/test/sesion/{sesion_caso_1_parcial.id}/resultados/')
+        response = self.client.get(f'/tests/test/session/{sesion_caso_1_parcial.id}/results/')
 
         self.assertEqual(response.context['correct_answers'], 5)
         self.assertEqual(response.context['incorrect_answers'], 2)
@@ -840,7 +841,7 @@ class ResultadosTestsViewTestCase(TestCase):
         )
 
         self.client.force_login(self.superuser)
-        response = self.client.get(f'/tests/test/sesion/{sesion_caso_2_parcial.id}/resultados/')
+        response = self.client.get(f'/tests/test/session/{sesion_caso_2_parcial.id}/results/')
 
         # Solo deben haber 4 respuestas correctas
         self.assertEqual(response.context['correct_answers'], 4)
@@ -912,7 +913,7 @@ class ResultadosTestsViewTestCase(TestCase):
         )
 
         self.client.force_login(self.superuser)
-        response = self.client.get(f'/tests/test/sesion/{sesion_caso_3_parcial.id}/resultados/')
+        response = self.client.get(f'/tests/test/session/{sesion_caso_3_parcial.id}/results/')
 
         self.assertEqual(response.context['correct_answers'], 5)
         self.assertEqual(response.context['incorrect_answers'], 3)
@@ -981,7 +982,7 @@ class ResultadosTestsViewTestCase(TestCase):
         )
 
         self.client.force_login(self.superuser)
-        response = self.client.get(f'/tests/test/sesion/{sesion_caso_4_parcial.id}/resultados/')
+        response = self.client.get(f'/tests/test/session/{sesion_caso_4_parcial.id}/results/')
 
         self.assertEqual(response.context['correct_answers'], 5)
         self.assertEqual(response.context['incorrect_answers'], 3)
@@ -1043,7 +1044,9 @@ class ResultadosTestsViewTestCase(TestCase):
         )
 
         self.client.force_login(self.superuser)
-        response = self.client.get(f'/tests/test/sesion/{sesion_caso_5_parcial.id}/resultados/')
+
+        # BUGFIX: I changed the name of the URL in my urls.py file, so I had to change them here as well
+        response = self.client.get(f'/tests/test/session/{sesion_caso_5_parcial.id}/results/')
 
         self.assertEqual(response.context['correct_answers'], 5)
         self.assertEqual(response.context['incorrect_answers'], 2)
