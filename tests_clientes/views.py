@@ -2245,7 +2245,7 @@ def resultados_del_test(request, session_id):
 
         case "2":
             # 4:1 penalty: every 4 wrong answers eliminate 1 correct answer
-            nombre_de_dificultad = "4:1 (4 respuestas malas restan 1 buena)"
+            nombre_de_dificultad = "4:1 (4 incorrect answers deduct 1 correct answer)"
             respuestas_eliminadas = respuestas_incorrectas // 4
             respuestas_correctas_ajustadas = max(0, respuestas_correctas - respuestas_eliminadas)
             score = (respuestas_correctas_ajustadas / numero_total_de_preguntas) * 10
