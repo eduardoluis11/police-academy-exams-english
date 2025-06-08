@@ -789,7 +789,7 @@ def configurar_test_predefinido(request, test_id):
         # 'questions_by_test': questions_by_test,
         # 'all_questions': all_questions,
         # 'difficulty_levels': [
-        #     {'value': '1', 'name': 'Errores No Restan'},
+        #     {'value': '1', 'name': 'Errors Do Not Deduct Points'},
         #     {'value': '2', 'name': '4:1 (4 respuestas malas restan 1 buena)'},
         #     {'value': '3', 'name': '3:1 (3 respuestas malas restan 1 buena)'},
         #     {'value': '4', 'name': '2:1 (2 respuestas malas restan 1 buena)'},
@@ -2166,7 +2166,7 @@ This code:
 
 Now, I want to print the difficulty level in my template. So, from this view, within the match / case, create a new 
 variable which will store the name of the difficulty level. Here are the names for each difficulty level (i.e.: 
-Difficulty "1" is called "Errores no restan"). Well, take these names, and create a new variable in my 
+Difficulty "1" is called "Errors Do Not Deduct Points"). Well, take these names, and create a new variable in my 
 resultados_del_test view to store the name of that difficulty level in that variable. Then, in the match case, change 
 the name of the difficulty depending on whether the difficulty is "1", "2", "3", etc. Then, send the name of that 
 difficulty level via jinja to my template.
@@ -2240,7 +2240,7 @@ def resultados_del_test(request, session_id):
     match session.nivel_de_dificultad:
         case "1":
             # Easiest: wrong answers don't affect score
-            nombre_de_dificultad = "Errores No Restan"
+            nombre_de_dificultad = "Errors Do Not Deduct Points"
             score = (respuestas_correctas / numero_total_de_preguntas) * 10 if numero_total_de_preguntas > 0 else 0
 
         case "2":
@@ -2272,7 +2272,7 @@ def resultados_del_test(request, session_id):
 
         case _:
             # Default case: use easiest scoring method
-            nombre_de_dificultad = "Errores No Restan"
+            nombre_de_dificultad = "Errors Do Not Deduct Points"
             score = (respuestas_correctas / numero_total_de_preguntas) * 10 if numero_total_de_preguntas > 0 else 0
 
     # # Dificultad 1 (la más fácil): Las respuestas incorrectas no te restan ninguna correcta

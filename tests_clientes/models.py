@@ -43,7 +43,7 @@ Ordenados de más restrictivo a menos restrictivo:
 - 2:1. 2 respuestas mal restan 1 bien
 - 3:1. 3 respuestas mal restan 1 bien
 - 4:1. 4 respuestas mal restan 1 bien
-- Errores no restan (más fácil)
+- Errors Do Not Deduct Points (más fácil)
 
 Agregué un nuevo campo que almacena cuanto tiempo le queda al cliente para terminar el test. Esto es para que, si el 
 cliente interrumpe el test, pueda volver a tomarlo y se le quede guardado en el cronómetro cuanto tiempo le queda.
@@ -68,7 +68,7 @@ class SesionDelTest(models.Model):
     nombre_del_test = models.ForeignKey('tests_administradores.Test', on_delete=models.CASCADE)
 
     # Nivel de dificultad del test que seleccionó el cliente
-    nivel_de_dificultad = models.CharField(max_length=50, default='Errores no restan puntos')
+    nivel_de_dificultad = models.CharField(max_length=50, default='Errors Do Not Deduct Points')
 
     # Puntuación que sacó el cliente en el test en el intento actual
     puntuacion = models.FloatField(null=True, blank=True)

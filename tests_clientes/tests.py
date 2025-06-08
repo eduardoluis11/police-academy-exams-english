@@ -367,7 +367,7 @@ class ResultadosTestsViewTestCase(TestCase):
         self.assertEqual(response.context['incorrect_answers'], 3)
 
         # Confirms the difficulty level name is correct for difficulty level 1 (where wrong answers don't penalize)
-        self.assertEqual(response.context['nombre_de_dificultad'], 'Errores No Restan')
+        self.assertEqual(response.context['nombre_de_dificultad'], 'Errors Do Not Deduct Points')
 
     # Caso 4:1: Este test chequea 6 preguntas buenas y 4 malas. Las malas penalizan (me quita 1 buena).
     def test_case2_penalty_for_wrong_answers(self):
@@ -772,7 +772,7 @@ class ResultadosTestsViewTestCase(TestCase):
 
         self.assertEqual(response.context['correct_answers'], 5)
         self.assertEqual(response.context['incorrect_answers'], 2)
-        self.assertEqual(response.context['nombre_de_dificultad'], 'Errores No Restan')
+        self.assertEqual(response.context['nombre_de_dificultad'], 'Errors Do Not Deduct Points')
         self.assertEqual(response.context['score'], (5 / 10) * 10)  # 5 correct out of total 10 questions = 50%
 
     # Caso 4:1, pero con algunas preguntas sin responder
