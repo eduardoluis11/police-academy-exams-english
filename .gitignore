@@ -177,7 +177,7 @@ cython_debug/
 media/
 
 # Carpeta "img" de la carpeta "static"
-static/img/
+static/img/botones-tipos-de-test
 
 # Archivos de FontAwesome que no quiero guardar en GitHub
 static/fontawesome/js
