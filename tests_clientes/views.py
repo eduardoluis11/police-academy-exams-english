@@ -3203,6 +3203,20 @@ The key changes are:
 2) When handling POST requests, pass both the user and the POST data.
 3) Pass the form to the template context.
 4) This matches the form's __init__ method which requires the user parameter, and fixes the TypeError you're seeing.
+
+Here's how to handle the password change once the user submits the form:
+
+1) Added password change handling in the form's is_valid() block.Add commentMore actions
+2) Used Django's built-in set_password() method to securely hash and save the new password.
+3) Added a success message to confirm the change
+4) Redirected to login page since changing password automatically logs out the user
+5) Kept the existing form instantiation for GET requests
+
+Now when users submit valid password changes:
+
+1) Their password will be updated securely
+2) They'll see a success message
+3) They'll be redirected to login with their new password
 """
 
 
@@ -3212,6 +3226,36 @@ def change_password_account_settings(request):
     # This will render the form for changing the password when users arrive to this page.
     # Initialize form with the current user.
     form = PasswordChangeForm(user=request.user)
+
+    # If the user submits the form
+    if request.method == 'POST':
+
+        # This creates an instance of the form with the password typed by the user
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+
+        # If the form is valid
+        if form.is_valid():
+
+            # Handle password change
+
+            # Get the new password from cleaned data
+            new_password = form.cleaned_data['new_password1']
+
+            # Set the user's new password
+            request.user.set_password(new_password)
+            request.user.save()
+
+            # Add a success message
+            messages.success(request, 'Tu contraseña ha sido cambiada exitosamente.')
+
+            # Redirect to login page since changing password logs the user out
+            return redirect('iniciar_sesion')
+
+    else:    # If the user enters the page for the first time.
+
+        # This will render the form for changing the password when users arrive to this page.
+        # Initialize form with the current user.
+        form = PasswordChangeForm(user=request.user)
 
     # Esto renderiza el template
     return render(request, 'tests_clientes/change_password_account_settings.html', {

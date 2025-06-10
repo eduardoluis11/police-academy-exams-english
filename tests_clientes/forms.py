@@ -659,17 +659,23 @@ Validate and save in your view as needed.
 
 
 class PasswordChangeForm(forms.Form):
+
+    # Old Password
     old_password = forms.CharField(
         label="Contraseña Actual",
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'current-password'}),
         strip=False,
     )
+
+    # New Password that the user wants to set
     new_password1 = forms.CharField(
         label="Nueva Contraseña",
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'new-password'}),
         strip=False,
         help_text=password_validation.password_validators_help_text_html(),
     )
+
+    # Field for Confirming the New Password
     new_password2 = forms.CharField(
         label="Confirmar Nueva Contraseña",
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'new-password'}),
