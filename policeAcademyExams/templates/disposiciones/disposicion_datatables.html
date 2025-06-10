@@ -163,7 +163,13 @@
                             {# Add navigation items in child templates if needed #}
                         {% endblock %}
                         
-                        <li class="nav-item">
+                        <li class="nav-item">   {# Link to go to your Profile Settings to change your Password #}
+                            <a class="nav-link" href="{% url 'tests_clientes:user_account' %}">
+                                Your Account
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item">   {# Link to Log you Out #}
                             <a class="nav-link" href="{% url 'cerrar_sesion' %}">Log Out</a>
                         </li>
                     {% else %}

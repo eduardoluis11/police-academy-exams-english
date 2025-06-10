@@ -95,4 +95,7 @@ urlpatterns = [
 
     # URL a la API para que el usuario pueda eliminar una pregunta guardada desde el front-end
     path('delete-saved-question/', views.eliminar_pregunta_guardada, name='eliminar_pregunta_guardada'),
+
+    # URL to go to your Profile PageAdd commentMore actions
+    path('tu-cuenta', views.user_account, name='user_account'),
 ]

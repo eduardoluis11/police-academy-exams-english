@@ -3174,6 +3174,19 @@ def ver_detalles_de_pregunta_guardada_seleccionada(request, pregunta_guardada_id
                   })
 
 
+""" Vista para ver los Datos y la Configuración de la Cuenta del Usuario Autenticado.
+
+Desde aquí te saldrá el enlace para que el usuario pueda cambiar su propia contraseña.Add commentMore actions
+"""
+
+
+@login_required(login_url='iniciar_sesion')
+def user_account(request):
+
+    # Esto renderiza el template
+    return render(request, 'tests_clientes/user_account.html')
+
+
 """ Vista con la API para que el Usuario pueda Guardar una Pregunta en el modelo de PreguntaGuardadaPorElUsuario().
 
 El usuario llamará a esta API desde el front-end cuando clique en el botón de "Guardar Pregunta" o el icono del 
