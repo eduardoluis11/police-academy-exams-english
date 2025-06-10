@@ -23,7 +23,8 @@ from .models import SesionDelTest, RespuestaDelUsuario, PreguntaGuardadaPorElUsu
 
 # Formularios de Django de esta app ("test_clientes")
 from .forms import (ConfigurarTestSinIncluirPreguntasForm, ConfigurarNuevoTestAGenerarForm,
-                    NumeroDePreguntasARealizarFormulario, ConfigureNewTestByTopicForm, ConfigureNewTestByRegulationForm)
+                    NumeroDePreguntasARealizarFormulario, ConfigureNewTestByTopicForm,
+                    ConfigureNewTestByRegulationForm, PasswordChangeForm)
 
 # Esto importa mis modelos de la app de tests para administradores
 from tests_administradores.models import PreguntaDelTest, Test
@@ -3185,6 +3186,37 @@ def user_account(request):
 
     # Esto renderiza el template
     return render(request, 'tests_clientes/user_account.html')
+
+
+""" Vista para que el Usuario pueda Cambiar Su Contraseña
+
+Esto es para que el usuario se pueda cambiar su contraseña sin necesidad de que le llegue un email. Es decir, esta
+es la típica funcionalidad para Cambiar tu Contraseña que puedes encontrar en muchas web apps populares.
+
+Pondré un formulario de Django desde un forms.py por motivos de seguridad.
+
+You need to pass the authenticated user to the PasswordChangeForm from forms.py when initializing it.
+
+The key changes are:
+
+1) Pass the authenticated user to the form using user=request.user.
+2) When handling POST requests, pass both the user and the POST data.
+3) Pass the form to the template context.
+4) This matches the form's __init__ method which requires the user parameter, and fixes the TypeError you're seeing.
+"""
+
+
+@login_required(login_url='iniciar_sesion')
+def change_password_account_settings(request):
+
+    # This will render the form for changing the password when users arrive to this page.
+    # Initialize form with the current user.
+    form = PasswordChangeForm(user=request.user)
+
+    # Esto renderiza el template
+    return render(request, 'tests_clientes/change_password_account_settings.html', {
+        'form': form,
+    })
 
 
 """ Vista con la API para que el Usuario pueda Guardar una Pregunta en el modelo de PreguntaGuardadaPorElUsuario().

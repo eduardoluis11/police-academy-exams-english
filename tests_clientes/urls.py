@@ -97,5 +97,8 @@ urlpatterns = [
     path('delete-saved-question/', views.eliminar_pregunta_guardada, name='eliminar_pregunta_guardada'),
 
     # URL to go to your Profile PageAdd commentMore actions
-    path('tu-cuenta', views.user_account, name='user_account'),
+    path('your-account', views.user_account, name='user_account'),
+
+    # This lets the User change their password while they are authenticated in their account
+    path('change-your-password', views.change_password_account_settings, name='change_password_account_settings')
 ]

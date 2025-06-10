@@ -1,8 +1,12 @@
-from django import forms
+from django import forms  # This lets me use Django forms
 
+# This imports the models from the test_administradores app
 from tests_administradores.models import Test, PreguntaDelTest
 
 from django.core.exceptions import ValidationError
+
+# This checks if the user typed their old password correctly while changing passwords
+from django.contrib.auth import password_validation
 
 """ Formularios de Django para la app de Test de Clientes.
 """
@@ -642,3 +646,59 @@ class NumeroDePreguntasARealizarFormulario(forms.Form):
         }),
         help_text='Type the number of questions that you want for the test.'
     )
+
+
+""" Formulario para que el usuario pueda Cambiar su Contraseña mientras esté autenticado.Add commentMore actions
+
+Make me a django form that lets the logged in user change their password. The form should have 3 fields: one asking them for their old password, one asking them for their new password, and another for confirming their new password.
+
+To make the form, instantiate with the user: form = PasswordChangeForm(request.user, data=request.POST or None)
+
+Validate and save in your view as needed.
+"""
+
+
+class PasswordChangeForm(forms.Form):
+    old_password = forms.CharField(
+        label="Contraseña Actual",
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'current-password'}),
+        strip=False,
+    )
+    new_password1 = forms.CharField(
+        label="Nueva Contraseña",
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'new-password'}),
+        strip=False,
+        help_text=password_validation.password_validators_help_text_html(),
+    )
+    new_password2 = forms.CharField(
+        label="Confirmar Nueva Contraseña",
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'new-password'}),
+        strip=False,
+    )
+
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+
+    def clean_old_password(self):
+        old_password = self.cleaned_data.get("old_password")
+        if not self.user.check_password(old_password):
+            raise forms.ValidationError("La contraseña actual es incorrecta.")
+        return old_password
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        # New Password
+        password1 = cleaned_data.get("new_password1")
+
+        # Field for Confirming the New Password
+        password2 = cleaned_data.get("new_password2")
+
+        # If the 2 new passwords don't match, raise an error message
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError("Las nuevas contraseñas no coinciden.")
+
+        # I guess this changes the user's password to the new one
+        password_validation.validate_password(password1, self.user)
+        return cleaned_data

@@ -1,7 +1,7 @@
 {% extends 'disposiciones/disposicion_autenticacion.html' %}
 {% load static %}
 
-{# Account Paage for the Authenticated User. #}
+{# Account Page for the Authenticated User. #}
 {#  #}
 {# From here, the user will be able to go to a link to be able to Change their Password. #}
 
@@ -9,6 +9,23 @@
 {% block title %}Tu Cuenta{% endblock %}
 
 {% block content %}
-Tu cuenta
+
+    {# Aquí imprimiré un Título <h4> que diga "Tu Cuenta". #}
+    <h2 class="mb-4">Tu Cuenta</h2>
+    <br>
+    <br>
+
+    {# Aquí imprimiré el nombre del usuario Logueado y diga "datos de tu cuenta" #}
+    <p><b>Nombre de Usuario:</b> {{ user.username }}</p>
+    <br>
+    <br>
+    
+    {# Aquí pondré el enlace a la página con el formulario para que el usuario pueda cambiar su contraseña. #}
+    {# Pondré un botón (así como puse en la página de Inicio.) #}
+    <a href="{% url 'tests_clientes:change_password_account_settings' %}" class="btn btn-primary">
+        Cambia tu Contraseña
+    </a>
+    <br>
+    <br>
 
 {% endblock %}
