@@ -19,8 +19,9 @@
 {# Hay enlaces que voy a meter automáticamente a todos o la mayoría de los templates en la disposicion. Esos #}
 {# enlaces NO los voy a poner aquí. #}
 
-{# Si el usuario ha iniciado sesión, se le mostrará solo el enlace para cerrar sesión #}
-{# Si el usuario no ha iniciado sesión, le mostraré los enlaces para autenticarse y para registrarse #}
+{# Si el usuario ha iniciado sesión, se le mostrará solo el enlace para cerrar sesión. #}
+{# Si el usuario no ha iniciado sesión, le mostraré los enlaces para autenticarse y para registrarse. #}
+
 {% block nav_items %}
 
     {# Si el usuario no está autenticado / iniciado sesión #}
@@ -35,89 +36,97 @@
     {% endif %}
 {% endblock %}
 
-{# Esto me renderiza el contenido de esta pagina. Sin el "block content", nada se renderiza  #}
+{# Esto me renderiza el contenido de esta pagina. Sin el "block content", nada se renderiza.  #}
+{# #}
+{# I will center the logo and all the buttons horizontally within the page by using Bootstrap. The container class #}
+{# ensures that the content is centered within a reasonable width, while the text-center class centers the text and #}
+{# inline elements. The mx-auto d-block classes center the logo image. #}
 {% block content %}
 
-    {# Police Exam's Logo #}
-    <img src="{% static 'img/logos/police-tests-logo-higher-resolution.png' %}" alt="Police Test's Logo" height="100">
-
-    <br>
-    <br>
-    <div class="welcome-message">
-
-        {# Esto imprime un mensaje flash de error después de que el usuario envíe el formulario. #}
-
-        {# Si el usuario inicia sesión, se le muestra su nombre de usuario #}
-        {% if user.is_authenticated %}
-            {#  User is logged.   #}
-            {# Panel de Control / Dashboard para Administradores. SOLO LOS ADMINISTRADORES PODRAN VER ESTO #}
-            {% if user.is_superuser %}
-
+    <div class="container text-center">  {# Add container and text-center class from Bootstrap #}
+    
+    
+        {# Police Exam's Logo #}
+        <img src="{% static 'img/logos/police-tests-logo-higher-resolution.png' %}" alt="Police Test's Logo" height="100">
+    
+        <br>
+        <br>
+        <div class="welcome-message">
+    
+            {# Esto imprime un mensaje flash de error después de que el usuario envíe el formulario. #}
+    
+            {# Si el usuario inicia sesión, se le muestra su nombre de usuario #}
+            {% if user.is_authenticated %}
+                {#  User is logged.   #}
+                {# Panel de Control / Dashboard para Administradores. SOLO LOS ADMINISTRADORES PODRAN VER ESTO #}
+                {% if user.is_superuser %}
+    
+                    <br>
+                    <br>
+                    <p>
+                        <b>Control Panel for Admins</b>
+                    </p>
+    
+                    {# Enlace para ver la lista de Tests #}
+                    <a href="{% url 'tests_clientes:lista_de_tests' %}" class="btn btn-primary">
+                        View Tests's List
+                    </a>
+                    <br>
+                    <br>
+    
+                    {# Enlace para subir tests desde un Excel #}
+                    <a href="{% url 'tests_administradores:upload_and_import_exams' %}" class="btn btn-primary">
+                        Subir un Test desde un archivo Excel
+                    </a>
+                    <br>
+                    <br>
+    
+                    {# Enlace para crear un test desde cero, sin usar un Excel #}
+                    <a href="{% url 'tests_administradores:crear_nuevo_test_sin_subir_un_archivo' %}" class="btn btn-primary">
+                        Create New Test
+                    </a>
+                   <br>
+                   <br>
+                    
+                    {# Link to go to the Question Search functionality #}
+                    <a href="{% url 'tests_administradores:buscador_de_preguntas' %}" class="btn btn-primary">
+                        Question Search
+                    </a>
+                    <br>
+                    <br>
+    
+                    {# Fin del Panel de Control / Dashboard para Administradores.  #}
+                {% endif %}
+    
+                {# Mensaje de bienvenida con el nombre de usuario #}
+                <p>Welcome, {{ user.username }}!</p>
                 <br>
                 <br>
-                <p>
-                    <b>Control Panel for Admins</b>
-                </p>
-
-                {# Enlace para ver la lista de Tests #}
-                <a href="{% url 'tests_clientes:lista_de_tests' %}" class="btn btn-primary">
-                    View Tests's List
-                </a>
-                <br>
-                <br>
-
-                {# Enlace para subir tests desde un Excel #}
-                <a href="{% url 'tests_administradores:upload_and_import_exams' %}" class="btn btn-primary">
-                    Subir un Test desde un archivo Excel
-                </a>
-                <br>
-                <br>
-
-                {# Enlace para crear un test desde cero, sin usar un Excel #}
-                <a href="{% url 'tests_administradores:crear_nuevo_test_sin_subir_un_archivo' %}" class="btn btn-primary">
-                    Create New Test
-                </a>
-               <br>
-               <br>
                 
-                {# Link to go to the Question Search functionality #}
-                <a href="{% url 'tests_administradores:buscador_de_preguntas' %}" class="btn btn-primary">
-                    Question Search
+                {# Enlaces a las funcionalidades para los clientes. #}
+                {# Link to the Exams' Lists #}
+                <a href="{% url 'tests_clientes:menu_principal_tests' %}" class="btn btn-primary">
+                    Tests
                 </a>
                 <br>
                 <br>
-
-                {# Fin del Panel de Control / Dashboard para Administradores.  #}
+    
+                <a href="{% url 'cerrar_sesion' %}">Log Out</a>
+    
+            {# Esto es lo que se le muestra al usuario si no inicia sesión en la web app #}
+            {% else %}
+                <!-- User is not logged in -->
+    
+                <!-- Botón con el enlace para Iniciar Sesión -->
+                <a href="{% url 'iniciar_sesion' %}" class="btn btn-primary">Log In</a>
+    
+                <br>
+                <br>
+    
+                <!-- Botón con el enlace para Registrarse -->
+                <a href="{% url 'registrarse' %}" class="btn btn-primary">Sign Up</a>
+    
             {% endif %}
-
-            {# Mensaje de bienvenida con el nombre de usuario #}
-            <p>Welcome, {{ user.username }}!</p>
-            <br>
-            <br>
-            
-            {# Enlaces a las funcionalidades para los clientes. #}
-            {# Link to the Exams' Lists #}
-            <a href="{% url 'tests_clientes:menu_principal_tests' %}" class="btn btn-primary">
-                Tests
-            </a>
-            <br>
-            <br>
-
-            <a href="{% url 'cerrar_sesion' %}">Log Out</a>
-
-        {# Esto es lo que se le muestra al usuario si no inicia sesión en la web app #}
-        {% else %}
-            <!-- User is not logged in -->
-
-            <!-- Botón con el enlace para Iniciar Sesión -->
-            <a href="{% url 'iniciar_sesion' %}" class="btn btn-primary">Log In</a>
-
-            <br>
-            <br>
-
-            <!-- Botón con el enlace para Registrarse -->
-            <a href="{% url 'registrarse' %}" class="btn btn-primary">Sign Up</a>
-
-        {% endif %}
+        </div>
     </div>
 {% endblock %}

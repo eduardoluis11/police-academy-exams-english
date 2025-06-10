@@ -179,6 +179,9 @@ media/
 # Carpeta "img" de la carpeta "static"
 static/img/botones-tipos-de-test
 
+# Folder with the AI chats that I used to help me write my code
+ai-chats
+
 # Archivos de FontAwesome que no quiero guardar en GitHub
 static/fontawesome/js
 static/fontawesome/metadata
