@@ -304,7 +304,8 @@ class UploadAndImportExamsViewTests(TestCase):
             'C': ['Option C'],
             'D': ['Option D'],
             'Correct': ['A'],
-            'Explanation': ['Because A is correct']
+            'Explanation': ['Because A is correct'],
+            'Year': ['2025']
         }
         excel_file = biblioteca_pandas.DataFrame(excel_data)
 

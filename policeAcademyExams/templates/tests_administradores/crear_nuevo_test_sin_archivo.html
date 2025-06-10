@@ -6,8 +6,8 @@
     <div class="container mt-4">
         <div class="card">
             <div class="card-body">
-                <h2 class="card-title">Crear un Nuevo Test</h2>
-                <p class="card-text">Rellene los Campos para crear un nuevo test</p>
+                <h2 class="card-title">Create a New Test</h2>
+                <p class="card-text">Fill in the fields to create a new test.</p>
 
                 
                 <div class="mt-4">
@@ -34,13 +34,13 @@
                         </div>
 
                         {# Botón para agregar un nuevo formset a mi formulario usando Javascript #}
-                        <button type="button" id="add-form" class="btn btn-secondary">Añadir Pregunta</button>
+                        <button type="button" id="add-form" class="btn btn-secondary">Add Question</button>
 
                         {# Botón para enviar mi formulario #}
-                        <button type="submit" class="btn btn-primary">Crear Test</button>
+                        <button type="submit" class="btn btn-primary">Create Test</button>
                     
                         {# Botón para Cancelar la Creación del Test y regresarme a la lista de Tests #}
-                        <a href="{% url 'tests_clientes:lista_de_tests' %}" class="btn btn-secondary ml-2">Cancelar</a>
+                        <a href="{% url 'tests_clientes:lista_de_tests' %}" class="btn btn-secondary ml-2">Cancel</a>
                     </form>
                 </div>
             </div>
@@ -90,7 +90,7 @@
                     
                     // Update form index
                     newForm.innerHTML = newForm.innerHTML.replace(/-\d+-/g, `-${formCount}-`);
-                    newForm.querySelector('h4').textContent = `Pregunta #${formCount + 1}`;
+                    newForm.querySelector('h4').textContent = `Question #${formCount + 1}`;
                     
                     // Clear form values and update IDs
                     newForm.querySelectorAll('input[type="text"], textarea').forEach(input => {

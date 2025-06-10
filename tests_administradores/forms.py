@@ -58,7 +58,13 @@ class NombreDelTestFormulario(forms.ModelForm):
     class Meta:
         model = Test
         fields = ['nombre_del_test', 'year']    # Aqui le digo que solo quiero el campo "nombre del test" y el año
-        label = 'Name of the test'
+        # label = 'Name of the test'
+
+        # Add a dictionary called "labels" to translate the field names for this form
+        labels = {
+            'nombre_del_test': 'Name of the Test',
+            'year': 'Year',
+        }
 
         # Optional: Add widgets, Bootstrap styles, labels, or help_text
         widgets = {
@@ -112,6 +118,7 @@ class CrearTestSinExcelFormulario(forms.ModelForm):
 
     # Override the respuesta_correcta field
     respuesta_correcta = forms.ChoiceField(
+        label='Correct Answer',  # Changed label to English
         choices=OPCIONES_RESPUESTA,
         widget=forms.Select(attrs={'class': 'form-control'})
     )
@@ -122,21 +129,74 @@ class CrearTestSinExcelFormulario(forms.ModelForm):
         fields = ['tema', 'normativa', 'pregunta',
                   'opcion_a', 'opcion_b', 'opcion_c', 'opcion_d',
                   'respuesta_correcta', 'justificacion']
+        
+        # Add a dictionary called "labels" to translate the field names for this form
+        labels = {
+            'tema': 'Topic',
+            'normativa': 'Regulation',
+            'pregunta': 'Question',
+            'opcion_a': 'Option A',
+            'opcion_b': 'Option B',
+            'opcion_c': 'Option C',
+            'opcion_d': 'Option D',
+            'justificacion': 'Explanation'
+        }
+
+        # # Optional help text in English
+        # help_texts = {
+        #     'tema': 'Enter the topic number',
+        #     'normativa': 'Enter the regulation name',
+        #     'pregunta': 'Write your question here',
+        #     'justificacion': 'Provide an explanation for the correct answer'
+        # }
+
 
         # Optional: Add widgets, labels, or help_text.
         # Con esto, puedo agrega la clase de form-control de Bootstrap a los campos del formulario
+        # I added a place holder to each field to better explain what each field is about.
         widgets = {
-            'tema': forms.NumberInput(attrs={'class': 'form-control'}),
-            'normativa': forms.TextInput(attrs={'class': 'form-control'}),
-            'pregunta': forms.Textarea(attrs={'class': 'form-control'}),
-            'opcion_a': forms.Textarea(attrs={'class': 'form-control'}),
-            'opcion_b': forms.Textarea(attrs={'class': 'form-control'}),
-            'opcion_c': forms.Textarea(attrs={'class': 'form-control'}),
-            'opcion_d': forms.Textarea(attrs={'class': 'form-control'}),
+            'tema': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter the topic number'
+
+                }),
+            'normativa': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter the regulation name'
+            }),
+            'pregunta': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Write your question here'
+
+            }),
+            'opcion_a': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter option A'
+
+            }),
+            'opcion_b': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter option B'
+
+            }),
+            'opcion_c': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter option C'
+
+            }),
+            'opcion_d': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter option D'
+
+            }),
 
             # La respuesta correcta la elimine de aqui y la definí como un ChoiceField arriba
             # 'respuesta_correcta': forms.TextInput(attrs={'class': 'form-control'}),
-            'justificacion': forms.Textarea(attrs={'class': 'form-control'})
+            'justificacion': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Provide an explanation for the correct answer'
+
+            })
         }
 
 
