@@ -662,14 +662,14 @@ class PasswordChangeForm(forms.Form):
 
     # Old Password
     old_password = forms.CharField(
-        label="Contraseña Actual",
+        label="Current Password",
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'current-password'}),
         strip=False,
     )
 
     # New Password that the user wants to set
     new_password1 = forms.CharField(
-        label="Nueva Contraseña",
+        label="New Password",
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'new-password'}),
         strip=False,
         help_text=password_validation.password_validators_help_text_html(),
@@ -677,7 +677,7 @@ class PasswordChangeForm(forms.Form):
 
     # Field for Confirming the New Password
     new_password2 = forms.CharField(
-        label="Confirmar Nueva Contraseña",
+        label="Confirm New Password",
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'new-password'}),
         strip=False,
     )
