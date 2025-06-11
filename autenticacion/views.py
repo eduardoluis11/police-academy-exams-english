@@ -183,7 +183,7 @@ def registrarse(request):
                 login(request, new_user)
 
                 # This will render a success flash message
-                messages.success(request, 'Te has registrado exitosamente.')
+                messages.success(request, 'You have successfully created your account.')
 
                 # This will redirect the logged user to the home page
                 return redirect('inicio')
@@ -324,7 +324,7 @@ def registrarse(request):
 
         else:
             # If the form is invalid, show a generic form error message
-            messages.error(request, 'Por favor, corrige los errores en el formulario.')
+            messages.error(request, 'Please, fix the errors in the form.')
 
     else:  # Esto renderiza el formulario si no se ha enviado el formulario
         # Esto crea una instancia del Formulario con el Email para Registrarse
@@ -532,7 +532,7 @@ def iniciar_sesion(request):
 
         else:   # If the form is invalid,
             # Show a generic form error message
-            messages.error(request, 'Por favor, corrige los errores en el formulario.')
+            messages.error(request, 'Please, fix the errors in the form.')
 
     else:  # Esto renderiza el formulario si no se ha enviado
         # Esto crea una instancia del Formulario de Django de  Inicio de Sesion

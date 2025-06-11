@@ -63,24 +63,24 @@ class EmailParaRegistrarseFormulario(forms.Form):
 
 """ Formulario on el Campo de la Contraseña para Registrarse.
 
-Este formulario solo tendrá el campo de la Contraseñay y el campo para Confirmar la Contraseña.
+Este formulario solo tendrá el campo de la Contraseña y el campo para Confirmar la Contraseña.
 """
 
 
 class ContraseñaParaRegistrarseFormulario(forms.Form):
     password = forms.CharField(
-        label='Contraseña',
+        label='Password',
         max_length=128,
         widget=forms.PasswordInput(attrs={
-            'placeholder': 'Contraseña',
+            'placeholder': 'Password',
             'class': 'form-control',  # Bootstrap class for input styling
         })
     )
     confirmar_password = forms.CharField(
-        label='Confirmar Contraseña',
+        label='Confirm Password',
         max_length=128,
         widget=forms.PasswordInput(attrs={
-            'placeholder': 'Confirma tu contraseña',
+            'placeholder': 'Confirm your password',
             'class': 'form-control',  # Bootstrap class for input styling
         })
     )
@@ -94,7 +94,7 @@ class ContraseñaParaRegistrarseFormulario(forms.Form):
         confirmar_password = cleaned_data.get('confirmar_password')
 
         if password and confirmar_password and password != confirmar_password:
-            raise forms.ValidationError("Las contraseñas no coinciden. Por favor, inténtalo de nuevo.")
+            raise forms.ValidationError("The passwords do not match. Please, try again.")
 
         return cleaned_data
 
