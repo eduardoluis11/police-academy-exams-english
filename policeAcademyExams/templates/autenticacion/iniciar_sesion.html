@@ -1,25 +1,25 @@
 {% extends 'disposiciones/disposicion_autenticacion.html' %}
 
 {# Esto me renderiza el título de la pagina en la pestaña del navegador  #}
-{% block title %}Iniciar Sesión{% endblock %}
+{% block title %}Log In{% endblock %}
 
 {# Esto me agrega los enlaces para la barra de navegación que tengo en mi template de disposicion de autenticacion #}
 {% block nav_items %}
     <li class="nav-item">
-        <a class="nav-link" href="{% url 'inicio' %}">Inicio</a>
+        <a class="nav-link" href="{% url 'inicio' %}">Home</a>
     </li>
     {% if user.is_authenticated %}
         <li class="nav-item">
-            <a class="nav-link" href="{% url 'cerrar_sesion' %}">Cerrar Sesión</a>
+            <a class="nav-link" href="{% url 'cerrar_sesion' %}">Log Out</a>
         </li>
     {% else %}
         {# Si el usuario no ha iniciado sesión, le mostraré los enlaces para autenticarse y para registrarse #}
         <li class="nav-item">
             {# El "active" resalta el enlace de la pagina actual en el navbar #}
-            <a class="nav-link active" href="{% url 'iniciar_sesion' %}">Iniciar Sesión</a>
+            <a class="nav-link active" href="{% url 'iniciar_sesion' %}">Log In</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{% url 'registrarse' %}">Registrarse</a>
+            <a class="nav-link" href="{% url 'registrarse' %}">Sign Up</a>
         </li>
     {% endif %}
 {% endblock %}
@@ -35,7 +35,7 @@
         {# Columna 2: Todo el formulario.  #}
         <div class="col-md-6">
 
-            <h1>Iniciar Sesión</h1>
+            <h1>Log In</h1>
             <br>
             <br>
 
@@ -46,7 +46,7 @@
             <form method="post">
                 {% csrf_token %}
 
-                {# Formulario con los estilos de Bootsrap #}
+                {# Formulario con los estilos de Bootstrap #}
                 {% for field in form %}
                     <div class="mb-3">
                         <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
@@ -63,7 +63,7 @@
                 <br>
 
                 {# Botón para Iniciar Sesión #}
-                <button class="btn btn-primary" type="submit">Iniciar Sesión</button>
+                <button class="btn btn-primary" type="submit">Log In</button>
             </form>
 
             <br>
@@ -71,7 +71,7 @@
 
             {# Si al usuario se le olvidó la contraseña, la puede resetear aquí #}
             <p>
-                ¿Olvidó su contraseña? <a href="{% url 'password_reset' %}">Clique aquí para crear una nueva.</a>
+                Forgot your Password? <a href="{% url 'password_reset' %}">Click here to create a new one.</a>
             </p>
 
         </div>  {# Fin de la Columna 2 #}

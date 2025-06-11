@@ -129,9 +129,9 @@ class IniciarSesionFormulario(forms.Form):
     #     }))
 
     password = forms.CharField(
-        label='Contraseña',
+        label='Password',
         max_length=128,
         widget=forms.PasswordInput(attrs={
-            'placeholder': 'Contraseña',
+            'placeholder': 'Password',
             'class': 'form-control',  # Bootstrap class for input styling
         }))
