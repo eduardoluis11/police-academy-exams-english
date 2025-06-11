@@ -1,7 +1,7 @@
 import os
 import random
 import string
-import dj_database_url
+# import dj_database_url
 
 """ Script del settings de mi web app de Django que contiene la configuración para un entorno de producción.
 
@@ -13,17 +13,36 @@ el settings_NO_USAR.py ni el local.py.
 
 from .base import *
 
+# Aquí se guarda la clave de Django en el archivo .env, es decir, en las
+# variables de entorno (fuente: https://codinggear.blog/django-environment-variables/)
+from dotenv import load_dotenv
+import os
+
+# Esto me corrige un bug que dice que "Necesitaba Autenticación para poder Enviar un Email"
+import django.core.mail.backends.smtp
+
+# Esto me ejecuta el dotenv para poder acceder a las variables de entorno
+load_dotenv()
+
 # Este script siempre será para producción, por lo que "DEBUG" siempre será "False"
 DEBUG = False
 
 DATABASES = {
-    "default": dj_database_url.config(
-        conn_max_age=600,
-        conn_health_checks=True
-    )
+
+    # This connects the web app to a SQLite database
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+
+    # "default": dj_database_url.config(
+    #     conn_max_age=600,
+    #     conn_health_checks=True
+    # )
 }
 
-SECRET_KEY = os.environ["SECRET_KEY"]
+# Django's Secret Key, which is taken from my environment variables
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
@@ -31,8 +50,18 @@ SECURE_SSL_REDIRECT = True
 
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "*").split(",")
 
-CSRF_TRUSTED_ORIGINS = os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
+# CSRF_TRUSTED_ORIGINS = os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
 
+
+""" Backend del Email.
+
+Esto envía emails a la consola en lugar de enviarlos usando una dirección de email real
+
+Por los momentos, enviaré todos los emails desde Django a la consola.
+
+Con esto, podré enviar los emails con el enlace para resetear la contraseña a la consola en lugar
+de tener que configurar un email.)
+"""
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 """ Ideally, these are the settings that I need to detect my static files from my S3 Bucket in Backblaze, so that my 
@@ -58,8 +87,8 @@ fly.io hosting server can detect my static files and stop giving me the "Interna
 #     default_acl = 'public-read'
 #     file_overwrite = False
 
-MIDDLEWARE.append("whitenoise.middleware.WhiteNoiseMiddleware")
-STORAGES["staticfiles"]["BACKEND"] = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# MIDDLEWARE.append("whitenoise.middleware.WhiteNoiseMiddleware")
+# STORAGES["staticfiles"]["BACKEND"] = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # """ S3 Bucket settings for Backblaze.
 #
