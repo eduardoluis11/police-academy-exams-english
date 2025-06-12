@@ -49,6 +49,8 @@ DATABASES = {
     }
 }
 
+
+
 """ Backend del Email.
 
 Esto envía emails a la consola en lugar de enviarlos usando una dirección de email real

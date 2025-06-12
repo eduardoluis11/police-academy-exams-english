@@ -170,11 +170,21 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
+""" I need this in order to use the "collecstatic" command in PythonAnywhere.
+"""
+STATIC_ROOT = BASE_DIR / "staticfiles"  # Optional, but recommended for collectstatic
+
 STATIC_URL = 'static/'
 
+
 """ Al parecer, esto hará que yo pueda detectar la carpeta "static" en la carpeta raíz de mi web app de Django.
+
+I had to modify this so that I could run the "collectstatic" command in PythonAnywhere. This way, I could load the CSS
+for the Django Admin Panel.
 """
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 """ Aquí especifico la carpeta la ruta de la carpeta "media", que es donde se guardaran los archivos multimedia que se 
 suban a la web app de Django.
