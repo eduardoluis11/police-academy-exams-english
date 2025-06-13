@@ -52,8 +52,12 @@
         <br>
         <br>
         <div class="welcome-message">
-    
-            {# Esto imprime un mensaje flash de error después de que el usuario envíe el formulario. #}
+
+            <br>
+            <br>
+            {# Mensaje de bienvenida con el nombre de usuario #}
+            <p>Welcome, {{ user.username }}!</p>
+
     
             {# Si el usuario inicia sesión, se le muestra su nombre de usuario #}
             {% if user.is_authenticated %}
@@ -67,9 +71,9 @@
                         <b>Control Panel for Admins</b>
                     </p>
     
-                    {# Enlace para ver la lista de Tests #}
+                    {# List of all the Tests in teh database #}
                     <a href="{% url 'tests_clientes:lista_de_tests' %}" class="btn btn-primary">
-                        View Tests's List
+                        Test List
                     </a>
                     <br>
                     <br>
@@ -97,9 +101,6 @@
     
                     {# Fin del Panel de Control / Dashboard para Administradores.  #}
                 {% endif %}
-    
-                {# Mensaje de bienvenida con el nombre de usuario #}
-                <p>Welcome, {{ user.username }}!</p>
                 <br>
                 <br>
                 
@@ -115,6 +116,7 @@
     
             {# Esto es lo que se le muestra al usuario si no inicia sesión en la web app #}
             {% else %}
+
                 <!-- User is not logged in -->
     
                 <!-- Botón con el enlace para Iniciar Sesión -->
