@@ -147,14 +147,18 @@ def upload_and_import_exams(request):
             success_count, error_messages = import_exams_from_excel(file_path)
 
             # Esto crea los mensajes flash de error y de confirmación usando "messages"
-            if success_count > 0:
-                messages.success(request, f"Se importaron exitosamente {success_count} preguntas.")
+            if success_count > 0:   # If the data from the Excel file is imported correctly
+
+                # Show a confirmation message stating that the questions were imported successfully
+                messages.success(request, f"Number of questions imported successfully: {success_count}.")
                 # messages.success(request, f"Successfully imported {success_count} exam questions.")
             if error_messages:  # Si hay errores
                 for error in error_messages:
                     messages.error(request, error)
-            else:   # Si no hay errores
-                messages.info(request, "No se encontraron errores durante la importación.")
+            else:   # If there are no errors while importing the Excel file
+
+                messages.info(request, "No errors were found while importing the data from the file.")
+                # messages.info(request, "No se encontraron errores durante la importación.")
                 # messages.info(request, "No errors encountered during import.")
 
             # Optionally, delete the file after processing for security
