@@ -53,14 +53,16 @@
         <br>
         <div class="welcome-message">
 
-            <br>
-            <br>
-            {# Mensaje de bienvenida con el nombre de usuario #}
-            <p>Welcome, {{ user.username }}!</p>
+
 
     
             {# Si el usuario inicia sesión, se le muestra su nombre de usuario #}
             {% if user.is_authenticated %}
+                
+                <br>
+                <br>
+                {# Mensaje de bienvenida con el nombre de usuario #}
+                <p>Welcome, {{ user.username }}!</p>
                 {#  User is logged.   #}
                 {# Panel de Control / Dashboard para Administradores. SOLO LOS ADMINISTRADORES PODRAN VER ESTO #}
                 {% if user.is_superuser %}
@@ -80,7 +82,9 @@
     
                     {# Enlace para subir tests desde un Excel #}
                     <a href="{% url 'tests_administradores:upload_and_import_exams' %}" class="btn btn-primary">
-                        Subir un Test desde un archivo Excel
+                        {#  Subir un Test desde un archivo Excel#}
+                    
+                        Upload a Test from an Excel File
                     </a>
                     <br>
                     <br>
