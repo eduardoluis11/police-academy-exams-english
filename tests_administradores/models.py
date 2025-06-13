@@ -146,9 +146,13 @@ class PreguntaDelTest(models.Model):
     # def __str__(self):
     #     return f"{self.nombre_del_test.nombre_del_test} - Pregunta {self.tema}"
 
-    class Meta:
-        verbose_name = "Pregunta Del Test"
-        verbose_name_plural = "Preguntas de los Tests"
+    class Meta:     # This changes  the name of the model in the Django admin panel
+
+        verbose_name = "Test Question"
+        verbose_name_plural = "Test Questions"
+
+        # verbose_name = "Pregunta Del Test"
+        # verbose_name_plural = "Preguntas de los Tests"
 
 
 # """ Modelo para mostrar la relacion entre Test y PreguntaDelTest.

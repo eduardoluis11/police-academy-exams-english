@@ -3,7 +3,6 @@ from django.db import models
 # This will access my base.py file with my settings
 from django.conf import settings  # Import settings
 
-
 from tests_administradores.models import PreguntaDelTest  # Modelo de Test de tests para administradores
 
 # Create your models here.
@@ -55,11 +54,11 @@ Si el límite de tiempo es infinito o ilimitado, dejaré el campo de tiempo rest
 
 
 class SesionDelTest(models.Model):
-
     # I will call my AbstractUser model, which I nicknamed "User", from my "autenticacion" app
-    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)     # Nombre del usuario que está tomando el test
-    hora_de_inicio = models.DateTimeField(auto_now_add=True)    # Hora de inicio del test
-    hora_del_fin_del_test = models.DateTimeField(null=True, blank=True)     # Hora de finalización del test
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                on_delete=models.CASCADE)  # Nombre del usuario que está tomando el test
+    hora_de_inicio = models.DateTimeField(auto_now_add=True)  # Hora de inicio del test
+    hora_del_fin_del_test = models.DateTimeField(null=True, blank=True)  # Hora de finalización del test
 
     # Time limit in seconds (e.g., 1800 minutes)
     limite_de_tiempo = models.IntegerField(default=1800, null=True, blank=True)
@@ -93,6 +92,10 @@ class SesionDelTest(models.Model):
     #         return None
     #     return [int(id) for id in self.preguntas_seleccionadas.split(',')]
 
+    class Meta:  # This will change the name of the model in the django admin panel
+        verbose_name = "Test Session"
+        verbose_name_plural = "Tests' Sessions"
+
     # Esto me renderiza el ID de la Sesión, el nombre del usuario y el nombre del test
     def __str__(self):
         return f"ID de Sesión: {self.id} - {self.usuario.username} - {self.nombre_del_test}"
@@ -123,7 +126,6 @@ both strings are converted to the same case.
 
 
 class RespuestaDelUsuario(models.Model):
-
     # Esto me almacena la pregunta que respondió el cliente en el examen
     pregunta = models.ForeignKey(PreguntaDelTest, on_delete=models.CASCADE)
 
@@ -138,7 +140,6 @@ class RespuestaDelUsuario(models.Model):
 
     # Esto compara la respuesta seleccionada por el cliente con la respuesta correcta de la pregunta
     def save(self, *args, **kwargs):
-
         # Si la respuesta seleccionada es correcta, entonces se marca la respuesta como correcta ("True").
         # Convert both answers to uppercase (or lowercase) before comparing.
         self.es_correcto = (self.respuesta_seleccionada.upper() == self.pregunta.respuesta_correcta.upper())
@@ -147,6 +148,10 @@ class RespuestaDelUsuario(models.Model):
 
         # Esto guarda si la respuesta seleccionada es correcta o no
         super().save(*args, **kwargs)
+
+    class Meta:  # This will change the name of the model in the django admin panel
+        verbose_name = "User's Answer"
+        verbose_name_plural = "Users' Answers"
 
     # Esto me debe imprimir el nombre de usuario, la ID de la pregunta, y la respuesta seleccionada
     def __str__(self):
@@ -186,6 +191,10 @@ class PreguntaGuardadaPorElUsuario(models.Model):
 
     # Esto me almacena la sesión del test en la que el cliente guardó la pregunta
     sesion = models.ForeignKey(SesionDelTest, on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:  # This will change the name of the model in the django admin panel
+        verbose_name = "Question Saved by the User"
+        verbose_name_plural = "Questions Saved by the Users"
 
     # Esto me imprime el nombre de usuario, la ID de la pregunta, y el nombre del test
     def __str__(self):
