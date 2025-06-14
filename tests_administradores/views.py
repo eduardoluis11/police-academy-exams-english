@@ -277,7 +277,8 @@ def crear_nuevo_test_sin_subir_un_archivo(request):
             # pregunta_del_test.save()
 
             # Muestra un mensaje de confirmación
-            messages.success(request, "El test fue creado correctamente.")
+            messages.success(request, "The test was successfully created.")
+            # messages.success(request, "El test fue creado correctamente.")
 
             # Esto redirige al usuario a la lista de tests
             return redirect('tests_clientes:lista_de_tests')
