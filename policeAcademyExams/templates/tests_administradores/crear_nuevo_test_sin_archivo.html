@@ -27,7 +27,9 @@
                             {# Esto renderiza cad formset individual #}
                             {% for form in formset %}
                                 <div class="pregunta-form border p-3 mb-3">
-                                    <h4>Pregunta #{{ forloop.counter }}</h4>
+                                
+                                    {# This renders the "Question Number" tile of each question #}
+                                    <h4>Question #{{ forloop.counter }}</h4>
                                     {{ form.as_p }}
                                 </div>
                             {% endfor %}
