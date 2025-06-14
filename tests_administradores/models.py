@@ -42,18 +42,18 @@ class Test(models.Model):
 
     # Define choices for the exam type as class variables
     # Nombres de las variables
-    TIPO_NORMATIVA = 'normativa'
-    TIPO_ANNO = 'año'
-    TIPO_TEMA = 'tema'
-    TIPO_SIN_ESPECIFICAR = 'sin especificar'
+    TIPO_NORMATIVA = 'regulation'
+    TIPO_ANNO = 'year'
+    TIPO_TEMA = 'topic'
+    TIPO_SIN_ESPECIFICAR = 'Unspecified'
     # TIPO_ALEATORIO = 'aleatorio'
 
     # Opciones de los tipos de test como una lista de tuplas de Python
     TIPOS_DE_TEST = [
-        (TIPO_NORMATIVA, 'Normativa'),
-        (TIPO_ANNO, 'Año'),
-        (TIPO_TEMA, 'Tema'),
-        (TIPO_SIN_ESPECIFICAR, 'Sin especificar'),
+        (TIPO_NORMATIVA, 'Regulation'),
+        (TIPO_ANNO, 'Year'),
+        (TIPO_TEMA, 'Topic'),
+        (TIPO_SIN_ESPECIFICAR, 'Unspecified'),
         # (TIPO_ALEATORIO, 'Aleatorio'),
     ]
 
