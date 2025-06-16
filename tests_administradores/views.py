@@ -229,7 +229,7 @@ def crear_nuevo_test_sin_subir_un_archivo(request):
             # Esto crea una nueva instancia del modelo de Test con su nombre, año, y de tipo "por año"
             nuevo_nombre_del_test = Test(
                 nombre_del_test=campo_nombre_del_test.cleaned_data['nombre_del_test'],
-                tipo="año",  # Todo test creado manualmente es un test por año, por lo que debo asignarle "año"
+                tipo="year",  # Todo test creado manualmente es un test por año, por lo que debo asignarle "año"
                 year=campo_nombre_del_test.cleaned_data['year'],    # Año del test (e.g., "2023")
                 fue_generado_proceduralmente=False,  # Esto marca el test como no generado proceduralmente (universal)
             )
