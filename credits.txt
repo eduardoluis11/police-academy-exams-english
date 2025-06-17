@@ -47,3 +47,11 @@ https://unsplash.com/es/fotos/un-calendario-con-pulsadores-rojos-fijados-bwOAixL
 
 14) Pokémon Palette: I got one of the color palettes from Pokémon Palette by Yassen Shopov.
 Website: https://www.pokemonpalette.com/
+
+15) Bootstrap: https://getbootstrap.com/ .
+
+16) Cookie Consent Banner by Godson Thomas:
+The code I used to create the cookie consent banner is copyrighted by Godson Thomas and was taken from the following
+repository: https://github.com/Godsont/Cookie-Consent-Banner
+
+I have permission from Godson Thomas to use his cookie consent banner code.
