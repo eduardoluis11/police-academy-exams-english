@@ -140,7 +140,7 @@ class PreguntaDelTest(models.Model):
     # Esto me renderiza la ID y el tema de la pregunta, y una vista previa de la pregunta
     def __str__(self):
         question_preview = self.pregunta[:30] + '...' if len(self.pregunta) > 30 else self.pregunta
-        return f"ID: {self.id} - Tema {self.tema} - {question_preview}"
+        return f"ID: {self.id} - Topic {self.tema} - {question_preview}"
 
     # Esto es lo que me causa el bug de que no puedo renderizar el modelo de PreguntaDelTest en el panel de admin
     # def __str__(self):

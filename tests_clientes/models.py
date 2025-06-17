@@ -50,13 +50,19 @@ Es decir, si le quedaban 10 minutos para terminar el test, y lo interrumpió, cu
 guardado que le quedan 10 minutos para terminar el test.
 
 Si el límite de tiempo es infinito o ilimitado, dejaré el campo de tiempo restante como "null".
+
+You can change how the field appears in the Django admin panel without changing the variable name by using the 
+verbose_name parameter. 
+This will keep the field name as usuario in your code but display it as "Student" in the Django admin panel.
 """
 
 
 class SesionDelTest(models.Model):
     # I will call my AbstractUser model, which I nicknamed "User", from my "autenticacion" app
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                on_delete=models.CASCADE)  # Nombre del usuario que está tomando el test
+                                on_delete=models.CASCADE,
+                                verbose_name="User"  # Or any other name you want to display
+                                )  # Nombre del usuario que está tomando el test
     hora_de_inicio = models.DateTimeField(auto_now_add=True)  # Hora de inicio del test
     hora_del_fin_del_test = models.DateTimeField(null=True, blank=True)  # Hora de finalización del test
 
@@ -98,7 +104,7 @@ class SesionDelTest(models.Model):
 
     # Esto me renderiza el ID de la Sesión, el nombre del usuario y el nombre del test
     def __str__(self):
-        return f"ID de Sesión: {self.id} - {self.usuario.username} - {self.nombre_del_test}"
+        return f"Session ID: {self.id} - {self.usuario.username} - {self.nombre_del_test}"
 
 
 """ Modelo para las Respuestas Enviadas por los clientes para cada pregunta en los Tests.
@@ -155,7 +161,7 @@ class RespuestaDelUsuario(models.Model):
 
     # Esto me debe imprimir el nombre de usuario, la ID de la pregunta, y la respuesta seleccionada
     def __str__(self):
-        return f"{self.sesion.usuario} - ID de Pregunta: {self.pregunta.id} - Respuesta Seleccionada: {self.respuesta_seleccionada}"
+        return f"{self.sesion.usuario} - Question ID: {self.pregunta.id} - Selected Answer: {self.respuesta_seleccionada}"
 
 
 """ Modelo de Preguntas Guardadas por el Usuario.
@@ -198,4 +204,4 @@ class PreguntaGuardadaPorElUsuario(models.Model):
 
     # Esto me imprime el nombre de usuario, la ID de la pregunta, y el nombre del test
     def __str__(self):
-        return f"{self.usuario.username} - ID de Pregunta: {self.pregunta.id} - Test: {self.test.nombre_del_test}"
+        return f"{self.usuario.username} - Question ID: {self.pregunta.id} - Test: {self.test.nombre_del_test}"
