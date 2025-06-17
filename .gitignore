@@ -185,7 +185,10 @@ ai-chats
 # Archivos de FontAwesome que no quiero guardar en GitHub
 static/fontawesome/js
 static/fontawesome/metadata
-static/fontawesome/webfonts
+static/fontawesome/webfonts/fa-brands-400.ttf
+static/fontawesome/webfonts/fa-brands-400.woff2
+static/fontawesome/webfonts/fa-v4compatibility.ttf
+static/fontawesome/webfonts/fa-v4compatibility.woff2
 static/fontawesome/sprites
 static/fontawesome/svgs
 
