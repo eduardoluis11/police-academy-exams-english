@@ -45,17 +45,17 @@
 
     <div class="container text-center">  {# Add container and text-center class from Bootstrap #}
     
+        {# Police Tests' Logo #}
+        <img src="{% static 'img/logos/police-tests-logo-higher-resolution.png' %}" 
+             alt="Police Test's Logo" height="100"
+        >
     
-        {# Police Exam's Logo #}
-        <img src="{% static 'img/logos/police-tests-logo-higher-resolution.png' %}" alt="Police Test's Logo" height="100">
+        {# Police Tests' Title #}
+        <h1><b>Police Tests</b></h1>
     
         <br>
         <br>
         <div class="welcome-message">
-
-
-
-    
             {# Si el usuario inicia sesión, se le muestra su nombre de usuario #}
             {% if user.is_authenticated %}
                 
