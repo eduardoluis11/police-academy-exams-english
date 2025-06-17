@@ -63,29 +63,33 @@ class SesionDelTest(models.Model):
                                 on_delete=models.CASCADE,
                                 verbose_name="User"  # Or any other name you want to display
                                 )  # Nombre del usuario que está tomando el test
-    hora_de_inicio = models.DateTimeField(auto_now_add=True)  # Hora de inicio del test
-    hora_del_fin_del_test = models.DateTimeField(null=True, blank=True)  # Hora de finalización del test
+    hora_de_inicio = models.DateTimeField(auto_now_add=True, verbose_name="Start Time")  # Hora de inicio del test
+    hora_del_fin_del_test = models.DateTimeField(null=True, blank=True,  # Hora de finalización del test
+                                                 verbose_name="End Time")
 
     # Time limit in seconds (e.g., 1800 minutes)
-    limite_de_tiempo = models.IntegerField(default=1800, null=True, blank=True)
+    limite_de_tiempo = models.IntegerField(default=1800, null=True, blank=True, verbose_name="Time Limit")
 
     # Nombre del Test del cliente. Se debe tomar como FK del modelo de Test de la app de Tests
-    nombre_del_test = models.ForeignKey('tests_administradores.Test', on_delete=models.CASCADE)
+    nombre_del_test = models.ForeignKey('tests_administradores.Test', on_delete=models.CASCADE,
+                                        verbose_name="Test Name")
 
     # Nivel de dificultad del test que seleccionó el cliente
-    nivel_de_dificultad = models.CharField(max_length=50, default='Errors Do Not Deduct Points')
+    nivel_de_dificultad = models.CharField(max_length=50, default='Errors Do Not Deduct Points',
+                                           verbose_name="Difficulty Level"
+                                           )
 
     # Puntuación que sacó el cliente en el test en el intento actual
-    puntuacion = models.FloatField(null=True, blank=True)
+    puntuacion = models.FloatField(null=True, blank=True, verbose_name="Score")
 
     # Esto me dice si el cliente ya tomó y terminó el test o no. Si es "False", el cliente puede seguir tomando el test.
-    cliente_entrego_este_test = models.BooleanField(default=False)
+    cliente_entrego_este_test = models.BooleanField(default=False, verbose_name="Did the client submit this test?")
 
     # Esto me guarda el tiempo en segundos de cuanto tiempo le queda al cliente para terminar el test (OPCIONAL)
-    tiempo_restante = models.IntegerField(null=True, blank=True)
+    tiempo_restante = models.IntegerField(null=True, blank=True, verbose_name="Remaining Time")
 
     # Esto me dice si el test es de autocorrección o no. Si es "True", el test es de autocorrección.
-    test_autocorregido = models.BooleanField(default=False)
+    test_autocorregido = models.BooleanField(default=False, verbose_name="Is this test self-corrected?")
 
     # # ESTO NO LO VOY A USAR
     # # New field for custom questions
@@ -133,16 +137,20 @@ both strings are converted to the same case.
 
 class RespuestaDelUsuario(models.Model):
     # Esto me almacena la pregunta que respondió el cliente en el examen
-    pregunta = models.ForeignKey(PreguntaDelTest, on_delete=models.CASCADE)
+    pregunta = models.ForeignKey(PreguntaDelTest, on_delete=models.CASCADE, verbose_name="Question")
 
     # Sesion del Test. Aqui obtengo datos como el nombre del usuario que está tomando el test, el nombre del test
-    sesion = models.ForeignKey(SesionDelTest, on_delete=models.CASCADE, related_name='answers')
+    sesion = models.ForeignKey(SesionDelTest, on_delete=models.CASCADE, related_name='answers',
+                               verbose_name="Session"
+                               )
 
     # Esto almacena la respuesta del cliente es correcta o no. Ver en "def save()" para más detalles.
-    es_correcto = models.BooleanField(default=False)
+    es_correcto = models.BooleanField(default=False,
+                                      verbose_name="Is the answer correct?"
+                                      )
 
     # Esto almacena la respuesta seleccionada por el cliente
-    respuesta_seleccionada = models.CharField(max_length=1)  # e.g., "A", "B", "C", "D"
+    respuesta_seleccionada = models.CharField(max_length=1, verbose_name="Selected answer")  # e.g., "A", "B", "C", "D"
 
     # Esto compara la respuesta seleccionada por el cliente con la respuesta correcta de la pregunta
     def save(self, *args, **kwargs):
@@ -186,17 +194,19 @@ para guardar también la sesión.
 
 class PreguntaGuardadaPorElUsuario(models.Model):
     # Esto me almacena la pregunta que guardó el cliente
-    pregunta = models.ForeignKey(PreguntaDelTest, on_delete=models.CASCADE)
+    pregunta = models.ForeignKey(PreguntaDelTest, on_delete=models.CASCADE, verbose_name="Question")
 
     # Esto me almacena el usuario que guardó la pregunta.
     # I will call my AbstractUser model, which is in in my base.py file, under the variable AUTH USER MODEL.
-    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="User")
 
     # Esto me almacena el test al que pertenece la pregunta
     test = models.ForeignKey('tests_administradores.Test', on_delete=models.CASCADE)
 
     # Esto me almacena la sesión del test en la que el cliente guardó la pregunta
-    sesion = models.ForeignKey(SesionDelTest, on_delete=models.CASCADE, null=True, blank=True)
+    sesion = models.ForeignKey(SesionDelTest, on_delete=models.CASCADE, null=True, blank=True,
+                               verbose_name="Session"
+                               )
 
     class Meta:  # This will change the name of the model in the django admin panel
         verbose_name = "Question Saved by the User"

@@ -39,7 +39,6 @@ logueado podra ver esos test por año, pero no podrá ver el de los demás.
 
 
 class Test(models.Model):
-
     # Define choices for the exam type as class variables
     # Nombres de las variables
     TIPO_NORMATIVA = 'regulation'
@@ -57,24 +56,29 @@ class Test(models.Model):
         # (TIPO_ALEATORIO, 'Aleatorio'),
     ]
 
-    nombre_del_test = models.CharField(max_length=255)  # Nombre del Test (ej.: "Granada 2023")
+    nombre_del_test = models.CharField(max_length=255,  # Nombre del Test (ej.: "Granada 2023")
+                                       verbose_name="Test Name",
+                                       )
 
     # Tipo de Test ("año", "normativa", o "tema")
     tipo = models.CharField(
         max_length=20,
         choices=TIPOS_DE_TEST,
-        default=TIPO_SIN_ESPECIFICAR  # Por defecto, a todos los tests se les pondrá "sin especificar"
+        default=TIPO_SIN_ESPECIFICAR,  # Por defecto, a todos los tests se les pondrá "sin especificar"
+        verbose_name="Type"
     )
 
     # # Categorías por las que podré agrupar a los tests
     # tema = models.IntegerField(null=True, blank=True)           # Tema (e.g., 1, 2, 3, etc).
     # normativa = models.CharField(max_length=100, null=True, blank=True)  # Normativa (e.g., "Constitución Española").
 
-    year = models.IntegerField(null=True, blank=True, verbose_name="Año")    # Año del test (e.g., 2023, 2024, etc).
+    year = models.IntegerField(null=True, blank=True)  # Año del test (e.g., 2023, 2024, etc).
 
     # Esto es para saber si el test fue generado proceduralmente o no
     fue_generado_proceduralmente = models.BooleanField(
-        default=True, verbose_name="Este test fue generado proceduralmente?"
+        default=True,
+        verbose_name="Was this test procedurally generated?"
+        # verbose_name="Este test fue generado proceduralmente?"
     )
 
     # year = models.CharField(max_length=255, null=True, blank=True, verbose_name="Año")    # Año (e.g., "2023")
@@ -118,24 +122,30 @@ año).
 
 
 class PreguntaDelTest(models.Model):
-
     # Modifiqué el nombre del test para que tenga una relación de muchos a muchos con el modelo de Test
-    nombre_del_test = models.ManyToManyField('tests_administradores.Test')
+    nombre_del_test = models.ManyToManyField('tests_administradores.Test', verbose_name="Test Name")
 
     # # Modifiqué el nombre del test para que sea tomado como FK del modelo de Test
     # nombre_del_test = models.ForeignKey('tests_administradores.Test', on_delete=models.CASCADE)
 
     # nombre_del_test = models.CharField(max_length=50)  # e.g., "Granada 2023"
-    tema = models.IntegerField(null=True, blank=True)           # Tema. e.g., 1, 2, 3, etc. OPCIONAL.
+    tema = models.IntegerField(null=True, blank=True,    # Tema. e.g., 1, 2, 3, etc. OPCIONAL.
+                               verbose_name="Topic"
+                               )
     year = models.CharField(max_length=255, null=True, blank=True)  # Año (ej: "Granada 2023"). OPCIONAL.
-    normativa = models.CharField(max_length=100, null=True, blank=True)  # Normativa. e.g., "Constitución Española".
-    pregunta = models.TextField()           # The question text
-    opcion_a = models.TextField()           # Option A
-    opcion_b = models.TextField()           # Option B
-    opcion_c = models.TextField()           # Option C
-    opcion_d = models.TextField(blank=True, null=True)           # Opcion D. Esta es opcional
-    respuesta_correcta = models.CharField(max_length=1)  # e.g., "A", "B", "C", or "D"
-    justificacion = models.TextField()      # Explanation or legal reference
+
+    normativa = models.CharField(max_length=100, null=True, blank=True,  # Normativa. e.g., "Constitución Española".
+                                 verbose_name="Regulation"
+                                 )
+    pregunta = models.TextField(verbose_name="Question")  # The question text
+    opcion_a = models.TextField(verbose_name="Option A")  # Option A
+    opcion_b = models.TextField(verbose_name="Option B")  # Option B
+    opcion_c = models.TextField(verbose_name="Option C")  # Option C
+    opcion_d = models.TextField(blank=True, null=True,  # Opcion D. Esta es opcional
+                                verbose_name="Option D"
+                                )
+    respuesta_correcta = models.CharField(max_length=1, verbose_name="Correct Answer")  # e.g., "A", "B", "C", or "D"
+    justificacion = models.TextField(verbose_name="Explanation")  # Explanation or legal reference
 
     # Esto me renderiza la ID y el tema de la pregunta, y una vista previa de la pregunta
     def __str__(self):
@@ -146,14 +156,13 @@ class PreguntaDelTest(models.Model):
     # def __str__(self):
     #     return f"{self.nombre_del_test.nombre_del_test} - Pregunta {self.tema}"
 
-    class Meta:     # This changes  the name of the model in the Django admin panel
+    class Meta:  # This changes  the name of the model in the Django admin panel
 
         verbose_name = "Test Question"
         verbose_name_plural = "Test Questions"
 
         # verbose_name = "Pregunta Del Test"
         # verbose_name_plural = "Preguntas de los Tests"
-
 
 # """ Modelo para mostrar la relacion entre Test y PreguntaDelTest.
 #
