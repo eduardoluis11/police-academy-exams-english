@@ -18,7 +18,8 @@
     {# Custom CSS which overrides the styles of some of Bootstrap's classes #}
     <link rel="stylesheet" href="{% static 'custom/custom-bootstrap.css' %}">
 
-
+    {# Link to CSS of Godson Thomas' Cookie Consent Banner #}
+    <link rel="stylesheet" href="{% static 'css/cookie_consent_banner_styles.css' %}">
     
     {# Para agregar CSS en mi template de disposicion, debo usar "extra_css", NO "block head" #}
     {% block extra_css %}{% endblock %}
@@ -220,14 +221,42 @@
             {# Child templates will fill this block #}
         {% endblock %}
     </main>
+    
+    <!-- Banner de consentimiento de cookies.
+
+    Part of this code was taken from Godson Thomas from: 
+    https://github.com/Godsont/Cookie-Consent-Banner/blob/master/index.html  -->
+    <!-- Texto del banner de consentimiento de cookies -->
+    <div class="cookie-container">
+        <p>
+            We use cookies to collect information about the people who use our website and to ensure you can use this 
+            site properly. Some features of this website only work through the use of our cookies. 
+            
+            Click "Accept" if you give us permission to use our cookies and collect your information. 
+            Otherwise, you will need to leave this website.
+            {#            Utilizamos cookies para recopilar información sobre las personas que utilizan nuestro sitio web, y para #}
+            {#            que puedas usar este sitio web. Algunas funcionalidades de este sitio web solo funcionan mediante el uso de #}
+            {#            nuestras cookies. #}
+            {#            Haz clic en "Aceptar" si nos das permiso para utilizar nuestras cookies y recopilar#}
+            {#            tu información. De lo contrario, necesitas salir de este sitio web.#}
+        </p>
+
+        <button class="cookie-btn">
+            Accept
+        </button>
+    </div>                      <!-- End of cookie consent banner text. -->
 
     {# JS de Bootstrap Local. NO INCLUYE POPPER.js. #}
 {#    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>#}
     
     {#    <!-- Bootstrap JS (with Popper.js included) -->#}
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" 
                 integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" 
-                crossorigin="anonymous"></script>
+                crossorigin="anonymous">
+    </script>
+    
+    {# Link to Cookie Consent Banner's script #}
+    <script src="{% static 'js/cookie_consent_banner_js.js' %}"></script>
     
     {% block extra_js %}{% endblock %}
 </body>

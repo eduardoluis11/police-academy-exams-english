@@ -1,0 +1,53 @@
+/* Estilos del Banner de Consentimiento de Cookies.
+
+This code was taken from Godson Thomas from: https://github.com/Godsont/Cookie-Consent-Banner/blob/master/style.css .
+
+Los estilos en general son modificados por Bootstrap, NO por estos estilos. */
+.cookie-container body {
+    font-family: "Arial", sans-serif;
+}
+
+.cookie-container p {
+    margin: 24px 0;
+    line-height: 2;
+}
+
+.wrapper {
+    padding: 32px;
+}
+
+.cookie-container {
+    position: fixed;
+    bottom: -100%;
+    left: 0;
+    right: 0;
+    background: #2f3640;
+    color: #f5f6fa;
+    padding: 0 32px;
+    box-shadow: 0 -2px 16px rgba(47, 54, 64, 0.39);
+
+    transition: 400ms;
+}
+
+/* Cuando el cookie consent banner se active, le pondré un z-index de 1000 para que pueda estar en frente
+del landing page azul (el "hero") y de cualquier otro elemento del sitio web. */
+.cookie-container.active {
+    bottom: 0;
+
+    z-index: 1000;
+}
+
+.cookie-container a {
+    color: #f5f6fa;
+}
+
+.cookie-btn {
+    background: #e84118;
+    border: 0;
+    color: #f5f6fa;
+    padding: 12px 48px;
+    font-size: 18px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}  /* End of CSS of the cookie consent banner. */
