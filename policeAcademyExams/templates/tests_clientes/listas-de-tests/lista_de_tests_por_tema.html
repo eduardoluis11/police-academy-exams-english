@@ -67,7 +67,9 @@
         </div>
       </div>
     {% else %}
-        <p class="alert alert-info">No hay tests por tema disponibles.</p>
+
+        {# If the user hasn't taken any tests by topic yet, show them a message that there aren't any tests available #}
+        <p class="alert alert-info">There aren't any tests by topic available.</p>
     {% endif %}
     {#  {% endfor %}#}
 
