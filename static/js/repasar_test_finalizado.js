@@ -6,8 +6,9 @@ async function navegarAPreguntaAlRepasarElTest(sessionId, questionNumber, event)
     event.preventDefault();
 
     // Esto redirige al usuario a la pregunta seleccionada en la vista de repasar_test_finalizado()
+    // en el grid de preguntas al repasar las preguntas.
     // Esto NO debería estar hard-coded. OPTIMIZAR DESPUES.
-    window.location.href = `/tests/repasar-test/${sessionId}/pregunta/${questionNumber}/`;
+    window.location.href = `/tests/review-test/${sessionId}/question/${questionNumber}/`;
 
 }
 
