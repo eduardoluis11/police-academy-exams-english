@@ -55,3 +55,12 @@ The code I used to create the cookie consent banner is copyrighted by Godson Tho
 repository: https://github.com/Godsont/Cookie-Consent-Banner
 
 I have permission from Godson Thomas to use his cookie consent banner code.
+
+17) Fonts from Bunny Fonts: https://fonts.bunny.net
+
+18) Oswald's font from Bunny Fonts: https://fonts.bunny.net/family/oswald
+
+Copyright of the Oswald font:
+
+OFL-1.1
+Copyright 2016 The Oswald Project Authors (https://github.com/googlefonts/OswaldFont)

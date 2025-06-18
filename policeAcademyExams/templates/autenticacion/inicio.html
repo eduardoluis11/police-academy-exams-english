@@ -42,6 +42,15 @@
 {# ensures that the content is centered within a reasonable width, while the text-center class centers the text and #}
 {# inline elements. The mx-auto d-block classes center the logo image. #}
 {% block content %}
+    
+    {# Bunny Fonts' CDN #}
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    
+    {# This will let me use the Oswald Font from Bunny Fonts (600 in weight) #}
+    <link href="https://fonts.bunny.net/css?family=oswald:600" rel="stylesheet" />
+    
+        {# This will let me use the Oswald Font from Bunny Fonts (500 in weight) #}
+    {#    <link href="https://fonts.bunny.net/css?family=oswald:500" rel="stylesheet" />#}
 
     <div class="container text-center">  {# Add container and text-center class from Bootstrap #}
     
@@ -51,7 +60,14 @@
         >
     
         {# Police Tests' Title #}
-        <h1><b>Police Tests</b></h1>
+        {#  #}
+        {# I like it as either having the title in all caps with a 600 weight of the Oswald Font, or just as #}
+        {# "Police Tests" with 500 of Weight. #}
+        <h1 style="font-family: 'Oswald', sans-serif;">
+            {#            Police Tests#}
+            POLICE TESTS
+        </h1>
+        {#        <h1><b>Police Tests</b></h1>#}
     
         <br>
         <br>
